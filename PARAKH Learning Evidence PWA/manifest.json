@@ -1,0 +1,25 @@
+{
+  "name": "PARAKH Learning Evidence App",
+  "short_name": "PARAKH App",
+  "description": "Beyond Attendance: Real Learning Evidence Capture & Competency Mapping App",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a1628",
+  "theme_color": "#1a3a6b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%231a3a6b' rx='24'/><text y='130' x='20' font-size='130' font-family='serif'>📚</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%231a3a6b' rx='64'/><text y='380' x='40' font-size='380' font-family='serif'>📚</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["education"],
+  "lang": "en-IN",
+  "scope": "./"
+}

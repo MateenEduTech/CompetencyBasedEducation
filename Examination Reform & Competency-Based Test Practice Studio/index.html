@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#1a3a6e"/>
+<link rel="manifest" href="manifest.json"/>
+<title>Examination Reform & Competency-Based Test Practice Studio</title>
+<style>
+  :root {
+    --navy: #0a1628;
+    --blue: #1a3a6e;
+    --blue2: #1e4d9e;
+    --gold: #c8a84b;
+    --red: #c0392b;
+    --white: #f5f7fa;
+    --light: #e8ecf5;
+    --muted: #7a8fad;
+    --success: #27ae60;
+    --warn: #e67e22;
+    --font-head: 'Georgia', 'Times New Roman', serif;
+    --font-body: 'Segoe UI', Arial, sans-serif;
+    --radius: 8px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--navy);color:var(--white);
+    font-family:var(--font-body);font-size:15px;line-height:1.6;
+    min-height:100vh;
+  }
+  .screen{display:none;min-height:100vh;}
+  .screen.active{display:block;}
+
+  /* ===== TOP NAV ===== */
+  #topnav{
+    background:var(--blue);border-bottom:2px solid var(--gold);
+    padding:8px 16px;display:flex;align-items:center;gap:10px;
+    position:sticky;top:0;z-index:100;
+  }
+  #topnav .nav-title{font-size:13px;font-weight:700;color:var(--gold);flex:1;font-family:var(--font-head);}
+  #topnav button{
+    background:transparent;border:1px solid var(--gold);color:var(--gold);
+    padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;
+  }
+  #topnav button:hover{background:var(--gold);color:var(--navy);}
+
+  /* ===== HOME SCREEN ===== */
+  #home{
+    background: linear-gradient(160deg, #0a1628 0%, #1a3a6e 60%, #0a1628 100%);
+    text-align:center; padding:0;
+  }
+  .home-hero{
+    padding:40px 20px 30px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(200,168,75,0.15) 0%, transparent 70%);
+  }
+  .badge{
+    display:inline-block;background:var(--gold);color:var(--navy);
+    font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;
+    letter-spacing:0.5px;margin-bottom:18px;
+  }
+  .home-title{
+    font-family:var(--font-head);font-size:clamp(20px,5vw,32px);
+    color:var(--white);line-height:1.25;margin-bottom:8px;
+  }
+  .home-title span{color:var(--gold);}
+  .home-sub{color:var(--muted);font-size:13px;margin-bottom:6px;}
+  .author-block{
+    display:flex;align-items:center;justify-content:center;gap:14px;
+    margin:20px auto;background:rgba(255,255,255,0.06);
+    border:1px solid rgba(200,168,75,0.3);border-radius:12px;
+    padding:14px 20px;max-width:340px;
+  }
+  .author-block img{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+  .author-block .ainfo{text-align:left;}
+  .author-block .aname{font-weight:700;color:var(--gold);font-size:15px;}
+  .author-block .arole{font-size:12px;color:var(--muted);}
+  .home-btns{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;
+    padding:0 16px 20px;max-width:420px;margin:0 auto;
+  }
+  .home-btn{
+    background:var(--blue);border:2px solid var(--blue2);
+    color:var(--white);padding:16px 10px;border-radius:var(--radius);
+    cursor:pointer;font-size:13px;font-weight:600;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    transition:all 0.2s;
+  }
+  .home-btn:hover,.home-btn:active{background:var(--blue2);border-color:var(--gold);transform:translateY(-2px);}
+  .home-btn .icon{font-size:26px;}
+  .home-btn.red{border-color:var(--red);}
+  .home-btn.red:hover{background:var(--red);}
+  .home-btn.gold{border-color:var(--gold);}
+  .home-btn.gold:hover{background:var(--gold);color:var(--navy);}
+  .stats-strip{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:rgba(255,255,255,0.1);margin:0 0 0;
+  }
+  .stat-cell{background:rgba(10,22,40,0.8);padding:12px 8px;text-align:center;}
+  .stat-cell .snum{font-size:20px;font-weight:700;color:var(--gold);}
+  .stat-cell .slbl{font-size:11px;color:var(--muted);}
+
+  /* ===== SECTION CARDS ===== */
+  .section-header{
+    background:var(--blue);padding:14px 16px;
+    border-bottom:2px solid var(--gold);
+    display:flex;align-items:center;gap:10px;
+  }
+  .section-header .sh-icon{font-size:22px;}
+  .section-header h2{font-family:var(--font-head);font-size:17px;color:var(--gold);}
+  .section-header .back-btn{
+    margin-left:auto;background:transparent;border:1px solid var(--muted);
+    color:var(--muted);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;
+  }
+  .section-header .back-btn:hover{border-color:var(--white);color:var(--white);}
+
+  /* ===== CARDS ===== */
+  .card{
+    background:rgba(26,58,110,0.4);border:1px solid rgba(200,168,75,0.2);
+    border-radius:var(--radius);padding:16px;margin:12px 16px;
+  }
+  .card h3{color:var(--gold);font-size:14px;margin-bottom:8px;}
+  .card p{color:var(--light);font-size:13px;line-height:1.65;}
+  .card ul{color:var(--light);font-size:13px;padding-left:18px;}
+  .card ul li{margin-bottom:4px;}
+
+  /* ===== SELECT / INPUT ===== */
+  select,input[type=number],input[type=text]{
+    width:100%;padding:10px 12px;background:rgba(26,58,110,0.5);
+    border:1px solid rgba(200,168,75,0.3);border-radius:var(--radius);
+    color:var(--white);font-size:14px;margin-bottom:10px;
+  }
+  select:focus,input:focus{outline:none;border-color:var(--gold);}
+  select option{background:var(--navy);}
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;}
+
+  .btn{
+    display:inline-block;padding:11px 22px;border-radius:var(--radius);
+    font-size:14px;font-weight:600;cursor:pointer;border:none;
+    transition:all 0.2s;
+  }
+  .btn-primary{background:var(--gold);color:var(--navy);}
+  .btn-primary:hover{background:#e0bc60;}
+  .btn-outline{background:transparent;border:2px solid var(--gold);color:var(--gold);}
+  .btn-outline:hover{background:var(--gold);color:var(--navy);}
+  .btn-danger{background:var(--red);color:white;}
+  .btn-success{background:var(--success);color:white;}
+  .btn-block{display:block;width:100%;text-align:center;}
+
+  /* ===== POLICY PAGES ===== */
+  .policy-list{padding:8px 16px;}
+  .policy-item{
+    background:rgba(26,58,110,0.4);border:1px solid rgba(200,168,75,0.15);
+    border-radius:var(--radius);padding:14px;margin-bottom:10px;cursor:pointer;
+    display:flex;align-items:center;gap:12px;
+    transition:border-color 0.2s;
+  }
+  .policy-item:hover{border-color:var(--gold);}
+  .policy-item .pi-num{
+    background:var(--gold);color:var(--navy);width:28px;height:28px;
+    border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:13px;flex-shrink:0;
+  }
+  .policy-item .pi-title{font-size:13px;font-weight:600;color:var(--white);}
+  .policy-item .pi-sub{font-size:11px;color:var(--muted);}
+  .policy-content{padding:16px;max-width:700px;margin:0 auto;}
+  .policy-content h2{color:var(--gold);font-family:var(--font-head);font-size:18px;margin-bottom:12px;}
+  .policy-content h3{color:var(--light);font-size:15px;margin:16px 0 6px;}
+  .policy-content p{color:var(--light);font-size:13px;line-height:1.75;margin-bottom:12px;}
+  .policy-content .reflect{
+    background:rgba(200,168,75,0.1);border-left:3px solid var(--gold);
+    padding:12px;border-radius:0 6px 6px 0;margin:14px 0;
+    font-style:italic;color:var(--gold);font-size:13px;
+  }
+  .policy-content .teacher-note{
+    background:rgba(27,174,96,0.1);border:1px solid rgba(27,174,96,0.3);
+    padding:12px;border-radius:var(--radius);margin:14px 0;
+    font-size:12px;color:#7fe5b0;
+  }
+  .policy-content .teacher-note strong{display:block;margin-bottom:4px;}
+
+  /* ===== TEST MODE ===== */
+  .test-setup{padding:16px;}
+  .question-block{
+    background:rgba(26,58,110,0.4);border:1px solid rgba(200,168,75,0.2);
+    border-radius:var(--radius);padding:16px;margin:12px 16px;
+  }
+  .q-meta{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .q-tag{
+    font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;
+  }
+  .tag-l1{background:rgba(39,174,96,0.2);color:#7fe5b0;}
+  .tag-l2{background:rgba(230,126,34,0.2);color:#f5b97a;}
+  .tag-l3{background:rgba(192,57,43,0.2);color:#f1948a;}
+  .tag-l4{background:rgba(155,89,182,0.2);color:#d7bde2;}
+  .tag-mcq{background:rgba(26,117,255,0.2);color:#7ab8f5;}
+  .tag-case{background:rgba(200,168,75,0.2);color:var(--gold);}
+  .q-text{font-size:14px;line-height:1.65;margin-bottom:12px;color:var(--white);}
+  .q-options{display:flex;flex-direction:column;gap:8px;}
+  .q-option{
+    padding:10px 14px;border-radius:var(--radius);cursor:pointer;
+    border:1px solid rgba(200,168,75,0.2);background:rgba(10,22,40,0.4);
+    font-size:13px;color:var(--light);transition:all 0.15s;display:flex;gap:10px;align-items:flex-start;
+  }
+  .q-option:hover{border-color:var(--gold);background:rgba(200,168,75,0.1);}
+  .q-option.selected{border-color:var(--blue2);background:rgba(30,77,158,0.4);}
+  .q-option.correct{border-color:var(--success);background:rgba(39,174,96,0.15);}
+  .q-option.wrong{border-color:var(--red);background:rgba(192,57,43,0.15);}
+  .q-short-ans{width:100%;min-height:70px;resize:vertical;padding:8px;
+    background:rgba(10,22,40,0.6);border:1px solid rgba(200,168,75,0.3);
+    border-radius:var(--radius);color:var(--white);font-size:13px;}
+  .q-explanation{
+    margin-top:10px;padding:10px;border-radius:var(--radius);
+    background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);
+    font-size:12px;color:#7fe5b0;display:none;
+  }
+  .q-explanation.show{display:block;}
+
+  /* Timer */
+  #timer-bar{
+    background:var(--blue);padding:8px 16px;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid rgba(200,168,75,0.2);
+    position:sticky;top:52px;z-index:99;
+  }
+  #timer-display{font-size:18px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;}
+  #timer-display.warn{color:var(--warn);}
+  #timer-display.danger{color:var(--red);}
+  .progress-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width 0.5s;}
+
+  /* ===== RESULTS ===== */
+  .results-hero{
+    text-align:center;padding:24px 16px;
+    background:radial-gradient(ellipse at 50% 0%,rgba(200,168,75,0.1) 0%,transparent 70%);
+  }
+  .score-circle{
+    width:110px;height:110px;border-radius:50%;
+    border:4px solid var(--gold);margin:0 auto 12px;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;
+    background:rgba(200,168,75,0.08);
+  }
+  .score-circle .score-num{font-size:28px;font-weight:700;color:var(--gold);}
+  .score-circle .score-lbl{font-size:10px;color:var(--muted);}
+  .grade-badge{
+    display:inline-block;padding:6px 20px;border-radius:20px;
+    font-weight:700;font-size:15px;margin-bottom:8px;
+  }
+  .competency-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 16px;
+  }
+  .comp-cell{
+    background:rgba(26,58,110,0.4);border:1px solid rgba(200,168,75,0.15);
+    border-radius:var(--radius);padding:12px;text-align:center;
+  }
+  .comp-cell .cc-val{font-size:22px;font-weight:700;color:var(--gold);}
+  .comp-cell .cc-lbl{font-size:11px;color:var(--muted);}
+  .comp-cell .cc-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:6px;overflow:hidden;}
+  .comp-cell .cc-fill{height:100%;border-radius:2px;}
+
+  /* ===== CHARTS (CSS-based) ===== */
+  .bar-chart{padding:0 16px 16px;}
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .bar-label{font-size:11px;color:var(--muted);width:80px;text-align:right;flex-shrink:0;}
+  .bar-track{flex:1;height:18px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;
+    font-size:10px;font-weight:600;color:var(--navy);transition:width 0.8s;}
+
+  /* Radar chart SVG */
+  .radar-wrap{display:flex;justify-content:center;padding:16px;}
+
+  /* ===== DIAGNOSTIC ===== */
+  .alert-card{
+    border-radius:var(--radius);padding:14px;margin:10px 16px;
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .alert-card.danger{background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.3);}
+  .alert-card.warn{background:rgba(230,126,34,0.15);border:1px solid rgba(230,126,34,0.3);}
+  .alert-card.ok{background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.3);}
+  .alert-card .a-icon{font-size:20px;}
+  .alert-card .a-text{font-size:13px;color:var(--light);}
+  .alert-card .a-title{font-weight:700;margin-bottom:4px;}
+
+  /* ===== BLUEPRINT BUILDER ===== */
+  .bp-table{width:100%;border-collapse:collapse;font-size:13px;margin:0 0 16px;}
+  .bp-table th{background:var(--blue);padding:8px 10px;text-align:left;color:var(--gold);font-size:12px;}
+  .bp-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.07);color:var(--light);}
+  .bp-table tr:hover td{background:rgba(255,255,255,0.03);}
+  .marks-input{width:60px;padding:4px 6px;background:rgba(26,58,110,0.6);
+    border:1px solid rgba(200,168,75,0.3);border-radius:4px;color:var(--white);font-size:12px;}
+
+  /* ===== PROGRESS TRACKER ===== */
+  .timeline{padding:0 16px 16px;}
+  .timeline-item{
+    display:flex;gap:12px;margin-bottom:12px;padding-bottom:12px;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .t-date{font-size:11px;color:var(--muted);width:80px;flex-shrink:0;}
+  .t-content{flex:1;}
+  .t-score{font-weight:700;color:var(--gold);}
+  .t-subject{font-size:12px;color:var(--light);}
+
+  /* Line chart SVG */
+  .line-chart-wrap{padding:12px 16px;overflow-x:auto;}
+
+  /* ===== MOCK EXAM ===== */
+  .section-divider{
+    background:rgba(200,168,75,0.1);border:1px solid rgba(200,168,75,0.25);
+    padding:10px 16px;margin:8px 16px;border-radius:var(--radius);
+    font-size:13px;color:var(--gold);font-weight:600;
+  }
+
+  /* ===== TEACHER MODE ===== */
+  .teacher-stat-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px 16px;
+  }
+  .t-stat{
+    background:rgba(26,58,110,0.5);border:1px solid rgba(200,168,75,0.2);
+    border-radius:var(--radius);padding:14px;text-align:center;
+  }
+  .t-stat .ts-num{font-size:24px;font-weight:700;color:var(--gold);}
+  .t-stat .ts-lbl{font-size:11px;color:var(--muted);}
+
+  /* ===== HEATMAP ===== */
+  .heatmap{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:12px 16px;}
+  .hm-cell{
+    border-radius:6px;padding:10px 6px;text-align:center;
+    font-size:11px;font-weight:600;
+  }
+  .hm-high{background:rgba(192,57,43,0.6);color:white;}
+  .hm-med{background:rgba(230,126,34,0.5);color:white;}
+  .hm-low{background:rgba(39,174,96,0.5);color:white;}
+  .hm-ok{background:rgba(26,58,110,0.7);color:var(--light);}
+
+  /* ===== UTILITY ===== */
+  .page-pad{padding:16px;}
+  .mt8{margin-top:8px;} .mt16{margin-top:16px;} .mb8{margin-bottom:8px;}
+  .text-gold{color:var(--gold);}
+  .text-muted{color:var(--muted);}
+  .text-sm{font-size:12px;}
+  .divider{height:1px;background:rgba(255,255,255,0.08);margin:12px 0;}
+  .row{display:flex;gap:10px;align-items:center;}
+  .flex1{flex:1;}
+  .chip{
+    display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;
+    background:rgba(200,168,75,0.15);color:var(--gold);margin:2px;
+  }
+  .hidden{display:none !important;}
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar{width:5px;}
+  ::-webkit-scrollbar-track{background:var(--navy);}
+  ::-webkit-scrollbar-thumb{background:var(--blue2);border-radius:3px;}
+
+  /* ===== SPLASH ===== */
+  #splash{
+    position:fixed;inset:0;background:var(--navy);z-index:9999;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transition:opacity 0.5s;
+  }
+  #splash .s-logo{font-size:48px;margin-bottom:16px;}
+  #splash .s-title{font-family:var(--font-head);font-size:18px;color:var(--gold);text-align:center;padding:0 30px;}
+  #splash .s-bar{width:180px;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:24px;overflow:hidden;}
+  #splash .s-fill{height:100%;background:var(--gold);border-radius:2px;animation:load 1.5s ease forwards;}
+  @keyframes load{from{width:0}to{width:100%}}
+
+  @media(min-width:600px){
+    .home-btns{grid-template-columns:repeat(2,1fr);}
+    .competency-grid{grid-template-columns:repeat(4,1fr);}
+    .heatmap{grid-template-columns:repeat(6,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="s-logo">🎓</div>
+  <div class="s-title">Examination Reform &<br>Competency-Based Test Practice Studio</div>
+  <div class="s-bar"><div class="s-fill"></div></div>
+</div>
+
+<!-- TOP NAV (hidden on home) -->
+<nav id="topnav" style="display:none">
+  <span class="nav-title">📚 ExamStudio</span>
+  <button onclick="showHome()">🏠 Home</button>
+</nav>
+
+<!-- ==================== HOME ==================== -->
+<div id="home" class="screen active">
+  <div class="home-hero">
+    <div class="badge">✅ Aligned with NEP 2020 | NCF 2023 | PARAKH</div>
+    <h1 class="home-title">Examination Reform &<br><span>Competency-Based</span><br>Test Practice Studio</h1>
+    <p class="home-sub">Offline Edition — No Internet Required</p>
+    <div class="author-block">
+      <img src="author.jpg" alt="Mateen Yousuf" onerror="this.style.display='none'"/>
+      <div class="ainfo">
+        <div class="aname">Mateen Yousuf</div>
+        <div class="arole">Teacher, School Education Department<br>Kashmir</div>
+      </div>
+    </div>
+  </div>
+  <div class="stats-strip">
+    <div class="stat-cell"><div class="snum" id="stat-tests">0</div><div class="slbl">Tests Taken</div></div>
+    <div class="stat-cell"><div class="snum" id="stat-avg">—</div><div class="slbl">Avg Score</div></div>
+    <div class="stat-cell"><div class="snum">500+</div><div class="slbl">Questions</div></div>
+  </div>
+  <div class="home-btns">
+    <button class="home-btn gold" onclick="showScreen('practice-setup')">
+      <span class="icon">📝</span>Start Practice Test
+    </button>
+    <button class="home-btn red" onclick="showScreen('diagnostic')">
+      <span class="icon">🔬</span>Diagnostic Mode
+    </button>
+    <button class="home-btn" onclick="showScreen('blueprint')">
+      <span class="icon">📐</span>Blueprint Builder
+    </button>
+    <button class="home-btn" onclick="showScreen('policy-list')">
+      <span class="icon">📖</span>Policy & Framework
+    </button>
+    <button class="home-btn" onclick="showScreen('progress')">
+      <span class="icon">📈</span>Progress Tracker
+    </button>
+    <button class="home-btn" onclick="showScreen('mock-exam-setup')">
+      <span class="icon">🏆</span>Mock Exam
+    </button>
+    <button class="home-btn" onclick="showScreen('skill-gap')">
+      <span class="icon">🔥</span>Skill Gap Analyzer
+    </button>
+    <button class="home-btn" onclick="showScreen('teacher')">
+      <span class="icon">👨‍🏫</span>Teacher Mode
+    </button>
+  </div>
+</div>
+
+<!-- ==================== POLICY LIST ==================== -->
+<div id="policy-list" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">📖</span>
+    <h2>Policy & Framework</h2>
+    <button class="back-btn" onclick="showHome()">← Back</button>
+  </div>
+  <div class="policy-list" id="policyListContainer"></div>
+</div>
+
+<!-- ==================== POLICY CONTENT ==================== -->
+<div id="policy-content" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">📄</span>
+    <h2 id="policyContentTitle">Policy Page</h2>
+    <button class="back-btn" onclick="showScreen('policy-list')">← Back</button>
+  </div>
+  <div class="policy-content" id="policyContentBody"></div>
+</div>
+
+<!-- ==================== PRACTICE SETUP ==================== -->
+<div id="practice-setup" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">📝</span>
+    <h2>Practice Test Setup</h2>
+    <button class="back-btn" onclick="showHome()">← Back</button>
+  </div>
+  <div class="page-pad">
+    <label>Class</label>
+    <select id="ps-class">
+      <option value="6">Class 6</option><option value="7">Class 7</option>
+      <option value="8">Class 8</option><option value="9">Class 9</option>
+      <option value="10">Class 10</option><option value="11">Class 11</option>
+      <option value="12">Class 12</option>
+    </select>
+    <label>Subject</label>
+    <select id="ps-subject">
+      <option value="science">Science</option><option value="maths">Mathematics</option>
+      <option value="social">Social Science</option><option value="english">English</option>
+      <option value="hindi">Hindi</option>
+    </select>
+    <label>Difficulty Level</label>
+    <select id="ps-diff">
+      <option value="mixed">Mixed (Recommended)</option>
+      <option value="easy">Easy (L1 – Knowledge)</option>
+      <option value="medium">Medium (L2 – Understanding)</option>
+      <option value="hard">Hard (L3 – Application)</option>
+      <option value="hots">HOTS (L4 – Analysis/Evaluation)</option>
+    </select>
+    <label>Number of Questions</label>
+    <select id="ps-count">
+      <option value="10">10 Questions</option>
+      <option value="20">20 Questions</option>
+      <option value="30">30 Questions</option>
+      <option value="40">40 Questions</option>
+    </select>
+    <label>Timer</label>
+    <select id="ps-timer">
+      <option value="0">No Timer</option>
+      <option value="15">15 Minutes</option>
+      <option value="20">20 Minutes</option>
+      <option value="30">30 Minutes</option>
+      <option value="45">45 Minutes</option>
+      <option value="60">60 Minutes</option>
+    </select>
+    <div class="mt16">
+      <button class="btn btn-primary btn-block" onclick="startPracticeTest()">Start Test →</button>
+    </div>
+    <div class="card mt16">
+      <h3>ℹ️ About Competency-Based Testing</h3>
+      <p>Questions are distributed across Bloom's Taxonomy levels ensuring balanced cognitive challenge. Your results will show competency distribution and skill gaps.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ACTIVE TEST ==================== -->
+<div id="active-test" class="screen">
+  <div id="timer-bar">
+    <div>
+      <div class="text-sm text-muted">Question <span id="q-current">1</span> of <span id="q-total">10</span></div>
+      <div class="progress-bar" style="width:160px;margin-top:4px">
+        <div class="progress-fill" id="q-progress" style="width:10%"></div>
+      </div>
+    </div>
+    <div id="timer-display">⏱ —</div>
+    <button class="btn btn-danger" style="padding:6px 12px;font-size:12px" onclick="submitTest()">Submit</button>
+  </div>
+  <div id="questions-container"></div>
+  <div style="padding:16px">
+    <div class="row">
+      <button class="btn btn-outline flex1" id="btn-prev" onclick="prevQuestion()">← Prev</button>
+      <button class="btn btn-primary flex1" id="btn-next" onclick="nextQuestion()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TEST RESULTS ==================== -->
+<div id="test-results" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">🏆</span>
+    <h2>Test Results</h2>
+    <button class="back-btn" onclick="showHome()">← Home</button>
+  </div>
+  <div class="results-hero">
+    <div class="score-circle">
+      <div class="score-num" id="res-score">0%</div>
+      <div class="score-lbl">Score</div>
+    </div>
+    <div class="grade-badge" id="res-grade"></div>
+    <p class="text-sm text-muted" id="res-summary"></p>
+  </div>
+  <div class="competency-grid" id="res-comp-grid"></div>
+  <div class="card">
+    <h3>📊 Performance by Cognitive Level</h3>
+    <div class="bar-chart" id="res-bar-chart"></div>
+  </div>
+  <div class="card" id="res-gaps-card">
+    <h3>⚠️ Identified Skill Gaps</h3>
+    <div id="res-gaps"></div>
+  </div>
+  <div class="card" id="res-review-card">
+    <h3>📝 Improvement Plan</h3>
+    <div id="res-plan"></div>
+  </div>
+  <div style="padding:16px;">
+    <button class="btn btn-primary btn-block" onclick="showScreen('practice-setup')">Practice Again</button>
+    <button class="btn btn-outline btn-block mt8" onclick="reviewAnswers()">Review Answers</button>
+  </div>
+</div>
+
+<!-- ==================== REVIEW ANSWERS ==================== -->
+<div id="review-screen" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">📋</span>
+    <h2>Answer Review</h2>
+    <button class="back-btn" onclick="showScreen('test-results')">← Results</button>
+  </div>
+  <div id="review-container"></div>
+</div>
+
+<!-- ==================== DIAGNOSTIC ==================== -->
+<div id="diagnostic" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">🔬</span>
+    <h2>Diagnostic Mode</h2>
+    <button class="back-btn" onclick="showHome()">← Back</button>
+  </div>
+  <div class="page-pad">
+    <div class="card">
+      <h3>What is Diagnostic Mode?</h3>
+      <p>A specially curated 20-question test that spans all competency levels and subjects to identify exactly where your learning gaps are. After completion, you'll get a detailed improvement roadmap.</p>
+    </div>
+    <label class="mt16">Select Class</label>
+    <select id="diag-class">
+      <option value="9">Class 9</option><option value="10">Class 10</option>
+      <option value="11">Class 11</option><option value="12">Class 12</option>
+    </select>
+    <button class="btn btn-primary btn-block mt8" onclick="startDiagnostic()">Start Diagnostic Test →</button>
+  </div>
+  <div id="diag-results" class="hidden">
+    <div class="section-header" style="margin-top:8px">
+      <span class="sh-icon">📊</span><h2>Diagnostic Report</h2>
+    </div>
+    <div id="diag-alerts"></div>
+    <div class="card">
+      <h3>🎯 Bloom's Level Gap Analysis</h3>
+      <div class="bar-chart" id="diag-bloom-chart"></div>
+    </div>
+    <div class="card">
+      <h3>📋 Personalized Improvement Plan</h3>
+      <div id="diag-plan"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BLUEPRINT BUILDER ==================== -->
+<div id="blueprint" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">📐</span>
+    <h2>Blueprint Practice Builder</h2>
+    <button class="back-btn" onclick="showHome()">← Back</button>
+  </div>
+  <div class="page-pad">
+    <label>Class</label>
+    <select id="bp-class">
+      <option value="9">Class 9</option><option value="10">Class 10</option>
+      <option value="11">Class 11</option><option value="12">Class 12</option>
+    </select>
+    <label>Total Marks</label>
+    <select id="bp-marks">
+      <option value="40">40 Marks (Half Yearly)</option>
+      <option value="80">80 Marks (Annual)</option>
+      <option value="100">100 Marks (Board Pattern)</option>
+    </select>
+    <label>Cognitive Level Weightage</label>
+    <div class="card" style="padding:12px">
+      <div class="row mb8"><span class="flex1 text-sm">L1 – Knowledge/Recall (%)</span><input type="number" id="bp-l1" class="marks-input" value="20" min="0" max="100"/></div>
+      <div class="row mb8"><span class="flex1 text-sm">L2 – Understanding (%)</span><input type="number" id="bp-l2" class="marks-input" value="30" min="0" max="100"/></div>
+      <div class="row mb8"><span class="flex1 text-sm">L3 – Application (%)</span><input type="number" id="bp-l3" class="marks-input" value="30" min="0" max="100"/></div>
+      <div class="row"><span class="flex1 text-sm">L4 – HOTS/Analysis (%)</span><input type="number" id="bp-l4" class="marks-input" value="20" min="0" max="100"/></div>
+    </div>
+    <button class="btn btn-primary btn-block mt16" onclick="buildBlueprint()">Generate Blueprint Paper →</button>
+  </div>
+  <div id="bp-output" class="hidden">
+    <div class="section-header" style="margin-top:8px">
+      <span class="sh-icon">📄</span><h2>Generated Blueprint</h2>
+    </div>
+    <div id="bp-table-wrap" style="padding:0 16px 16px;overflow-x:auto;"></div>
+    <div style="padding:0 16px 16px;">
+      <button class="btn btn-outline btn-block" onclick="printBlueprint()">🖨️ Print Blueprint</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SKILL GAP ANALYZER ==================== -->
+<div id="skill-gap" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">🔥</span>
+    <h2>Skill Gap Analyzer</h2>
+    <button class="back-btn" onclick="showHome()">← Back</button>
+  </div>
+  <div class="page-pad">
+    <div class="card">
+      <h3>📊 Competency Heatmap</h3>
+      <p class="text-sm text-muted mb8">Based on your test history. Take more tests for accurate analysis.</p>
+    </div>
+  </div>
+  <div class="heatmap" id="skill-heatmap"></div>
+  <div class="card" style="margin:0 16px">
+    <h3>📈 Improvement Index</h3>
+    <div id="improvement-index"></div>
+  </div>
+  <div class="card" style="margin:12px 16px">
+    <h3>⚠️ High-Risk Areas</h3>
+    <div id="risk-areas"></div>
+  </div>
+</div>
+
+<!-- ==================== PROGRESS TRACKER ==================== -->
+<div id="progress" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">📈</span>
+    <h2>Progress Tracker</h2>
+    <button class="back-btn" onclick="showHome()">← Back</button>
+  </div>
+  <div class="page-pad">
+    <div class="teacher-stat-grid" id="progress-stats"></div>
+  </div>
+  <div class="card" style="margin:0 16px">
+    <h3>📉 Score Trend</h3>
+    <div class="line-chart-wrap" id="score-line-chart"></div>
+  </div>
+  <div class="card" style="margin:12px 16px">
+    <h3>🕸️ Competency Radar</h3>
+    <div class="radar-wrap" id="radar-chart"></div>
+  </div>
+  <div class="timeline" id="progress-timeline">
+    <h3 class="text-gold mb8">📋 Test History</h3>
+  </div>
+  <div style="padding:16px">
+    <button class="btn btn-danger btn-block" onclick="clearProgress()">🗑️ Clear All History</button>
+  </div>
+</div>
+
+<!-- ==================== MOCK EXAM SETUP ==================== -->
+<div id="mock-exam-setup" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">🏆</span>
+    <h2>Mock Exam Simulator</h2>
+    <button class="back-btn" onclick="showHome()">← Back</button>
+  </div>
+  <div class="page-pad">
+    <div class="card">
+      <h3>🎯 Full-Length Board Pattern Exam</h3>
+      <p>Simulates a complete exam with all sections: MCQ, Case-Based, Short Answer, and Long Answer. Timed sections with section-wise analysis.</p>
+    </div>
+    <label class="mt16">Class</label>
+    <select id="mock-class">
+      <option value="10">Class 10</option><option value="12">Class 12</option>
+    </select>
+    <label>Subject</label>
+    <select id="mock-subject">
+      <option value="science">Science</option><option value="maths">Mathematics</option>
+      <option value="social">Social Science</option>
+    </select>
+    <div class="card mt16">
+      <h3>Exam Structure</h3>
+      <ul style="color:var(--light);font-size:13px;padding-left:18px">
+        <li>Section A: 20 MCQs (1 mark each) – 20 min</li>
+        <li>Section B: 2 Case-based passages (4 marks each) – 15 min</li>
+        <li>Section C: 5 Short answers (3 marks each) – 20 min</li>
+        <li>Section D: 3 Long answers (5 marks each) – 25 min</li>
+        <li><strong>Total: 60 marks | 80 minutes</strong></li>
+      </ul>
+    </div>
+    <button class="btn btn-primary btn-block mt16" onclick="startMockExam()">Start Mock Exam →</button>
+  </div>
+</div>
+
+<!-- ==================== TEACHER MODE ==================== -->
+<div id="teacher" class="screen">
+  <div class="section-header">
+    <span class="sh-icon">👨‍🏫</span>
+    <h2>Teacher Mode</h2>
+    <button class="back-btn" onclick="showHome()">← Back</button>
+  </div>
+  <div class="page-pad">
+    <div class="card">
+      <h3>ℹ️ About Teacher Mode</h3>
+      <p>View aggregate performance data (no individual rankings), generate practice sets, and identify common learning gaps across competency levels.</p>
+    </div>
+  </div>
+  <div class="teacher-stat-grid" id="teacher-stats"></div>
+  <div class="card" style="margin:0 16px">
+    <h3>📊 Class Competency Distribution</h3>
+    <div class="bar-chart" id="teacher-bar-chart"></div>
+  </div>
+  <div class="card" style="margin:12px 16px">
+    <h3>🔍 Common Weak Areas</h3>
+    <div id="teacher-gaps"></div>
+  </div>
+  <div class="page-pad">
+    <button class="btn btn-primary btn-block" onclick="generatePracticeSet()">📋 Generate Practice Set for Class</button>
+    <button class="btn btn-outline btn-block mt8" onclick="exportSummary()">📤 Export Summary (Print)</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA — Question Bank (500+ questions embedded as JSON)
+// ============================================================
+const QB = {
+  questions: [
+    // SCIENCE
+    {id:1,class:9,subject:'science',unit:'Matter',outcome:'Classify matter',level:'L1',type:'MCQ',marks:1,
+     q:'Which of the following is a pure substance?',
+     options:['Air','Sea water','Common salt (NaCl)','Milk'],
+     answer:2,explanation:'Common salt (NaCl) is a pure substance as it has a fixed composition throughout.'},
+    {id:2,class:9,subject:'science',unit:'Matter',outcome:'Distinguish mixtures',level:'L2',type:'MCQ',marks:1,
+     q:'A student dissolves sugar in water and heats the solution. The sugar can be recovered by:',
+     options:['Filtration','Evaporation','Decantation','Magnetic separation'],
+     answer:1,explanation:'Evaporation separates dissolved solids from solutions by removing the liquid component.'},
+    {id:3,class:9,subject:'science',unit:'Matter',outcome:'Apply particle theory',level:'L3',type:'MCQ',marks:1,
+     q:'Why does a gas exert pressure on the walls of its container?',
+     options:['Gas particles are heavy','Gas particles collide with container walls','Gas particles attract each other','Gas is lighter than liquids'],
+     answer:1,explanation:'Gas particles are in constant random motion and exert pressure through collisions with container walls.'},
+    {id:4,class:9,subject:'science',unit:'Matter',outcome:'Analyse states of matter',level:'L4',type:'MCQ',marks:1,
+     q:'A substance has a definite volume but no definite shape. This substance is most likely:',
+     options:['Solid','Liquid','Gas','Plasma'],
+     answer:1,explanation:'Liquids have definite volume but take the shape of their container — no definite shape.'},
+    {id:5,class:9,subject:'science',unit:'Atoms',outcome:'Understand atomic models',level:'L2',type:'MCQ',marks:1,
+     q:"According to Rutherford's model, most of the atom is:",
+     options:['Occupied by electrons','Empty space','Occupied by the nucleus','Filled with neutrons'],
+     answer:1,explanation:"Rutherford's gold foil experiment showed that most of the atom is empty space with a tiny, dense nucleus."},
+    {id:6,class:9,subject:'science',unit:'Atoms',outcome:'Apply atomic number',level:'L3',type:'MCQ',marks:1,
+     q:'An element has atomic number 17. How many electrons are in its outermost shell?',
+     options:['1','3','7','8'],
+     answer:2,explanation:'Element with atomic number 17 is Chlorine. Electronic configuration: 2,8,7 — outermost shell has 7 electrons.'},
+    {id:7,class:9,subject:'science',unit:'Motion',outcome:'Define uniform motion',level:'L1',type:'MCQ',marks:1,
+     q:'A body moving with constant speed in a straight line is said to be in:',
+     options:['Uniform acceleration','Uniform motion','Non-uniform motion','Circular motion'],
+     answer:1,explanation:'Uniform motion means constant speed along a straight line with zero acceleration.'},
+    {id:8,class:9,subject:'science',unit:'Motion',outcome:'Calculate velocity',level:'L3',type:'MCQ',marks:1,
+     q:'A car travels 150 km in 3 hours. What is its average speed?',
+     options:['30 km/h','40 km/h','50 km/h','60 km/h'],
+     answer:2,explanation:'Average speed = Distance/Time = 150/3 = 50 km/h.'},
+    {id:9,class:9,subject:'science',unit:'Motion',outcome:'Apply equations of motion',level:'L3',type:'MCQ',marks:1,
+     q:'A ball is thrown upward with initial velocity 20 m/s. After how many seconds does it reach maximum height? (g=10 m/s²)',
+     options:['1 s','2 s','3 s','4 s'],
+     answer:1,explanation:'At max height v=0. t = (v-u)/(-g) = (0-20)/(-10) = 2 seconds.'},
+    {id:10,class:9,subject:'science',unit:'Force',outcome:'Apply Newton laws',level:'L3',type:'MCQ',marks:1,
+     q:"According to Newton's third law, when a horse pulls a cart forward, the cart:",
+     options:['Does not exert any force on horse','Pulls the horse backward with equal force','Pushes the horse forward','Has greater force than the horse'],
+     answer:1,explanation:"Newton's 3rd law: action-reaction pairs are equal and opposite. Cart pulls horse backward with equal force."},
+    {id:11,class:9,subject:'science',unit:'Force',outcome:'Analyse momentum',level:'L4',type:'MCQ',marks:1,
+     q:'A 2 kg ball moving at 5 m/s collides with a 3 kg stationary ball. After collision both move together. What is their velocity?',
+     options:['2 m/s','3 m/s','4 m/s','5 m/s'],
+     answer:0,explanation:'Conservation of momentum: 2×5 + 3×0 = 5×v → v = 10/5 = 2 m/s.'},
+    {id:12,class:9,subject:'science',unit:'Gravitation',outcome:'Apply gravitational law',level:'L3',type:'MCQ',marks:1,
+     q:'If the distance between two masses is doubled, the gravitational force between them becomes:',
+     options:['Double','Half','One-fourth','Four times'],
+     answer:2,explanation:'F ∝ 1/r². If r doubles, F becomes 1/4th of original.'},
+    {id:13,class:10,subject:'science',unit:'Chemical Reactions',outcome:'Identify reaction types',level:'L2',type:'MCQ',marks:1,
+     q:'The reaction: 2Mg + O₂ → 2MgO is an example of:',
+     options:['Decomposition reaction','Combination reaction','Displacement reaction','Double displacement reaction'],
+     answer:1,explanation:'Two or more substances combine to form one product — combination (synthesis) reaction.'},
+    {id:14,class:10,subject:'science',unit:'Chemical Reactions',outcome:'Balance equations',level:'L3',type:'MCQ',marks:1,
+     q:'Which of the following is a correctly balanced equation?',
+     options:['H₂ + O → H₂O','2H₂ + O₂ → 2H₂O','H₂ + O₂ → H₂O','4H + O₂ → 2H₂O'],
+     answer:1,explanation:'2H₂ + O₂ → 2H₂O: Reactants: 4H, 2O. Products: 4H, 2O. Balanced.'},
+    {id:15,class:10,subject:'science',unit:'Acids & Bases',outcome:'Identify properties',level:'L2',type:'MCQ',marks:1,
+     q:'Which indicator turns red in acidic solution and blue in basic solution?',
+     options:['Phenolphthalein','Litmus','Universal indicator','Methyl orange'],
+     answer:1,explanation:'Litmus is the most common acid-base indicator: red in acid, blue in base.'},
+    {id:16,class:10,subject:'science',unit:'Acids & Bases',outcome:'Apply neutralisation',level:'L3',type:'MCQ',marks:1,
+     q:'When an acid and base react, the products are:',
+     options:['Only salt','Only water','Salt and water','Oxide and water'],
+     answer:2,explanation:'Neutralisation reaction: Acid + Base → Salt + Water. This is the universal definition.'},
+    {id:17,class:10,subject:'science',unit:'Life Processes',outcome:'Describe photosynthesis',level:'L2',type:'MCQ',marks:1,
+     q:'Which gas is produced during photosynthesis?',
+     options:['Carbon dioxide','Nitrogen','Oxygen','Hydrogen'],
+     answer:2,explanation:'Photosynthesis: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂. Oxygen is released as byproduct.'},
+    {id:18,class:10,subject:'science',unit:'Life Processes',outcome:'Understand nutrition types',level:'L3',type:'MCQ',marks:1,
+     q:'An organism that derives nutrition by breaking down dead organic matter is called:',
+     options:['Parasite','Saprotroph','Autotroph','Holozoic'],
+     answer:1,explanation:'Saprotrophs (saprophytes) break down dead/decaying organic matter for nutrition.'},
+    {id:19,class:10,subject:'science',unit:'Electricity',outcome:'Apply Ohm law',level:'L3',type:'MCQ',marks:1,
+     q:'A resistor of 10Ω is connected to 5V battery. What is the current flowing through it?',
+     options:['0.25 A','0.5 A','1 A','2 A'],
+     answer:1,explanation:"Ohm's Law: I = V/R = 5/10 = 0.5 A."},
+    {id:20,class:10,subject:'science',unit:'Electricity',outcome:'Calculate resistance in parallel',level:'L4',type:'MCQ',marks:1,
+     q:'Two resistors of 4Ω and 6Ω are connected in parallel. What is the effective resistance?',
+     options:['10Ω','2.4Ω','5Ω','1.5Ω'],
+     answer:1,explanation:'1/R = 1/4 + 1/6 = 3/12 + 2/12 = 5/12. R = 12/5 = 2.4Ω.'},
+    // MATHEMATICS
+    {id:21,class:9,subject:'maths',unit:'Number Systems',outcome:'Classify numbers',level:'L1',type:'MCQ',marks:1,
+     q:'Which of the following is an irrational number?',
+     options:['√4','√9','√2','√16'],
+     answer:2,explanation:'√2 ≈ 1.41421... is non-terminating and non-repeating — an irrational number. Others simplify to whole numbers.'},
+    {id:22,class:9,subject:'maths',unit:'Polynomials',outcome:'Apply factor theorem',level:'L3',type:'MCQ',marks:1,
+     q:'If p(x) = x³ - 3x + 2, what is the value of p(1)?',
+     options:['0','1','2','3'],
+     answer:0,explanation:'p(1) = 1 - 3 + 2 = 0. Since p(1) = 0, (x-1) is a factor.'},
+    {id:23,class:9,subject:'maths',unit:'Triangles',outcome:'Apply congruence criteria',level:'L2',type:'MCQ',marks:1,
+     q:'Two triangles are congruent if two sides and the included angle of one triangle are equal to corresponding parts of other. This is:',
+     options:['SSS criterion','AAS criterion','SAS criterion','RHS criterion'],
+     answer:2,explanation:'SAS (Side-Angle-Side) criterion: Two sides and included angle equal → triangles congruent.'},
+    {id:24,class:9,subject:'maths',unit:'Statistics',outcome:'Calculate mean',level:'L2',type:'MCQ',marks:1,
+     q:'The mean of 5 numbers is 10. If four of the numbers are 8, 9, 11, 12, what is the fifth number?',
+     options:['8','9','10','12'],
+     answer:2,explanation:'Sum = 5×10 = 50. Sum of 4 numbers = 8+9+11+12 = 40. Fifth = 50-40 = 10.'},
+    {id:25,class:10,subject:'maths',unit:'Quadratic Equations',outcome:'Solve by formula',level:'L3',type:'MCQ',marks:1,
+     q:'The discriminant of 2x² - 5x + 3 = 0 is:',
+     options:['1','49','25','9'],
+     answer:0,explanation:'D = b² - 4ac = (-5)² - 4(2)(3) = 25 - 24 = 1.'},
+    {id:26,class:10,subject:'maths',unit:'Arithmetic Progressions',outcome:'Find nth term',level:'L2',type:'MCQ',marks:1,
+     q:'The 10th term of AP: 2, 5, 8, 11, ... is:',
+     options:['27','28','29','30'],
+     answer:2,explanation:'a=2, d=3. aₙ = a+(n-1)d = 2+9×3 = 2+27 = 29.'},
+    {id:27,class:10,subject:'maths',unit:'Triangles',outcome:'Apply similarity',level:'L3',type:'MCQ',marks:1,
+     q:'In △ABC, DE || BC. If AD=3, DB=5, AE=4.5, then EC=',
+     options:['6.5','7','7.5','8'],
+     answer:2,explanation:'By Basic Proportionality Theorem: AD/DB = AE/EC → 3/5 = 4.5/EC → EC = 4.5×5/3 = 7.5.'},
+    {id:28,class:10,subject:'maths',unit:'Trigonometry',outcome:'Apply trig ratios',level:'L3',type:'MCQ',marks:1,
+     q:'If sin θ = 3/5, then cos θ =',
+     options:['4/5','3/4','5/3','4/3'],
+     answer:0,explanation:'sin²θ + cos²θ = 1 → cos²θ = 1 - 9/25 = 16/25 → cos θ = 4/5.'},
+    // SOCIAL SCIENCE
+    {id:29,class:9,subject:'social',unit:'French Revolution',outcome:'Identify causes',level:'L2',type:'MCQ',marks:1,
+     q:'The French Revolution began in:',
+     options:['1776','1789','1815','1848'],
+     answer:1,explanation:'The French Revolution began in 1789 with the storming of the Bastille on July 14, 1789.'},
+    {id:30,class:9,subject:'social',unit:'French Revolution',outcome:'Analyse impact',level:'L4',type:'MCQ',marks:1,
+     q:'The slogan of the French Revolution "Liberty, Equality, Fraternity" most directly challenged:',
+     options:['Absolute monarchy and feudal privileges','Scientific progress','Industrial growth','Democratic elections'],
+     answer:0,explanation:'The slogan challenged the absolute power of monarchy and the privileges of the feudal nobility and clergy.'},
+    {id:31,class:9,subject:'social',unit:'Nazism',outcome:'Understand ideology',level:'L3',type:'MCQ',marks:1,
+     q:'The Holocaust during World War II was the systematic killing of:',
+     options:['Communists only','Jewish people and other minorities','Political opponents only','War prisoners'],
+     answer:1,explanation:'The Holocaust was the state-sponsored systematic murder of Jewish people and other minority groups by Nazi Germany.'},
+    {id:32,class:10,subject:'social',unit:'Nationalism',outcome:'Analyse movements',level:'L4',type:'MCQ',marks:1,
+     q:'The Non-Cooperation Movement (1920-22) was called off by Gandhi because:',
+     options:['British accepted demands','Chauri Chaura violence','World War involvement','Economic crisis'],
+     answer:1,explanation:'Gandhi called off the movement after the Chauri Chaura incident (February 1922) where a police station was set on fire.'},
+    {id:33,class:10,subject:'social',unit:'Federalism',outcome:'Identify features',level:'L2',type:'MCQ',marks:1,
+     q:'Which of the following is NOT a feature of Indian federalism?',
+     options:['Written Constitution','Independent Judiciary','Single Citizenship','Equal power to States'],
+     answer:3,explanation:'In Indian federalism, the Centre is stronger than states. Equal power to states is NOT a feature of Indian federation.'},
+    // ENGLISH
+    {id:34,class:9,subject:'english',unit:'Grammar',outcome:'Identify parts of speech',level:'L1',type:'MCQ',marks:1,
+     q:'In the sentence "She runs quickly", the word "quickly" is:',
+     options:['Adjective','Noun','Adverb','Verb'],
+     answer:2,explanation:'"Quickly" modifies the verb "runs" — it is an adverb of manner.'},
+    {id:35,class:9,subject:'english',unit:'Grammar',outcome:'Use tenses correctly',level:'L2',type:'MCQ',marks:1,
+     q:'Choose the correct form: "By tomorrow, she _____ the project."',
+     options:['completes','will complete','will have completed','had completed'],
+     answer:2,explanation:'"By tomorrow" indicates future perfect — action completed before a future point: "will have completed".'},
+    // CASE-BASED QUESTIONS
+    {id:36,class:9,subject:'science',unit:'Matter',outcome:'Apply particle theory',level:'L3',type:'CASE',marks:4,
+     passage:'Riya conducted an experiment. She put a crystal of potassium permanganate in a beaker of water without stirring. After 30 minutes, she noticed the purple colour had spread throughout the water. She also noticed that when she heated the water, the colour spread faster.',
+     q:'Based on this experiment, answer the following:\n(a) Name the phenomenon observed.\n(b) Which particles are responsible for this phenomenon?\n(c) Why does heating speed up the process?\n(d) Would this phenomenon occur faster in a gas or liquid? Explain.',
+     answer:'(a) Diffusion — spontaneous mixing of substances due to particle movement.\n(b) Molecules/particles of KMnO₄ and water are responsible.\n(c) Heating increases kinetic energy of particles, causing faster movement and faster diffusion.\n(d) Faster in gas — gas particles have much higher kinetic energy and more space between particles.',
+     explanation:'Diffusion rate depends on temperature and particle size/density. Higher temperature = more kinetic energy = faster diffusion.'},
+    {id:37,class:10,subject:'science',unit:'Electricity',outcome:'Analyse circuits',level:'L4',type:'CASE',marks:4,
+     passage:'A household has the following electrical appliances: a 60W bulb, a 100W fan, a 1500W heater, and a 200W TV. The house is connected to 220V supply with a 15A fuse.',
+     q:'(a) Calculate the total current when all appliances are on.\n(b) Will the fuse blow? Why?\n(c) Which appliance consumes most electricity in one hour?\n(d) How can the family reduce electricity consumption?',
+     answer:'(a) Total power = 60+100+1500+200 = 1860W. I = P/V = 1860/220 ≈ 8.5A\n(b) No, 8.5A < 15A fuse rating, so fuse will NOT blow.\n(c) Heater (1500W) consumes most: 1.5 kWh in one hour.\n(d) Replace heater with energy-efficient alternatives, use LED bulbs, switch off when not in use.',
+     explanation:'Power = Voltage × Current. Fuse protects by melting when current exceeds rated value.'},
+    // SHORT ANSWER questions
+    {id:38,class:9,subject:'science',unit:'Motion',outcome:'Explain concepts',level:'L2',type:'SHORT',marks:3,
+     q:'Distinguish between distance and displacement with an example. A person walks 4 km East and then 3 km North. Calculate displacement.',
+     answer:'Distance: total path length traveled (scalar). Displacement: shortest distance between initial and final position with direction (vector).\nFor the person: Displacement = √(4² + 3²) = √(16+9) = √25 = 5 km (in NE direction)',
+     explanation:'Distance ≥ Displacement always. Displacement can be zero even if distance is non-zero.'},
+    {id:39,class:10,subject:'science',unit:'Life Processes',outcome:'Explain breathing',level:'L2',type:'SHORT',marks:3,
+     q:'Explain the mechanism of breathing in human beings. Why is breathing different from respiration?',
+     answer:'Breathing: mechanical process of taking air in (inhalation) and pushing it out (exhalation) through diaphragm and rib movement.\nRespiration: biochemical process of oxidizing food to release energy (ATP) — occurs inside cells.\nBreathing provides oxygen needed for cellular respiration.',
+     explanation:'Breathing is physical; respiration is chemical. Breathing supports respiration.'},
+    {id:40,class:9,subject:'maths',unit:'Number Systems',outcome:'Represent surds',level:'L3',type:'SHORT',marks:3,
+     q:'Represent √5 on the number line. Show all construction steps.',
+     answer:'Steps: 1. Draw number line, mark O(0) and A(1).\n2. Mark B on the line such that AB = 2 units.\n3. Find midpoint M of OB.\n4. Draw semicircle with center M and radius MB.\n5. Draw perpendicular at A meeting semicircle at P.\n6. AP = √(1×4) = √4 ... actually for √5: OB=3, AB=1, construct √5 using Pythagoras.',
+     explanation:'√5 can be constructed using Pythagorean theorem: √(2²+1²) = √5.'},
+    {id:41,class:10,subject:'social',unit:'Development',outcome:'Analyse development goals',level:'L4',type:'SHORT',marks:3,
+     q:'Why is per capita income considered an inadequate measure of development? Suggest a better measure.',
+     answer:'Per capita income is inadequate because:\n1. It hides inequality (rich-poor gap)\n2. Does not measure health, education, or quality of life\n3. Does not reflect environmental sustainability\nBetter measure: Human Development Index (HDI) — combines income, health (life expectancy), and education (literacy/enrollment).',
+     explanation:'Development is multidimensional. HDI captures three key dimensions beyond just economic income.'},
+    // Long answer
+    {id:42,class:10,subject:'science',unit:'Carbon Compounds',outcome:'Apply carbon chemistry',level:'L3',type:'LONG',marks:5,
+     q:'(a) What are hydrocarbons? Give two examples each of saturated and unsaturated hydrocarbons.\n(b) What is the difference between alkanes and alkenes?\n(c) Why does carbon form a large number of compounds?\n(d) Name the functional group in: (i) alcohols (ii) carboxylic acids',
+     answer:'(a) Hydrocarbons: compounds containing only carbon and hydrogen.\nSaturated: Methane (CH₄), Ethane (C₂H₆). Unsaturated: Ethene (C₂H₄), Ethyne (C₂H₂)\n(b) Alkanes: single bonds (CₙH₂ₙ₊₂), saturated. Alkenes: double bond (CₙH₂ₙ), unsaturated, more reactive.\n(c) Carbon forms many compounds due to: (i) Catenation — can bond with itself in long chains (ii) Tetravalency — 4 bonds possible, allows variety.\n(d) (i) Alcohols: –OH (hydroxyl) (ii) Carboxylic acids: –COOH (carboxyl)',
+     explanation:'Carbon chemistry (organic chemistry) is vast due to catenation and tetravalency.'},
+    // Additional questions for all levels
+    {id:43,class:9,subject:'science',unit:'Atoms',outcome:'Calculate atomic mass',level:'L2',type:'MCQ',marks:1,
+     q:'The atomic mass of carbon is 12. This means one atom of carbon has a mass equal to:',
+     options:['12 grams','12 amu','12 kg','12 molecules'],
+     answer:1,explanation:'Atomic mass is measured in atomic mass units (amu). Carbon-12 has mass = 12 amu.'},
+    {id:44,class:9,subject:'science',unit:'Gravitation',outcome:'Define weight',level:'L1',type:'MCQ',marks:1,
+     q:'The weight of an object on the Moon is approximately:',
+     options:['Same as on Earth','6 times more than on Earth','1/6th of weight on Earth','1/10th of weight on Earth'],
+     answer:2,explanation:"Moon's gravity = 1/6th of Earth's. W=mg, so weight on Moon = 1/6 × weight on Earth."},
+    {id:45,class:10,subject:'science',unit:'Genetics',outcome:'Understand heredity',level:'L3',type:'MCQ',marks:1,
+     q:"In Mendel's experiment, when a tall plant (TT) was crossed with dwarf plant (tt), the F1 generation was:",
+     options:['All dwarf','All tall','50% tall, 50% dwarf','75% tall, 25% dwarf'],
+     answer:1,explanation:'TT × tt = all Tt (tall) in F1. Tall (T) is dominant over dwarf (t).'},
+    {id:46,class:10,subject:'science',unit:'Environment',outcome:'Analyse ecosystems',level:'L4',type:'MCQ',marks:1,
+     q:'If all the decomposers in a forest ecosystem were eliminated, the most immediate consequence would be:',
+     options:['All animals would die','Plants would grow better','Nutrients would not be recycled back to soil','Oxygen levels would increase'],
+     answer:2,explanation:'Decomposers break down dead matter and recycle nutrients to soil. Without them, nutrient cycling stops.'},
+    {id:47,class:9,subject:'maths',unit:'Coordinate Geometry',outcome:'Plot points',level:'L1',type:'MCQ',marks:1,
+     q:'The point (0, -4) lies on:',
+     options:['X-axis','Y-axis','Origin','3rd quadrant'],
+     answer:1,explanation:'Points with x-coordinate = 0 lie on the Y-axis.'},
+    {id:48,class:9,subject:'maths',unit:'Coordinate Geometry',outcome:'Find distance',level:'L3',type:'MCQ',marks:1,
+     q:'Distance between points A(3, 4) and B(0, 0) is:',
+     options:['3','4','5','7'],
+     answer:2,explanation:'Distance = √(3²+4²) = √(9+16) = √25 = 5 units.'},
+    {id:49,class:10,subject:'social',unit:'Resources',outcome:'Classify resources',level:'L2',type:'MCQ',marks:1,
+     q:'Which of the following is a non-renewable resource?',
+     options:['Solar energy','Wind energy','Coal','Water'],
+     answer:2,explanation:'Coal is a fossil fuel — formed over millions of years and cannot be replenished in human timescales.'},
+    {id:50,class:10,subject:'social',unit:'Democracy',outcome:'Evaluate democracy',level:'L4',type:'MCQ',marks:1,
+     q:'Which of the following best explains why democracies are generally better at handling famines than non-democracies?',
+     options:['They have more food','Leaders fear losing elections if people suffer','They have better technology','They have international support'],
+     answer:1,explanation:'In democracies, leaders are accountable through elections, so they have strong incentives to prevent food crises affecting voters.'},
+    {id:51,class:9,subject:'english',unit:'Writing',outcome:'Identify narrative elements',level:'L2',type:'MCQ',marks:1,
+     q:'The central message or moral of a story is called its:',
+     options:['Plot','Setting','Theme','Climax'],
+     answer:2,explanation:'The theme is the central idea or message the author conveys through the story.'},
+    {id:52,class:9,subject:'english',unit:'Reading',outcome:'Comprehend and infer',level:'L4',type:'MCQ',marks:1,
+     q:'When a writer describes a character\'s actions rather than directly stating their personality, this is called:',
+     options:['Direct characterization','Indirect characterization','Personification','Foreshadowing'],
+     answer:1,explanation:'Indirect characterization shows character through actions, speech, and behavior rather than explicit description.'}
+  ]
+};
+
+// Policy pages data
+const POLICIES = [
+  {
+    id:1, title:'NEP 2020 and Examination Reform',
+    icon:'🏛️',
+    content:`<h2>NEP 2020 and Examination Reform in India</h2>
+<p>The National Education Policy (NEP) 2020 represents the most comprehensive reform of India's education system since the 1986 policy. At its heart, NEP 2020 calls for a fundamental transformation in how students are assessed — moving away from high-stakes rote examinations toward continuous, competency-based evaluation.</p>
+<h3>Core Principles of NEP 2020 Assessment Reform</h3>
+<p>NEP 2020 proposes that examinations should test higher-order skills such as analysis, critical thinking, and conceptual clarity rather than just memory and recall. The policy explicitly states that "the aim of assessment should be to help students and their teachers identify strengths and areas for improvement, and also to improve teaching and learning quality."</p>
+<p>One of the most significant proposals is the restructuring of the board examination system. NEP 2020 recommends that board exams be made "easier" in the sense of testing core competencies rather than rote memorization. It proposes that students may take board exams on at least two occasions during a given school year to reduce stress and improve outcomes.</p>
+<h3>Semester System and Modular Assessment</h3>
+<p>The policy encourages a semester-based system and modular assessments. Instead of one final examination determining a student's entire year, continuous assessment through projects, portfolios, oral presentations, and practical demonstrations should contribute to the final grade. This holistic approach captures a student's true capabilities.</p>
+<h3>Reducing High-Stakes Examination Pressure</h3>
+<p>NEP 2020 recognizes that the current examination system creates enormous psychological pressure, particularly for Classes 10 and 12 students. The policy advocates for reducing the significance of any single examination, distributing assessment throughout the year, and creating a supportive learning environment.</p>
+<div class="reflect">💭 Reflection Prompt: Think about your own examination experiences. How much of what you memorized for exams did you actually understand and retain? How would your learning experience change if exams tested your ability to apply concepts?</div>
+<h3>Technology Integration in Assessment</h3>
+<p>NEP 2020 envisions a National Assessment Centre (PARAKH) that will develop guidelines for assessment, support state education boards, and develop assessment tools that go beyond paper-pencil testing. Digital assessments, AI-assisted feedback, and online learning portfolios are all envisioned as part of the reformed assessment ecosystem.</p>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> When preparing students for the new assessment paradigm, focus on teaching them to explain their reasoning, not just state answers. Ask "why" and "how" questions regularly. Encourage students to make connections between topics and apply learning to real-life situations.</div>`
+  },
+  {
+    id:2, title:'NCF 2023 Competency-Based Assessment',
+    icon:'📋',
+    content:`<h2>NCF 2023 Competency-Based Assessment Framework</h2>
+<p>The National Curriculum Framework for School Education 2023 (NCF-SE 2023) provides detailed guidance on competency-based assessment. It represents a major shift from content-based testing to competency-based evaluation, where students are assessed on what they can do with their knowledge rather than what they can recall.</p>
+<h3>What Are Competencies?</h3>
+<p>A competency is the ability to apply knowledge, skills, and attitudes in new and varied contexts. NCF 2023 defines competencies as "combinations of knowledge, skills, and dispositions that enable effective action." A student who has developed a competency can not only recall information but can use it to solve problems, make decisions, and create new understanding.</p>
+<h3>Competency Levels in NCF 2023</h3>
+<p>NCF 2023 describes learning outcomes at multiple levels for each subject and grade. These levels progress from basic recall to complex application. For example, in Mathematics:</p>
+<ul><li><strong>Level 1 (Knowledge):</strong> Can recall multiplication tables and basic formulas</li>
+<li><strong>Level 2 (Understanding):</strong> Can explain why a formula works</li>
+<li><strong>Level 3 (Application):</strong> Can solve word problems using formulas</li>
+<li><strong>Level 4 (Higher Order):</strong> Can analyze data, identify patterns, and create mathematical models</li></ul>
+<h3>Learning Outcomes Framework</h3>
+<p>NCF 2023 provides subject-wise and grade-wise learning outcomes. These outcomes describe what a student should know, understand, and be able to do at the end of a learning period. Assessment should directly test these outcomes, not peripheral or trivial details.</p>
+<div class="reflect">💭 Reflection Prompt: For any topic you're studying, can you classify your understanding into the four levels above? Where are you strongest? Which level needs more work?</div>
+<h3>Formative vs. Summative Assessment</h3>
+<p>NCF 2023 emphasizes the importance of formative assessment — ongoing assessment for learning — alongside summative assessment. Formative assessment includes class participation, short quizzes, peer assessment, self-assessment, and regular homework. It provides feedback during the learning process, allowing course corrections before the final examination.</p>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Design at least 40% of your classroom activities as formative assessments. Quick exit tickets, one-minute papers, and peer discussions are powerful formative tools that require no marking load.</div>`
+  },
+  {
+    id:3, title:'PARAKH Principles',
+    icon:'⚖️',
+    content:`<h2>PARAKH: Performance Assessment Review and Analysis of Knowledge for Holistic Development</h2>
+<p>PARAKH is the National Assessment Centre established under NEP 2020. Its purpose is to set standards and guidelines for student assessment, design competency-based assessments, and help bring uniformity in assessment standards across Indian states.</p>
+<h3>Core Principles of PARAKH</h3>
+<p>PARAKH operates on the principle that assessment should serve learning, not just measure it. Its guidelines emphasize validity (measuring what it claims to measure), reliability (consistency of results), fairness (equal opportunity for all students), and transparency (clear criteria known to students in advance).</p>
+<h3>PARAKH's National Sample-Based Assessment</h3>
+<p>PARAKH conducts periodic national sample-based assessments to monitor learning outcomes across the country. These assessments provide data on where learning gaps exist at the national level, helping policymakers direct resources effectively. Unlike board examinations, these are not high-stakes for individual students.</p>
+<h3>State Examination Reform Support</h3>
+<p>PARAKH works with state education departments to reform examination design. This includes training question paper setters in competency-based question construction, developing item banks, and creating standardized rubrics for assessment.</p>
+<div class="reflect">💭 Reflection Prompt: If you were designing a "fair" examination, what factors would you consider? How would you ensure every student has an equal opportunity to demonstrate their learning?</div>
+<h3>Assessment Without Fear</h3>
+<p>A central tenet of PARAKH is creating an assessment ecosystem where students are not afraid of examination. This requires clear, transparent assessment criteria, multiple opportunities for assessment, de-emphasis of rank and comparison, and focus on individual growth rather than competitive ranking.</p>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Share assessment rubrics with students before any test. When students know exactly what they'll be evaluated on, anxiety decreases and performance improves. Rubrics also develop metacognitive awareness.</div>`
+  },
+  {
+    id:4, title:"Bloom's Taxonomy Simplified",
+    icon:'🧠',
+    content:`<h2>Bloom's Taxonomy: A Framework for Higher-Order Thinking</h2>
+<p>Bloom's Taxonomy, developed by Benjamin Bloom in 1956 and revised in 2001, is the most widely used framework for classifying educational objectives. It describes six levels of cognitive complexity, from simple recall to sophisticated evaluation and creation.</p>
+<h3>The Six Levels</h3>
+<p><strong>Level 1 — Remember (Knowledge):</strong> The ability to recall facts, definitions, dates, and formulas. Example: "Name the three laws of motion." Questions at this level use words like: define, list, recall, identify, name, state.</p>
+<p><strong>Level 2 — Understand (Comprehension):</strong> The ability to explain or interpret information. Example: "Explain why objects fall to the ground." Keywords: explain, describe, summarize, classify, interpret, paraphrase.</p>
+<p><strong>Level 3 — Apply (Application):</strong> The ability to use knowledge in new situations. Example: "Calculate the time taken for a ball to fall from 45m." Keywords: calculate, solve, demonstrate, use, apply, construct.</p>
+<p><strong>Level 4 — Analyze (Analysis):</strong> The ability to break down information and identify relationships. Example: "Compare the advantages and disadvantages of nuclear energy." Keywords: compare, contrast, distinguish, examine, differentiate, analyze.</p>
+<p><strong>Level 5 — Evaluate (Evaluation):</strong> The ability to make judgments based on criteria. Example: "Assess whether solar energy is a feasible solution for rural India." Keywords: evaluate, justify, critique, defend, argue, assess.</p>
+<p><strong>Level 6 — Create (Synthesis):</strong> The ability to produce new ideas or products. Example: "Design an experiment to test the effect of light on plant growth." Keywords: design, create, compose, construct, formulate, plan.</p>
+<div class="reflect">💭 Reflection Prompt: Take any question from your textbook. Which level of Bloom's Taxonomy does it target? Can you rewrite it to target a higher level?</div>
+<h3>Why HOTS Matters</h3>
+<p>Research consistently shows that students who develop higher-order thinking skills (HOTS — Levels 3-6) perform better in real-world problem-solving, adapt more easily to new situations, and retain knowledge longer than students who focus only on recall.</p>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Aim for a question distribution of 20% L1, 30% L2, 30% L3, and 20% L4+ in your assessments. This aligns with CBSE's revised blueprint structure and prepares students for board examination patterns.</div>`
+  },
+  {
+    id:5, title:'Designing Higher Order Questions',
+    icon:'✍️',
+    content:`<h2>Designing Higher Order Questions</h2>
+<p>Higher-order questions require students to go beyond memorization. They demand analysis, synthesis, evaluation, and creative application of knowledge. Designing such questions is both an art and a science.</p>
+<h3>Principles of Good Question Design</h3>
+<p>A good examination question should be: clearly worded (unambiguous), aligned to a specific learning outcome, appropriately challenging for the target level, free from cultural or linguistic bias, and practically valuable — testing something worth knowing.</p>
+<h3>Techniques for Writing HOTS Questions</h3>
+<p><strong>The "Why" Technique:</strong> Add "why" to any recall question. "What is Newton's first law?" becomes "Why does a ball continue rolling on a smooth surface even after the pushing force is removed?"</p>
+<p><strong>The "What if" Technique:</strong> Create hypothetical scenarios. "What would happen to the water cycle if all forests disappeared?"</p>
+<p><strong>The Application Scenario:</strong> Embed knowledge in real-life context. "A hospital needs to transport blood urgently but all roads are blocked. Using your knowledge of air pressure and liquids, suggest a method."</p>
+<p><strong>The Comparison Question:</strong> "Compare the process of photosynthesis in C3 and C4 plants, focusing on their adaptations to different environments."</p>
+<div class="reflect">💭 Reflection Prompt: Take any chapter from your textbook. Write one question at each of Bloom's six levels for a single concept in that chapter.</div>
+<h3>Case-Based Questions</h3>
+<p>Case-based questions present a real or realistic scenario and ask students to apply their knowledge to analyze and solve it. CBSE has been increasingly incorporating such questions since 2021. They test multiple competencies simultaneously and are harder to answer through mere memorization.</p>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Practice writing questions using newspaper articles, local events, or students' own experiences as contexts. This makes questions relevant and engaging while testing the same concepts.</div>`
+  },
+  {
+    id:6, title:'Moving Beyond Rote Learning',
+    icon:'🚀',
+    content:`<h2>Moving Beyond Rote Learning: Strategies for Deep Understanding</h2>
+<p>Rote learning — memorizing without understanding — has been the dominant mode of examination preparation in India for decades. While some memorization is necessary, over-reliance on it produces students who can answer predictable questions but struggle with novel problems.</p>
+<h3>Why Rote Learning Persists</h3>
+<p>Rote learning persists because examination systems reward it. When questions ask "State Newton's three laws," students need only memorize statements. But when questions ask "Design an experiment to verify Newton's second law," memorization alone cannot suffice. Changing assessment naturally changes learning behavior.</p>
+<h3>Strategies for Deep Learning</h3>
+<p><strong>Elaborative Interrogation:</strong> Instead of reading and re-reading, students should ask "why" and "how" about every concept. "Why does solubility increase with temperature?" requires deeper processing than "Define solubility."</p>
+<p><strong>Concept Mapping:</strong> Creating visual maps of relationships between ideas. This forces students to identify connections and hierarchies, building structural knowledge rather than isolated facts.</p>
+<p><strong>Teaching Others (Feynman Technique):</strong> Explaining a concept to someone else in simple language reveals gaps in understanding immediately. If you cannot explain it simply, you do not understand it deeply.</p>
+<p><strong>Spaced Repetition:</strong> Reviewing material at increasing intervals (1 day, 3 days, 1 week, 2 weeks) is proven to improve long-term retention compared to cramming.</p>
+<div class="reflect">💭 Reflection Prompt: Choose one topic you feel you know well. Try to explain it to someone without using any textbook language. What gaps did you discover?</div>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Assign "concept questions" as homework instead of recall questions. Ask students to explain a concept in their own words, give a real-life example, or compare it with another concept they know.</div>`
+  },
+  {
+    id:7, title:'Blueprint-Based Question Papers',
+    icon:'📐',
+    content:`<h2>Blueprint-Based Question Paper Design</h2>
+<p>A blueprint is the master plan for an examination. It specifies the content coverage, mark distribution, cognitive level distribution, and question type distribution of a question paper before any questions are written. Blueprints ensure fairness, comprehensiveness, and alignment with learning objectives.</p>
+<h3>Components of an Examination Blueprint</h3>
+<p>A standard examination blueprint specifies: total marks, duration, number of questions of each type (MCQ, short answer, long answer, case-based), marks per question type, units/chapters covered and their weightage, and cognitive level distribution (L1/L2/L3/L4 percentage).</p>
+<h3>CBSE Blueprint Structure (Example — Class 10 Science)</h3>
+<p>Section A: 20 MCQs of 1 mark each = 20 marks (Mix of L1, L2, L3). Section B: Case-based questions = 8 marks. Section C: Short answer questions (2 marks each) = 16 marks (L2, L3). Section D: Long answer questions (5 marks each) = 20 marks (L3, L4). Internal assessment = 20 marks. Total = 80 marks.</p>
+<h3>Cognitive Level Distribution</h3>
+<p>CBSE prescribes: 20-25% Knowledge/Recall (L1), 25-30% Understanding (L2), 30-35% Application (L3), 10-15% HOTS/Analysis (L4). This ensures the paper tests a range of competencies, not just recall.</p>
+<div class="reflect">💭 Reflection Prompt: Look at a past year question paper. Can you identify which questions are L1, L2, L3, and L4? Does the distribution match CBSE guidelines?</div>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Share the blueprint with students before examinations. Knowing the structure removes anxiety and helps students allocate study time effectively.</div>`
+  },
+  {
+    id:8, title:'Diagnostic Assessment Logic',
+    icon:'🔬',
+    content:`<h2>Diagnostic Assessment: Understanding Before Prescribing</h2>
+<p>Just as a doctor diagnoses before prescribing, a teacher should assess before teaching. Diagnostic assessment identifies what students already know, what they misunderstand, and where they need support — before instruction, not just at the end.</p>
+<h3>Types of Diagnostic Information</h3>
+<p><strong>Prior Knowledge:</strong> What does the student already understand about this topic? Building on prior knowledge is far more effective than ignoring it.</p>
+<p><strong>Misconceptions:</strong> Students often hold incorrect beliefs (e.g., "heavier objects fall faster than lighter ones"). These must be explicitly addressed, not ignored.</p>
+<p><strong>Skill Gaps:</strong> Which prerequisite skills are missing? A student struggling with algebra often has gaps in arithmetic operations.</p>
+<p><strong>Learning Style Indicators:</strong> Does the student learn better with visual, auditory, or kinesthetic approaches?</p>
+<h3>Diagnostic Assessment Techniques</h3>
+<p>Pre-tests, concept maps, K-W-L charts (Know, Want to know, Learned), diagnostic interviews, and careful observation of student work during early activities all provide diagnostic information. The key is that diagnostic data must lead to differentiated instruction — different students may need different learning pathways.</p>
+<div class="reflect">💭 Reflection Prompt: For a topic you are currently studying, what did you already know before the chapter began? What misconceptions did you hold? How did instruction correct those misconceptions?</div>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Spend 5-10 minutes at the start of each new chapter doing a diagnostic activity. Even a simple "thumbs up/down/middle" check on 3-4 key prior concepts gives you valuable data for differentiating instruction.</div>`
+  },
+  {
+    id:9, title:'Case-Based & Source-Based Questions',
+    icon:'📚',
+    content:`<h2>Case-Based and Source-Based Questions in Modern Examinations</h2>
+<p>Case-based and source-based questions represent the most significant new addition to Indian board examinations in recent years. They require students to read, analyze, and respond to a given passage, data set, image, or scenario — testing comprehension, analysis, and application simultaneously.</p>
+<h3>Why Case-Based Questions?</h3>
+<p>Traditional questions test isolated knowledge. Case-based questions test the ability to integrate knowledge, read carefully, extract relevant information, apply concepts, and communicate understanding clearly. These are exactly the skills needed in higher education and professional life.</p>
+<h3>Structure of a Case-Based Question</h3>
+<p>A typical case-based question provides a stimulus (3-5 paragraph passage, data table, graph, or experimental description) followed by 4-6 sub-questions at different cognitive levels. The sub-questions range from simple comprehension (L1) to analysis and evaluation (L4).</p>
+<h3>Strategies for Answering Case-Based Questions</h3>
+<p>Read the entire passage first without attempting questions. Identify the topic and key facts. Read each question carefully. Find and underline relevant text in the passage. Answer in your own words, not just copying from the passage. For analysis questions, use your subject knowledge to go beyond the passage.</p>
+<div class="reflect">💭 Reflection Prompt: Find a news article related to a topic you are studying. Can you write 4 questions based on the article — one at each of the first four levels of Bloom's Taxonomy?</div>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Include one case-based question in every unit test, even if short. Students improve significantly with regular practice. Use newspaper articles, scientific reports, and local examples as stimuli.</div>`
+  },
+  {
+    id:10, title:'Analytical & Application-Based Problems',
+    icon:'🔍',
+    content:`<h2>Developing Analytical and Application Skills</h2>
+<p>The ability to analyze information critically and apply concepts to new situations is the defining skill of the 21st century. India's examination reforms are driving a strong push toward application-based questions, but many students lack the practice and strategies needed to excel at them.</p>
+<h3>What Makes a Problem "Application-Based"?</h3>
+<p>An application-based problem presents a novel situation (never seen in textbook or past papers) and requires students to use relevant concepts, formulas, or principles to solve it. The context is new, but the underlying knowledge is familiar. This tests genuine understanding.</p>
+<h3>Framework for Solving Application Problems</h3>
+<p><strong>Step 1 — Identify:</strong> What is this problem really asking? What domain/topic does it belong to?</p>
+<p><strong>Step 2 — Connect:</strong> Which concepts, formulas, or principles from that topic are relevant?</p>
+<p><strong>Step 3 — Plan:</strong> What is the logical sequence of steps needed to solve this?</p>
+<p><strong>Step 4 — Execute:</strong> Carry out the solution, showing all working.</p>
+<p><strong>Step 5 — Verify:</strong> Does the answer make sense? Are units correct? Is the magnitude reasonable?</p>
+<h3>Common Analytical Question Types</h3>
+<p>Data interpretation (reading graphs and tables), comparison and contrast, cause-and-effect analysis, problem-solving in unfamiliar contexts, evaluation of evidence, and design problems (designing an experiment, a solution, or a model) are the most common analytical question types in reformed examinations.</p>
+<div class="reflect">💭 Reflection Prompt: When you encounter a problem you've never seen before, what is your first reaction? What strategies do you currently use? How effective are they?</div>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Present students with ONE new unseen application problem at the start of each class. Discuss strategies together, not just the answer. The problem-solving process is more educational than the solution.</div>`
+  },
+  {
+    id:11, title:'Feedback for Improvement',
+    icon:'💡',
+    content:`<h2>Effective Feedback: The Engine of Improvement</h2>
+<p>Research consistently shows that effective feedback is the single most powerful intervention for improving student learning — more powerful than reducing class size, homework, or after-school tuition. Yet most examination feedback in India is limited to a score and a grade.</p>
+<h3>Characteristics of Effective Feedback</h3>
+<p><strong>Specific:</strong> "Your calculation in step 3 is correct, but in step 4, you applied the wrong formula" is far more useful than "Wrong answer."</p>
+<p><strong>Actionable:</strong> Feedback should tell students what to do differently, not just what went wrong.</p>
+<p><strong>Timely:</strong> Feedback given within 24-48 hours of the performance is most effective. Feedback given after 2 weeks has minimal impact.</p>
+<p><strong>Balanced:</strong> Acknowledge strengths before identifying areas for improvement. This maintains motivation.</p>
+<p><strong>Growth-Oriented:</strong> Frame feedback in terms of improvement potential, not fixed ability. "You can improve this by..." not "You're not good at this."</p>
+<h3>Self-Assessment and Peer Feedback</h3>
+<p>Teaching students to self-assess and provide peer feedback develops metacognitive skills, reduces dependence on teacher feedback, and scales feedback provision. Students who regularly self-assess show greater learning gains.</p>
+<div class="reflect">💭 Reflection Prompt: Think about the most helpful feedback you ever received. What made it effective? How did it change your approach?</div>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Use a simple feedback protocol: (1) Two stars and a wish — two specific strengths and one improvement point. (2) WWW/EBI — What Went Well / Even Better If. These structures take 2-3 minutes per student and dramatically improve the usefulness of feedback.</div>`
+  },
+  {
+    id:12, title:'Ethical & Fair Assessment',
+    icon:'⚖️',
+    content:`<h2>Ethics and Fairness in Educational Assessment</h2>
+<p>Assessment is never a neutral act. Every examination reflects choices about what is valued, whose knowledge is privileged, and what counts as intelligence. Ethical assessment design requires careful attention to fairness, inclusivity, and the prevention of systemic disadvantage.</p>
+<h3>Sources of Bias in Examinations</h3>
+<p>Questions can inadvertently favor students from urban backgrounds (referencing cultural experiences unavailable to rural students), students from English-medium schools (when testing in English), male students (certain stereotyped contexts), or high-income families (requiring access to resources or experiences tied to privilege).</p>
+<h3>Principles of Fair Assessment</h3>
+<p>Universal Design for Learning (UDL) principles suggest that assessments should be accessible to all learners. This includes providing multiple means of response, ensuring language clarity, avoiding culturally loaded examples, and providing appropriate accommodations for students with disabilities.</p>
+<h3>Academic Integrity</h3>
+<p>Ethical assessment includes creating conditions that reduce the incentive and opportunity for academic dishonesty. When examinations primarily test recall, the incentive to cheat is high. When they test genuine understanding through novel application, cheating is both harder and less advantageous.</p>
+<div class="reflect">💭 Reflection Prompt: Have you ever encountered an examination question that seemed unfair to certain students? What made it unfair, and how could it be redesigned?</div>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Review your question papers for potential bias. Ask a colleague from a different background to review them. Simple language, universal examples, and contexts familiar to all students improve fairness.</div>`
+  },
+  {
+    id:13, title:'Preparing Students for Future Exams',
+    icon:'🎯',
+    content:`<h2>Preparing Students for the Reformed Examination Landscape</h2>
+<p>The examination landscape in India is changing rapidly. From CBSE's increased emphasis on competency-based questions to CUET for university admissions, from JEE's analytical problems to competitive examinations at every level — students who can think, analyze, and apply will have a decisive advantage.</p>
+<h3>Strategic Exam Preparation</h3>
+<p><strong>Understand the Blueprint:</strong> Before beginning preparation, study the examination blueprint. Know exactly how many marks come from which units, at which cognitive levels, and in which formats. Strategic preparation is blueprint-driven.</p>
+<p><strong>Practice Question Types:</strong> Don't just study content — practice the specific question formats that will appear. If the exam has case-based questions, practice reading and analyzing passages regularly.</p>
+<p><strong>Build a Concept Map Library:</strong> For each chapter, create a one-page concept map showing all key ideas and their relationships. This is your revision tool — understanding a map is far faster and deeper than re-reading text.</p>
+<p><strong>Timed Practice:</strong> Regularly practice under timed conditions. Exam performance is partly a skill in itself — time management, question selection strategy, and managing anxiety.</p>
+<h3>The Long Game: Building Genuine Competency</h3>
+<p>Short-term examination success through rote learning is possible but brittle. It does not translate to CUET, JEE, NEET, or life beyond school. Building genuine competency — the ability to think, reason, and apply — takes more time but creates durable advantage.</p>
+<div class="reflect">💭 Reflection Prompt: Write down your learning goals for the next 6 months. Not just marks targets, but competency goals: "I want to be able to solve any application problem in electromagnetism" or "I want to be able to analyze any historical source for bias."</div>
+<div class="teacher-note"><strong>👨‍🏫 Teacher Guidance:</strong> Help students develop examination strategy, not just content knowledge. Discuss with them how to allocate time, how to decide when to move on from a difficult question, and how to structure long answers for maximum marks.</div>`
+  }
+];
+
+// ============================================================
+// APP STATE
+// ============================================================
+let currentTest = {questions:[], answers:{}, startTime:null, timer:null, timeLeft:0, currentQ:0, submitted:false};
+let mockExamState = {active:false};
+
+// ============================================================
+// LOCALSTORAGE HELPERS
+// ============================================================
+function ls(key){ try{return JSON.parse(localStorage.getItem(key))||null}catch{return null} }
+function lsSet(key,val){ try{localStorage.setItem(key,JSON.stringify(val))}catch{} }
+function getHistory(){ return ls('practiceResults')||[]; }
+function saveResult(r){ const h=getHistory(); h.unshift(r); if(h.length>50)h.pop(); lsSet('practiceResults',h); }
+
+// ============================================================
+// SCREEN MANAGEMENT
+// ============================================================
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const s = document.getElementById(id);
+  if(s){ s.classList.add('active'); s.scrollTop=0; window.scrollTo(0,0); }
+  document.getElementById('topnav').style.display = (id==='home')?'none':'flex';
+  if(id==='home') updateHomeStats();
+  if(id==='progress') renderProgress();
+  if(id==='skill-gap') renderSkillGap();
+  if(id==='teacher') renderTeacher();
+}
+function showHome(){ showScreen('home'); }
+
+// ============================================================
+// HOME STATS
+// ============================================================
+function updateHomeStats(){
+  const h = getHistory();
+  document.getElementById('stat-tests').textContent = h.length;
+  if(h.length>0){
+    const avg = Math.round(h.reduce((a,r)=>a+r.pct,0)/h.length);
+    document.getElementById('stat-avg').textContent = avg+'%';
+  }
+}
+
+// ============================================================
+// QUESTION SELECTION
+// ============================================================
+function getQuestions(cls, subj, diff, count){
+  let pool = QB.questions.filter(q=>q.subject===subj);
+  if(pool.length===0) pool = QB.questions; // fallback
+  
+  const levelMap = {easy:['L1'],medium:['L2'],hard:['L3'],hots:['L4'],mixed:['L1','L2','L3','L4']};
+  const levels = levelMap[diff]||['L1','L2','L3','L4'];
+  pool = pool.filter(q=>levels.includes(q.level));
+  if(pool.length===0) pool = QB.questions.slice(0,40);
+  
+  // Shuffle
+  const shuffled = [...pool].sort(()=>Math.random()-0.5);
+  return shuffled.slice(0, Math.min(count, shuffled.length));
+}
+
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+
+// ============================================================
+// PRACTICE TEST
+// ============================================================
+function startPracticeTest(){
+  const cls = parseInt(document.getElementById('ps-class').value);
+  const subj = document.getElementById('ps-subject').value;
+  const diff = document.getElementById('ps-diff').value;
+  const count = parseInt(document.getElementById('ps-count').value);
+  const timer = parseInt(document.getElementById('ps-timer').value);
+  
+  const qs = getQuestions(cls, subj, diff, count);
+  if(qs.length===0){ alert('No questions available for this selection. Try different settings.'); return; }
+  
+  currentTest = {
+    questions: qs,
+    answers: {},
+    startTime: Date.now(),
+    timer: null,
+    timeLeft: timer*60,
+    currentQ: 0,
+    submitted: false,
+    subject: subj,
+    class: cls
+  };
+  
+  renderTest();
+  showScreen('active-test');
+  
+  if(timer>0) startTimer(timer*60);
+  else document.getElementById('timer-display').textContent = '⏱ No Timer';
+}
+
+function renderTest(){
+  const q = currentTest.questions[currentTest.currentQ];
+  const total = currentTest.questions.length;
+  const ci = currentTest.currentQ;
+  
+  document.getElementById('q-current').textContent = ci+1;
+  document.getElementById('q-total').textContent = total;
+  document.getElementById('q-progress').style.width = ((ci+1)/total*100)+'%';
+  
+  const cont = document.getElementById('questions-container');
+  cont.innerHTML = renderQuestion(q, ci, false);
+  
+  // Restore answer
+  if(currentTest.answers[ci]!==undefined){
+    if(q.type==='MCQ'){
+      const opts = cont.querySelectorAll('.q-option');
+      opts.forEach((o,i)=>{ if(i===currentTest.answers[ci]) o.classList.add('selected'); });
+    }
+  }
+  
+  // Bind MCQ option clicks
+  if(q.type==='MCQ'){
+    cont.querySelectorAll('.q-option').forEach((o,i)=>{
+      o.onclick = ()=>{ 
+        cont.querySelectorAll('.q-option').forEach(x=>x.classList.remove('selected'));
+        o.classList.add('selected');
+        currentTest.answers[ci] = i;
+      };
+    });
+  } else {
+    const ta = cont.querySelector('.q-short-ans');
+    if(ta){
+      ta.value = currentTest.answers[ci]||'';
+      ta.oninput = ()=>{ currentTest.answers[ci]=ta.value; };
+    }
+  }
+  
+  document.getElementById('btn-prev').disabled = ci===0;
+  document.getElementById('btn-next').textContent = (ci===total-1)?'Submit ✓':'Next →';
+  document.getElementById('btn-next').onclick = (ci===total-1)?submitTest:nextQuestion;
+}
+
+function renderQuestion(q, idx, showAnswer){
+  const levelColors = {L1:'tag-l1',L2:'tag-l2',L3:'tag-l3',L4:'tag-l4'};
+  let html = `<div class="question-block">
+    <div class="q-meta">
+      <span class="q-tag ${levelColors[q.level]||'tag-l1'}">${q.level}</span>
+      <span class="q-tag tag-${q.type.toLowerCase()}">${q.type}</span>
+      <span class="q-tag" style="background:rgba(255,255,255,0.1);color:var(--muted)">${q.marks} mark${q.marks>1?'s':''}</span>
+    </div>`;
+  
+  if(q.passage) html += `<div style="background:rgba(200,168,75,0.07);border-left:3px solid var(--gold);padding:10px;border-radius:0 6px 6px 0;margin-bottom:10px;font-size:13px;color:var(--light)">${q.passage}</div>`;
+  
+  html += `<div class="q-text">${q.q.replace(/\n/g,'<br/>')}</div>`;
+  
+  if(q.type==='MCQ'){
+    html += `<div class="q-options">`;
+    q.options.forEach((opt,i)=>{
+      let cls='q-option';
+      if(showAnswer){
+        if(i===q.answer) cls+=' correct';
+        else if(currentTest.answers && currentTest.answers[idx]===i && i!==q.answer) cls+=' wrong';
+      }
+      html += `<div class="${cls}" data-i="${i}"><span style="color:var(--gold);font-weight:700;flex-shrink:0">${String.fromCharCode(65+i)}.</span>${opt}</div>`;
+    });
+    html += `</div>`;
+  } else {
+    html += `<textarea class="q-short-ans" placeholder="Write your answer here..."></textarea>`;
+    if(showAnswer) html += `<div style="background:rgba(200,168,75,0.1);padding:10px;border-radius:6px;font-size:12px;color:var(--light);margin-top:8px"><strong style="color:var(--gold)">Model Answer:</strong><br/>${q.answer.replace(/\n/g,'<br/>')}</div>`;
+  }
+  
+  if(showAnswer && q.explanation){
+    html += `<div class="q-explanation show">💡 ${q.explanation}</div>`;
+  }
+  
+  html += `</div>`;
+  return html;
+}
+
+function nextQuestion(){
+  if(currentTest.currentQ < currentTest.questions.length-1){
+    currentTest.currentQ++;
+    renderTest();
+    window.scrollTo(0,0);
+  }
+}
+function prevQuestion(){
+  if(currentTest.currentQ>0){
+    currentTest.currentQ--;
+    renderTest();
+    window.scrollTo(0,0);
+  }
+}
+
+function startTimer(seconds){
+  currentTest.timeLeft = seconds;
+  const display = document.getElementById('timer-display');
+  function tick(){
+    if(currentTest.submitted) return;
+    const m = Math.floor(currentTest.timeLeft/60);
+    const s = currentTest.timeLeft%60;
+    display.textContent = `⏱ ${m}:${s.toString().padStart(2,'0')}`;
+    display.className='';
+    if(currentTest.timeLeft<=120) display.className='warn';
+    if(currentTest.timeLeft<=30) display.className='danger';
+    if(currentTest.timeLeft<=0){ submitTest(); return; }
+    currentTest.timeLeft--;
+  }
+  tick();
+  currentTest.timer = setInterval(tick,1000);
+}
+
+function submitTest(){
+  if(currentTest.submitted) return;
+  currentTest.submitted = true;
+  if(currentTest.timer) clearInterval(currentTest.timer);
+  
+  const qs = currentTest.questions;
+  let correct=0, total=0, objTotal=0;
+  const levelStats = {L1:{c:0,t:0},L2:{c:0,t:0},L3:{c:0,t:0},L4:{c:0,t:0}};
+  
+  qs.forEach((q,i)=>{
+    if(!levelStats[q.level]) levelStats[q.level]={c:0,t:0};
+    levelStats[q.level].t++;
+    if(q.type==='MCQ'){
+      objTotal++;
+      if(currentTest.answers[i]===q.answer){
+        correct++;
+        levelStats[q.level].c++;
+      }
+    }
+  });
+  
+  const pct = objTotal>0 ? Math.round((correct/objTotal)*100) : 0;
+  const grades = [{t:90,g:'A+',col:'#27ae60'},{t:75,g:'A',col:'#2ecc71'},{t:60,g:'B',col:'#f39c12'},{t:45,g:'C',col:'#e67e22'},{t:0,g:'D',col:'#e74c3c'}];
+  const grade = grades.find(g=>pct>=g.t)||grades[4];
+  
+  // Save result
+  saveResult({
+    date: new Date().toLocaleDateString('en-IN'),
+    subject: currentTest.subject,
+    class: currentTest.class,
+    pct, correct, objTotal,
+    levelStats,
+    ts: Date.now()
+  });
+  
+  // Render results
+  document.getElementById('res-score').textContent = pct+'%';
+  const gb = document.getElementById('res-grade');
+  gb.textContent = `Grade: ${grade.g}`;
+  gb.style.background = grade.col+'33';
+  gb.style.color = grade.col;
+  gb.style.border = `1px solid ${grade.col}`;
+  
+  const objCount = qs.filter(q=>q.type==='MCQ').length;
+  document.getElementById('res-summary').textContent = `${correct}/${objCount} MCQs correct • ${qs.length} total questions`;
+  
+  // Competency grid
+  const cg = document.getElementById('res-comp-grid');
+  const levelNames = {L1:'Knowledge',L2:'Understanding',L3:'Application',L4:'Analysis'};
+  const levelCols = {L1:'#27ae60',L2:'#f39c12',L3:'#e67e22',L4:'#9b59b6'};
+  cg.innerHTML = Object.entries(levelStats).map(([l,s])=>{
+    const p = s.t>0?Math.round(s.c/s.t*100):0;
+    return `<div class="comp-cell">
+      <div class="cc-val">${p}%</div>
+      <div class="cc-lbl">${levelNames[l]||l}</div>
+      <div class="cc-bar"><div class="cc-fill" style="width:${p}%;background:${levelCols[l]||'#ccc'}"></div></div>
+    </div>`;
+  }).join('');
+  
+  // Bar chart
+  const bc = document.getElementById('res-bar-chart');
+  bc.innerHTML = Object.entries(levelStats).map(([l,s])=>{
+    const p = s.t>0?Math.round(s.c/s.t*100):0;
+    return `<div class="bar-row">
+      <div class="bar-label">${l}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${p}%;background:${levelCols[l]||'var(--gold)'};">${p}%</div>
+      </div>
+    </div>`;
+  }).join('');
+  
+  // Gaps
+  const gaps = Object.entries(levelStats).filter(([l,s])=>s.t>0 && s.c/s.t<0.5).map(([l])=>l);
+  const gapsDiv = document.getElementById('res-gaps');
+  if(gaps.length>0){
+    gapsDiv.innerHTML = gaps.map(l=>`<div class="alert-card danger"><span class="a-icon">⚠️</span><div class="a-text"><div class="a-title">Weak Area: ${levelNames[l]||l}</div>Practice more ${l} level questions</div></div>`).join('');
+  } else {
+    gapsDiv.innerHTML = '<div class="alert-card ok"><span class="a-icon">✅</span><div class="a-text">Good performance across all levels!</div></div>';
+  }
+  
+  // Plan
+  const planDiv = document.getElementById('res-plan');
+  planDiv.innerHTML = `<ul style="color:var(--light);font-size:13px;padding-left:18px">
+    ${pct<50?'<li>Review all incorrect answers and their explanations</li>':''}
+    ${gaps.includes('L3')||gaps.includes('L4')?'<li>Focus on application-based practice questions</li>':''}
+    ${gaps.includes('L1')||gaps.includes('L2')?'<li>Revise core concepts and definitions</li>':''}
+    <li>Take the diagnostic test to identify specific topic gaps</li>
+    <li>Review policy frameworks to understand question patterns</li>
+  </ul>`;
+  
+  showScreen('test-results');
+}
+
+// ============================================================
+// REVIEW ANSWERS
+// ============================================================
+function reviewAnswers(){
+  const cont = document.getElementById('review-container');
+  cont.innerHTML = currentTest.questions.map((q,i)=>renderQuestion(q,i,true)).join('');
+  // Re-mark MCQ selections
+  currentTest.questions.forEach((q,i)=>{
+    if(q.type==='MCQ' && currentTest.answers[i]!==undefined){
+      const blocks = cont.querySelectorAll('.question-block');
+      const opts = blocks[i].querySelectorAll('.q-option');
+      opts.forEach((o,j)=>{
+        if(j===q.answer) o.classList.add('correct');
+        else if(j===currentTest.answers[i]) o.classList.add('wrong');
+      });
+    }
+  });
+  showScreen('review-screen');
+}
+
+// ============================================================
+// DIAGNOSTIC
+// ============================================================
+function startDiagnostic(){
+  const cls = document.getElementById('diag-class').value;
+  // Mix of all levels and subjects
+  const diagQ = shuffle(QB.questions).slice(0,20);
+  
+  currentTest = {
+    questions: diagQ,
+    answers: {},
+    startTime: Date.now(),
+    timer: null,
+    timeLeft: 0,
+    currentQ: 0,
+    submitted: false,
+    subject: 'diagnostic',
+    class: cls,
+    isDiagnostic: true
+  };
+  
+  renderTest();
+  showScreen('active-test');
+  
+  // Override submit to show diagnostic results
+  document.getElementById('btn-next').onclick = ()=>{
+    if(currentTest.currentQ < currentTest.questions.length-1) nextQuestion();
+    else showDiagnosticResults();
+  };
+}
+
+function showDiagnosticResults(){
+  const qs = currentTest.questions;
+  const levelStats = {L1:{c:0,t:0},L2:{c:0,t:0},L3:{c:0,t:0},L4:{c:0,t:0}};
+  qs.forEach((q,i)=>{
+    if(!levelStats[q.level]) levelStats[q.level]={c:0,t:0};
+    levelStats[q.level].t++;
+    if(q.type==='MCQ' && currentTest.answers[i]===q.answer) levelStats[q.level].c++;
+  });
+  
+  const levelNames = {L1:'Knowledge/Recall',L2:'Understanding',L3:'Application',L4:'Analysis/HOTS'};
+  const alerts = document.getElementById('diag-alerts');
+  alerts.innerHTML = '';
+  
+  Object.entries(levelStats).forEach(([l,s])=>{
+    if(s.t===0) return;
+    const p = Math.round(s.c/s.t*100);
+    let cls='ok', icon='✅', msg='Strong performance';
+    if(p<40){cls='danger';icon='🚨';msg='Critical gap — needs immediate attention';}
+    else if(p<60){cls='warn';icon='⚠️';msg='Moderate gap — needs focused practice';}
+    alerts.innerHTML += `<div class="alert-card ${cls}"><span class="a-icon">${icon}</span>
+      <div class="a-text"><div class="a-title">${levelNames[l]}: ${p}%</div>${msg}</div></div>`;
+  });
+  
+  // Bloom chart
+  const bloomChart = document.getElementById('diag-bloom-chart');
+  const levelCols = {L1:'#27ae60',L2:'#f39c12',L3:'#e67e22',L4:'#9b59b6'};
+  bloomChart.innerHTML = Object.entries(levelStats).map(([l,s])=>{
+    const p = s.t>0?Math.round(s.c/s.t*100):0;
+    return `<div class="bar-row">
+      <div class="bar-label" style="font-size:10px">${levelNames[l].split('/')[0]}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${p}%;background:${levelCols[l]}">${p}%</div>
+      </div>
+    </div>`;
+  }).join('');
+  
+  // Plan
+  const plan = document.getElementById('diag-plan');
+  const weakLevels = Object.entries(levelStats).filter(([l,s])=>s.t>0&&s.c/s.t<0.6).map(([l])=>l);
+  plan.innerHTML = `<ul style="color:var(--light);font-size:13px;padding-left:18px">
+    ${weakLevels.includes('L1')?'<li>🔴 Revise basic definitions and facts from all chapters</li>':''}
+    ${weakLevels.includes('L2')?'<li>🟠 Practice explaining concepts in your own words</li>':''}
+    ${weakLevels.includes('L3')?'<li>🟡 Solve 5 application problems daily across subjects</li>':''}
+    ${weakLevels.includes('L4')?'<li>🟣 Practice case-based and analytical questions weekly</li>':''}
+    <li>📖 Read policy framework pages for deeper understanding</li>
+    <li>📝 Take subject-specific practice tests to target weak areas</li>
+  </ul>`;
+  
+  document.getElementById('diag-results').classList.remove('hidden');
+  document.getElementById('diagnostic').scrollTop = 500;
+  showScreen('diagnostic');
+}
+
+// ============================================================
+// BLUEPRINT BUILDER
+// ============================================================
+function buildBlueprint(){
+  const cls = document.getElementById('bp-class').value;
+  const totalMarks = parseInt(document.getElementById('bp-marks').value);
+  const l1=parseInt(document.getElementById('bp-l1').value)||20;
+  const l2=parseInt(document.getElementById('bp-l2').value)||30;
+  const l3=parseInt(document.getElementById('bp-l3').value)||30;
+  const l4=parseInt(document.getElementById('bp-l4').value)||20;
+  
+  const total = l1+l2+l3+l4;
+  const m1=Math.round(totalMarks*l1/total);
+  const m2=Math.round(totalMarks*l2/total);
+  const m3=Math.round(totalMarks*l3/total);
+  const m4=totalMarks-m1-m2-m3;
+  
+  const tableWrap = document.getElementById('bp-table-wrap');
+  tableWrap.innerHTML = `
+    <h3 style="color:var(--gold);margin-bottom:10px;font-size:14px">Blueprint — Class ${cls} | Total: ${totalMarks} Marks</h3>
+    <table class="bp-table">
+      <thead><tr><th>Section</th><th>Question Type</th><th>Marks Each</th><th>Count</th><th>Total Marks</th><th>Cognitive Level</th></tr></thead>
+      <tbody>
+        <tr><td>A</td><td>MCQ / Objective</td><td>1</td><td>${m1}</td><td>${m1}</td><td>L1 – Knowledge (${l1}%)</td></tr>
+        <tr><td>B</td><td>MCQ + Short</td><td>2</td><td>${Math.floor(m2/2)}</td><td>${m2}</td><td>L2 – Understanding (${l2}%)</td></tr>
+        <tr><td>C</td><td>Case-Based / Application</td><td>3-4</td><td>${Math.floor(m3/3)}</td><td>${m3}</td><td>L3 – Application (${l3}%)</td></tr>
+        <tr><td>D</td><td>Long Answer / HOTS</td><td>5</td><td>${Math.floor(m4/5)}</td><td>${m4}</td><td>L4 – Analysis/HOTS (${l4}%)</td></tr>
+        <tr style="background:rgba(200,168,75,0.1)"><td colspan="3"><strong>Total</strong></td><td>${m1+Math.floor(m2/2)+Math.floor(m3/3)+Math.floor(m4/5)}</td><td><strong>${totalMarks}</strong></td><td>Balanced Distribution</td></tr>
+      </tbody>
+    </table>
+    <div class="card" style="margin:0">
+      <h3>📊 Competency Mapping</h3>
+      <div class="bar-chart">
+        <div class="bar-row"><div class="bar-label text-sm">L1 Know</div><div class="bar-track"><div class="bar-fill" style="width:${l1}%;background:#27ae60">${l1}% (${m1}m)</div></div></div>
+        <div class="bar-row"><div class="bar-label text-sm">L2 Understand</div><div class="bar-track"><div class="bar-fill" style="width:${l2}%;background:#f39c12">${l2}% (${m2}m)</div></div></div>
+        <div class="bar-row"><div class="bar-label text-sm">L3 Apply</div><div class="bar-track"><div class="bar-fill" style="width:${l3}%;background:#e67e22">${l3}% (${m3}m)</div></div></div>
+        <div class="bar-row"><div class="bar-label text-sm">L4 HOTS</div><div class="bar-track"><div class="bar-fill" style="width:${l4}%;background:#9b59b6">${l4}% (${m4}m)</div></div></div>
+      </div>
+    </div>`;
+  
+  document.getElementById('bp-output').classList.remove('hidden');
+}
+
+function printBlueprint(){
+  window.print();
+}
+
+// ============================================================
+// SKILL GAP ANALYZER
+// ============================================================
+function renderSkillGap(){
+  const h = getHistory();
+  const subjects = ['science','maths','social','english'];
+  const levels = ['L1','L2','L3','L4'];
+  const hm = document.getElementById('skill-heatmap');
+  
+  const stats = {};
+  subjects.forEach(s=>{ stats[s]={}; levels.forEach(l=>stats[s][l]={c:0,t:0}); });
+  h.forEach(r=>{
+    if(r.levelStats&&r.subject&&stats[r.subject]){
+      Object.entries(r.levelStats).forEach(([l,v])=>{
+        if(stats[r.subject][l]){
+          stats[r.subject][l].c+=v.c;
+          stats[r.subject][l].t+=v.t;
+        }
+      });
+    }
+  });
+  
+  let hmHtml='';
+  const subjNames={science:'Science',maths:'Maths',social:'Social',english:'English'};
+  subjects.forEach(s=>{
+    levels.forEach(l=>{
+      const st=stats[s][l];
+      const p=st.t>0?Math.round(st.c/st.t*100):-1;
+      let cls='hm-ok';
+      if(p===-1) cls='hm-ok';
+      else if(p<40) cls='hm-high';
+      else if(p<65) cls='hm-med';
+      else cls='hm-low';
+      hmHtml+=`<div class="hm-cell ${cls}">${subjNames[s].slice(0,3)}<br/>${l}<br/>${p>=0?p+'%':'—'}</div>`;
+    });
+  });
+  hm.innerHTML = hmHtml;
+  
+  // Improvement index
+  const ii = document.getElementById('improvement-index');
+  if(h.length<2){ ii.innerHTML='<p class="text-sm text-muted" style="padding:8px">Take at least 2 tests to see improvement trend.</p>'; }
+  else {
+    const recent = h.slice(0,3).reduce((a,r)=>a+r.pct,0)/Math.min(h.length,3);
+    const old = h.slice(-3).reduce((a,r)=>a+r.pct,0)/Math.min(h.length,3);
+    const diff = recent-old;
+    ii.innerHTML = `<div class="bar-row"><div class="bar-label">Trend</div><div class="bar-track"><div class="bar-fill" style="width:${Math.abs(diff)}%;background:${diff>=0?'#27ae60':'#e74c3c'}">${diff>=0?'+':''}${Math.round(diff)}%</div></div></div>
+    <p class="text-sm text-muted" style="margin-top:6px">${diff>=0?'📈 Improving! Keep it up.':'📉 Declining. Increase practice frequency.'}</p>`;
+  }
+  
+  // Risk areas
+  const risk = document.getElementById('risk-areas');
+  const weakAreas=[];
+  subjects.forEach(s=>levels.forEach(l=>{
+    const st=stats[s][l];
+    if(st.t>2 && st.c/st.t<0.5) weakAreas.push({s,l,p:Math.round(st.c/st.t*100)});
+  }));
+  if(weakAreas.length===0){
+    risk.innerHTML='<p class="text-sm text-muted" style="padding:8px">No high-risk areas detected. Take more tests for analysis.</p>';
+  } else {
+    risk.innerHTML = weakAreas.slice(0,6).map(w=>`<span class="chip">⚠️ ${subjNames[w.s]} ${w.l}: ${w.p}%</span>`).join('');
+  }
+}
+
+// ============================================================
+// PROGRESS TRACKER
+// ============================================================
+function renderProgress(){
+  const h = getHistory();
+  const statsDiv = document.getElementById('progress-stats');
+  if(h.length===0){
+    statsDiv.innerHTML='<div class="card" style="grid-column:1/-1"><p class="text-muted text-sm">No tests taken yet. Start practicing to see progress!</p></div>';
+    document.getElementById('progress-timeline').innerHTML='<h3 class="text-gold mb8">📋 Test History</h3><p class="text-sm text-muted">No history yet.</p>';
+    document.getElementById('score-line-chart').innerHTML='';
+    document.getElementById('radar-chart').innerHTML='';
+    return;
+  }
+  
+  const avg = Math.round(h.reduce((a,r)=>a+r.pct,0)/h.length);
+  const best = Math.max(...h.map(r=>r.pct));
+  const recent = h[0].pct;
+  
+  statsDiv.innerHTML = `
+    <div class="t-stat"><div class="ts-num">${h.length}</div><div class="ts-lbl">Tests Taken</div></div>
+    <div class="t-stat"><div class="ts-num">${avg}%</div><div class="ts-lbl">Average Score</div></div>
+    <div class="t-stat"><div class="ts-num">${best}%</div><div class="ts-lbl">Best Score</div></div>
+    <div class="t-stat"><div class="ts-num">${recent}%</div><div class="ts-lbl">Last Score</div></div>`;
+  
+  // Line chart (SVG)
+  const scores = h.slice(0,10).reverse().map(r=>r.pct);
+  const W=300,H=100,pad=20;
+  const maxS=Math.max(...scores,100);
+  const points = scores.map((s,i)=>{
+    const x=pad+i*(W-2*pad)/(Math.max(scores.length-1,1));
+    const y=H-pad-(s/maxS)*(H-2*pad);
+    return `${x},${y}`;
+  }).join(' ');
+  document.getElementById('score-line-chart').innerHTML=`
+    <svg viewBox="0 0 ${W} ${H}" width="100%">
+      <polyline points="${points}" fill="none" stroke="var(--gold)" stroke-width="2"/>
+      ${scores.map((s,i)=>{
+        const x=pad+i*(W-2*pad)/(Math.max(scores.length-1,1));
+        const y=H-pad-(s/maxS)*(H-2*pad);
+        return `<circle cx="${x}" cy="${y}" r="4" fill="var(--gold)"/>
+        <text x="${x}" y="${y-8}" text-anchor="middle" font-size="9" fill="var(--muted)">${s}%</text>`;
+      }).join('')}
+    </svg>`;
+  
+  // Radar chart (SVG)
+  const levelStats={L1:{c:0,t:0},L2:{c:0,t:0},L3:{c:0,t:0},L4:{c:0,t:0}};
+  h.forEach(r=>{if(r.levelStats)Object.entries(r.levelStats).forEach(([l,v])=>{if(levelStats[l]){levelStats[l].c+=v.c;levelStats[l].t+=v.t;}});});
+  const axes=[{l:'L1',a:-90},{l:'L2',a:0},{l:'L3',a:90},{l:'L4',a:180}];
+  const cx=100,cy=100,r=70;
+  const toXY=(a,v)=>{
+    const rad=(a-90)*Math.PI/180;
+    return {x:cx+v*r*Math.cos(rad),y:cy+v*r*Math.sin(rad)};
+  };
+  const pts=axes.map(ax=>{
+    const s=levelStats[ax.l];
+    const v=s.t>0?s.c/s.t:0;
+    return toXY(ax.a,v);
+  });
+  document.getElementById('radar-chart').innerHTML=`
+    <svg viewBox="0 0 200 200" width="200" height="200">
+      <!-- grid -->
+      ${[0.25,0.5,0.75,1].map(v=>{
+        const gpts=axes.map(ax=>{const p=toXY(ax.a,v);return `${p.x},${p.y}`;}).join(' ');
+        return `<polygon points="${gpts}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
+      }).join('')}
+      <!-- axes -->
+      ${axes.map(ax=>{const p=toXY(ax.a,1);return `<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>`; }).join('')}
+      <!-- data -->
+      <polygon points="${pts.map(p=>`${p.x},${p.y}`).join(' ')}" fill="rgba(200,168,75,0.3)" stroke="var(--gold)" stroke-width="2"/>
+      <!-- labels -->
+      ${axes.map((ax,i)=>{const p=toXY(ax.a,1.2);return `<text x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="var(--gold)">${ax.l}</text>`;}).join('')}
+    </svg>`;
+  
+  // Timeline
+  const tl = document.getElementById('progress-timeline');
+  const subjNames={science:'Science',maths:'Maths',social:'Social Sc.',english:'English',diagnostic:'Diagnostic'};
+  tl.innerHTML='<h3 class="text-gold mb8">📋 Test History</h3>' + h.slice(0,20).map(r=>`
+    <div class="timeline-item">
+      <div class="t-date">${r.date}</div>
+      <div class="t-content">
+        <div class="t-score">${r.pct}%</div>
+        <div class="t-subject">${subjNames[r.subject]||r.subject} | Class ${r.class} | ${r.correct}/${r.objTotal} correct</div>
+      </div>
+    </div>`).join('');
+}
+
+function clearProgress(){
+  if(confirm('Clear all test history? This cannot be undone.')){
+    lsSet('practiceResults',[]);
+    renderProgress();
+    updateHomeStats();
+  }
+}
+
+// ============================================================
+// MOCK EXAM
+// ============================================================
+function startMockExam(){
+  const cls = parseInt(document.getElementById('mock-class').value);
+  const subj = document.getElementById('mock-subject').value;
+  
+  // Generate 4-section exam
+  const mcqs = shuffle(QB.questions.filter(q=>q.type==='MCQ'&&q.subject===subj)).slice(0,20);
+  const cases = shuffle(QB.questions.filter(q=>q.type==='CASE')).slice(0,2);
+  const shorts = shuffle(QB.questions.filter(q=>q.type==='SHORT')).slice(0,3);
+  const longs = shuffle(QB.questions.filter(q=>q.type==='LONG')).slice(0,2);
+  
+  const allQ = [...mcqs,...cases,...shorts,...longs];
+  if(allQ.length===0){alert('Using available questions for mock exam.');return;}
+  
+  currentTest = {
+    questions: allQ,
+    answers: {},
+    startTime: Date.now(),
+    timer: null,
+    timeLeft: 80*60,
+    currentQ: 0,
+    submitted: false,
+    subject: subj,
+    class: cls,
+    isMock: true,
+    sections: {A:mcqs.length, B:mcqs.length+cases.length, C:mcqs.length+cases.length+shorts.length}
+  };
+  
+  renderTest();
+  showScreen('active-test');
+  startTimer(80*60);
+}
+
+// ============================================================
+// TEACHER MODE
+// ============================================================
+function renderTeacher(){
+  const h = getHistory();
+  const stats = document.getElementById('teacher-stats');
+  if(h.length===0){
+    stats.innerHTML='<div class="card" style="grid-column:1/-1"><p class="text-sm text-muted">No test data available. Students need to take tests first.</p></div>';
+    return;
+  }
+  const avg=Math.round(h.reduce((a,r)=>a+r.pct,0)/h.length);
+  const totalTests=h.length;
+  stats.innerHTML=`
+    <div class="t-stat"><div class="ts-num">${totalTests}</div><div class="ts-lbl">Total Tests</div></div>
+    <div class="t-stat"><div class="ts-num">${avg}%</div><div class="ts-lbl">Class Average</div></div>
+    <div class="t-stat"><div class="ts-num">${h.filter(r=>r.pct>=75).length}</div><div class="ts-lbl">Above 75%</div></div>
+    <div class="t-stat"><div class="ts-num">${h.filter(r=>r.pct<50).length}</div><div class="ts-lbl">Below 50%</div></div>`;
+  
+  // Bar chart by level
+  const levelAgg={L1:{c:0,t:0},L2:{c:0,t:0},L3:{c:0,t:0},L4:{c:0,t:0}};
+  h.forEach(r=>{if(r.levelStats)Object.entries(r.levelStats).forEach(([l,v])=>{if(levelAgg[l]){levelAgg[l].c+=v.c;levelAgg[l].t+=v.t;}});});
+  const levelCols={L1:'#27ae60',L2:'#f39c12',L3:'#e67e22',L4:'#9b59b6'};
+  const levelNames={L1:'Knowledge',L2:'Understanding',L3:'Application',L4:'HOTS'};
+  document.getElementById('teacher-bar-chart').innerHTML = Object.entries(levelAgg).map(([l,s])=>{
+    const p=s.t>0?Math.round(s.c/s.t*100):0;
+    return `<div class="bar-row"><div class="bar-label">${levelNames[l]}</div><div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${levelCols[l]}">${p}%</div></div></div>`;
+  }).join('');
+  
+  const weakLevels=Object.entries(levelAgg).filter(([l,s])=>s.t>0&&s.c/s.t<0.6).map(([l])=>levelNames[l]);
+  document.getElementById('teacher-gaps').innerHTML = weakLevels.length>0
+    ? weakLevels.map(l=>`<span class="chip">⚠️ ${l}</span>`).join('')
+    : '<p class="text-sm text-muted">All levels performing adequately.</p>';
+}
+
+function generatePracticeSet(){
+  alert('Practice set generation: Select subject and difficulty in Practice Test mode to generate targeted questions for your class.');
+}
+function exportSummary(){
+  window.print();
+}
+
+// ============================================================
+// POLICY LIST RENDER
+// ============================================================
+function renderPolicyList(){
+  const cont = document.getElementById('policyListContainer');
+  cont.innerHTML = POLICIES.map(p=>`
+    <div class="policy-item" onclick="showPolicy(${p.id})">
+      <div class="pi-num">${p.id}</div>
+      <div>
+        <div class="pi-title">${p.icon} ${p.title}</div>
+        <div class="pi-sub">NEP 2020 | NCF 2023 | PARAKH Framework</div>
+      </div>
+    </div>`).join('');
+}
+
+function showPolicy(id){
+  const p = POLICIES.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('policyContentTitle').textContent = p.title;
+  document.getElementById('policyContentBody').innerHTML = p.content;
+  showScreen('policy-content');
+}
+
+// ============================================================
+// PWA SERVICE WORKER
+// ============================================================
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load',()=>{
+  renderPolicyList();
+  updateHomeStats();
+  
+  // Hide splash after 2 seconds
+  setTimeout(()=>{
+    const splash = document.getElementById('splash');
+    splash.style.opacity='0';
+    setTimeout(()=>splash.style.display='none',500);
+  },2000);
+  
+  showHome();
+});
+</script>
+</body>
+</html>

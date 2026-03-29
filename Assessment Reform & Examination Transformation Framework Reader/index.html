@@ -1,0 +1,2222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a1628">
+<meta name="description" content="Assessment Reform & Examination Transformation — Official Policy Framework Reader">
+<title>Assessment Reform & Examination Transformation | Official Framework Reader</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="mateen.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0a1628;
+  --navy-mid: #112240;
+  --navy-light: #1a3a5c;
+  --steel: #2a3f5f;
+  --steel-light: #3d5a80;
+  --saffron: #c97d2e;
+  --saffron-light: #e8952a;
+  --saffron-pale: #f5e6d0;
+  --blue-info: #4a90c4;
+  --blue-pale: #d6e8f5;
+  --text-primary: #1a2942;
+  --text-secondary: #4a5568;
+  --text-light: #718096;
+  --bg-main: #f0f3f8;
+  --bg-card: #ffffff;
+  --bg-sidebar: #0a1628;
+  --border: #d1dae8;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Source Sans 3', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --sidebar-width: 300px;
+  --progress-h: 4px;
+}
+
+[data-theme="dark"] {
+  --bg-main: #0d1b2e;
+  --bg-card: #112240;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  --text-light: #718096;
+  --border: #1e3a5f;
+  --blue-pale: #1a2f4a;
+  --saffron-pale: #2a1f10;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  line-height: 1.7;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* PROGRESS BAR */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: var(--progress-h);
+  background: linear-gradient(90deg, var(--saffron), var(--saffron-light));
+  width: 0%;
+  z-index: 9999;
+  transition: width 0.1s;
+}
+
+/* SIDEBAR */
+#sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--bg-sidebar);
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+  scrollbar-width: thin;
+  scrollbar-color: var(--steel) transparent;
+}
+
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: var(--steel); border-radius: 2px; }
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-logo {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--saffron-light);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.sidebar-subtitle {
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.sidebar-search {
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+#search-input {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#search-input::placeholder { color: rgba(255,255,255,0.3); }
+#search-input:focus { border-color: var(--saffron); }
+
+.nav-section {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.nav-section-title {
+  padding: 10px 20px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--saffron);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+.nav-section-title .toggle-icon {
+  font-size: 10px;
+  transition: transform 0.2s;
+  color: rgba(255,255,255,0.4);
+}
+
+.nav-section.collapsed .toggle-icon { transform: rotate(-90deg); }
+.nav-section.collapsed .nav-items { display: none; }
+
+.nav-item {
+  display: block;
+  padding: 7px 20px 7px 28px;
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+.nav-item:hover {
+  color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(201,125,46,0.5);
+}
+
+.nav-item.active {
+  color: var(--saffron-light);
+  border-left-color: var(--saffron-light);
+  background: rgba(201,125,46,0.08);
+}
+
+.nav-item .bookmark-dot {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--saffron);
+  display: none;
+}
+
+.nav-item.bookmarked .bookmark-dot { display: block; }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.source-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.source-filter-btn {
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.source-filter-btn.active,
+.source-filter-btn:hover {
+  border-color: var(--saffron);
+  color: var(--saffron);
+  background: rgba(201,125,46,0.1);
+}
+
+.dark-toggle {
+  width: 100%;
+  padding: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: rgba(255,255,255,0.6);
+  font-size: 11px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all 0.2s;
+}
+
+.dark-toggle:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+/* MAIN CONTENT */
+#main {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+  transition: margin-left 0.3s;
+}
+
+/* COVER PAGE */
+#cover {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0a1628 0%, #112240 40%, #1a3a5c 70%, #243b55 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 60px 40px;
+}
+
+#cover::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(201,125,46,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+#cover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--saffron), var(--saffron-light), var(--saffron), transparent);
+}
+
+.cover-inner {
+  max-width: 680px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.cover-emblem {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 24px;
+}
+
+.cover-badge {
+  display: inline-block;
+  border: 1px solid rgba(201,125,46,0.4);
+  color: var(--saffron-light);
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 5px 16px;
+  border-radius: 2px;
+  margin-bottom: 24px;
+  font-family: var(--mono);
+}
+
+.cover-title {
+  font-family: var(--serif);
+  font-size: 42px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.cover-title span { color: var(--saffron-light); }
+
+.cover-subtitle {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
+.cover-sources {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  font-family: var(--mono);
+}
+
+.cover-divider {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--saffron), transparent);
+  margin: 0 auto 40px;
+}
+
+.author-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(10px);
+  max-width: 420px;
+  margin: 0 auto 40px;
+}
+
+.author-photo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--saffron);
+  flex-shrink: 0;
+}
+
+.author-info { text-align: left; }
+
+.author-name {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.author-title {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+}
+
+.cover-stats {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+}
+
+.cover-stat {
+  text-align: center;
+}
+
+.cover-stat-number {
+  font-family: var(--serif);
+  font-size: 28px;
+  color: var(--saffron-light);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.cover-stat-label {
+  font-size: 9px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* CONTENT AREA */
+#content {
+  padding: 48px 56px;
+  max-width: 860px;
+}
+
+/* SECTION HEADERS */
+.part-header {
+  margin: 56px 0 32px;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+  border-radius: 4px;
+  border-left: 4px solid var(--saffron);
+  position: relative;
+  overflow: hidden;
+}
+
+.part-header::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 200px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(201,125,46,0.05));
+}
+
+.part-number {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--saffron);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.part-title {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.part-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.5px;
+}
+
+/* CHAPTER */
+.chapter {
+  margin-bottom: 48px;
+  scroll-margin-top: 24px;
+}
+
+.chapter-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.chapter-number {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--saffron);
+  background: var(--saffron-pale);
+  padding: 4px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+[data-theme="dark"] .chapter-number { background: rgba(201,125,46,0.15); }
+
+.chapter-title-wrap { flex: 1; }
+
+.chapter-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  font-family: var(--mono);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+.source-badge.nep { background: #dbeafe; color: #1d4ed8; }
+.source-badge.ncf { background: #d1fae5; color: #065f46; }
+.source-badge.parakh { background: #fef3c7; color: #92400e; }
+.source-badge.jkbose { background: #fce7f3; color: #9d174d; }
+
+[data-theme="dark"] .source-badge.nep { background: #1e3a6e; color: #93c5fd; }
+[data-theme="dark"] .source-badge.ncf { background: #064e3b; color: #6ee7b7; }
+[data-theme="dark"] .source-badge.parakh { background: #451a03; color: #fbbf24; }
+[data-theme="dark"] .source-badge.jkbose { background: #500724; color: #f9a8d4; }
+
+.chapter-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: all 0.15s;
+  color: var(--text-secondary);
+}
+
+.action-btn:hover { border-color: var(--saffron); color: var(--saffron); }
+.action-btn.bookmarked { border-color: var(--saffron); background: var(--saffron-pale); }
+
+.reading-time {
+  font-size: 10px;
+  color: var(--text-light);
+  font-family: var(--mono);
+  margin-bottom: 16px;
+}
+
+/* CONTENT BLOCKS */
+.chapter-content {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.chapter-content h3 {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--text-primary);
+  margin: 24px 0 10px;
+  font-weight: 600;
+}
+
+.chapter-content h4 {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--navy-light);
+  margin: 20px 0 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 13px;
+}
+
+[data-theme="dark"] .chapter-content h4 { color: var(--blue-info); }
+
+.chapter-content p { margin-bottom: 14px; }
+
+.chapter-content ul, .chapter-content ol {
+  padding-left: 22px;
+  margin-bottom: 14px;
+}
+
+.chapter-content li { margin-bottom: 6px; }
+
+.chapter-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* CALLOUT BOXES */
+.callout {
+  margin: 20px 0;
+  padding: 16px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.callout-saffron {
+  background: var(--saffron-pale);
+  border-left: 3px solid var(--saffron);
+  color: #7a4a1a;
+}
+
+[data-theme="dark"] .callout-saffron {
+  background: rgba(201,125,46,0.12);
+  color: #e8b56a;
+}
+
+.callout-blue {
+  background: var(--blue-pale);
+  border-left: 3px solid var(--blue-info);
+  color: #1e4a6e;
+}
+
+[data-theme="dark"] .callout-blue {
+  background: rgba(74,144,196,0.12);
+  color: #7ec8e3;
+}
+
+.callout-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 6px;
+  opacity: 0.7;
+}
+
+/* SVG DIAGRAMS */
+.diagram-container {
+  margin: 28px 0;
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.diagram-title {
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 10px;
+}
+
+/* SEARCH RESULTS */
+#search-results {
+  position: fixed;
+  top: 0; left: var(--sidebar-width);
+  right: 0;
+  bottom: 0;
+  background: var(--bg-main);
+  z-index: 50;
+  overflow-y: auto;
+  padding: 48px 56px;
+  display: none;
+}
+
+#search-results.visible { display: block; }
+
+.search-result-item {
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.search-result-item:hover { border-color: var(--saffron); }
+
+.search-result-title {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.search-result-snippet {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.search-result-snippet mark {
+  background: var(--saffron-pale);
+  color: var(--saffron);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* HAMBURGER */
+#menu-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 200;
+  background: var(--navy);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+#menu-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #fff;
+  border-radius: 1px;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+}
+
+/* PRINT */
+@media print {
+  #sidebar, #progress-bar, #menu-toggle, .chapter-actions { display: none !important; }
+  #main { margin-left: 0 !important; }
+  #content { padding: 20px; }
+  .part-header { background: #0a1628 !important; -webkit-print-color-adjust: exact; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  :root { --sidebar-width: 280px; }
+  #content { padding: 32px 28px; }
+}
+
+@media (max-width: 700px) {
+  #menu-toggle { display: flex; }
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.open { transform: translateX(0); }
+  .overlay.visible { display: block; }
+  #main { margin-left: 0; }
+  #search-results { left: 0; padding: 32px 20px; }
+  .cover-title { font-size: 28px; }
+  .author-section { flex-direction: column; text-align: center; }
+  .author-info { text-align: center; }
+}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<button id="menu-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+<div class="overlay" id="overlay"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">Assessment Reform<br>Framework Reader</div>
+    <div class="sidebar-subtitle">Official Policy Documents</div>
+  </div>
+
+  <div class="sidebar-search">
+    <input type="text" id="search-input" placeholder="Search sections..." autocomplete="off">
+  </div>
+
+  <div class="nav-items-container" id="nav-container">
+    <!-- Nav sections injected by JS -->
+  </div>
+
+  <div class="sidebar-footer">
+    <div style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Filter by Source</div>
+    <div class="source-filters">
+      <button class="source-filter-btn active" data-filter="all">All</button>
+      <button class="source-filter-btn" data-filter="nep">NEP 2020</button>
+      <button class="source-filter-btn" data-filter="ncf">NCF 2023</button>
+      <button class="source-filter-btn" data-filter="parakh">PARAKH</button>
+      <button class="source-filter-btn" data-filter="jkbose">JKBOSE</button>
+    </div>
+    <button class="dark-toggle" id="dark-toggle">⬡ Toggle Dark Mode</button>
+  </div>
+</nav>
+
+<!-- SEARCH RESULTS -->
+<div id="search-results">
+  <h2 style="font-family:var(--serif);font-size:24px;margin-bottom:24px;color:var(--text-primary)">Search Results</h2>
+  <div id="results-list"></div>
+  <button onclick="closeSearch()" style="margin-top:16px;padding:8px 20px;background:var(--navy);color:#fff;border:none;border-radius:4px;cursor:pointer;font-family:var(--sans);">← Back to Reader</button>
+</div>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- COVER PAGE -->
+  <section id="cover">
+    <div class="cover-inner">
+      <!-- Emblem SVG -->
+      <svg class="cover-emblem" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="28" cy="28" r="27" stroke="#c97d2e" stroke-width="1.5"/>
+        <circle cx="28" cy="28" r="20" stroke="rgba(201,125,46,0.4)" stroke-width="1"/>
+        <path d="M28 10L32 20H42L34 26L37 36L28 30L19 36L22 26L14 20H24Z" fill="none" stroke="#c97d2e" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>
+
+      <div class="cover-badge">APP 17 | Official Policy Framework</div>
+
+      <h1 class="cover-title">Assessment Reform &<br><span>Examination Transformation</span></h1>
+      <p class="cover-subtitle">Official Policy Framework Reader</p>
+      <p class="cover-sources">PARAKH · NEP 2020 · NCF 2023 · JKBOSE</p>
+
+      <div class="cover-divider"></div>
+
+      <div class="author-section">
+        <img src="mateen.jpg" alt="Dr. Mateen Yousuf" class="author-photo" onerror="this.style.display='none'">
+        <div class="author-info">
+          <div class="author-name">Dr. Mateen Yousuf</div>
+          <div class="author-title">Teacher – School Education Department<br>Jammu & Kashmir</div>
+        </div>
+      </div>
+
+      <div class="cover-stats">
+        <div class="cover-stat">
+          <div class="cover-stat-number">4</div>
+          <div class="cover-stat-label">Policy Sources</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-number">30+</div>
+          <div class="cover-stat-label">Sections</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-number">100%</div>
+          <div class="cover-stat-label">Offline</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <div id="content">
+    <!-- Content injected by JS -->
+  </div>
+
+</main>
+
+<script>
+// ─── CONTENT DATA ───────────────────────────────────────────────────────────
+const PARTS = [
+  {
+    id: 'section-i',
+    number: 'SECTION I',
+    title: 'NEP 2020 Assessment Reform',
+    desc: 'National Education Policy 2020 — Assessment & Evaluation Framework',
+    source: 'nep',
+    chapters: [
+      {
+        id: 'nep-1',
+        number: '1',
+        title: 'Shift from Summative to Formative Assessment',
+        source: 'nep',
+        sourceLabel: 'NEP 2020',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            National Education Policy 2020 — Ministry of Education, Government of India. Chapter 4: Curriculum and Pedagogy in Schools: Learning Should be Holistic, Integrated, Enjoyable, and Engaging.
+          </div>
+          <h3>4.37 — Assessment Reforms</h3>
+          <p>The purpose of assessment will shift from one that primarily tests rote memorization skills to one that is more formative, promotes learning and development of students, and tests higher-order skills, such as analysis, critical thinking, and conceptual clarity.</p>
+          <p>The curriculum and pedagogical structure of school education will be reconfigured to make it holistic, flexible, multidisciplinary, suited to the 21st century, and aimed at bringing out the unique capabilities of each student. The focus of the National Curriculum Framework for School Education will thus be on developing key capacities of students.</p>
+          <h3>4.38 — Continuous Formative Assessment</h3>
+          <p>The purposes of assessment will also be clarified — not just 'assessment of learning' but 'assessment for learning' and 'assessment as learning'. Pedagogy will be reconfigured to give primacy to formative assessment, which would help determine a student's learning needs and then attend to them; summative assessments, while still used at appropriate intervals, will not be the primary driver of learning or pedagogy.</p>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Key Principle</div>
+            Assessment will be a tool for improving learning rather than only measuring learning. The shift from 'assessment of learning' to 'assessment for learning' and 'assessment as learning' is central to NEP 2020's vision.
+          </div>
+          <h3>Formative vs. Summative: The Policy Distinction</h3>
+          <p>Formative assessment is ongoing and aims to monitor student learning progress, provide regular feedback that teachers can use to improve their teaching and that students can use to improve their learning. It takes place during instruction and measures student performance in relation to the curriculum goals. It is low stakes and meant to improve learning outcomes.</p>
+          <p>Summative assessment aims to evaluate student learning at the end of an instructional unit by comparing it against some standard or benchmark. It is high stakes and its result is usually expressed as a score or a grade. While summative assessment is not eliminated, the NEP's emphasis is firmly on formative approaches.</p>
+        `
+      },
+      {
+        id: 'nep-2',
+        number: '2',
+        title: 'Competency-Based Assessment',
+        source: 'nep',
+        sourceLabel: 'NEP 2020',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            National Education Policy 2020 — Chapter 4, Paragraphs 4.37–4.41
+          </div>
+          <h3>4.39 — Competency-Based Assessment Framework</h3>
+          <p>The Board Examinations will be redesigned to encourage holistic development. Students will be given more flexibility and choice in what subjects they take — to remove the rigid separation of the arts, humanities, mathematics and sciences — and to make the Boards low-stakes by offering the opportunity to take Board Exams on at least two occasions during any given school year.</p>
+          <p>Board Exams for Grades 10 and 12 will be continued, but restructured so as to eliminate the need for rote learning and to instead test core competencies. The possibility of offering Board Exams in two parts, over the course of the year — a semester-like system — will be explored.</p>
+          <h3>Competency Framework</h3>
+          <p>The National Curriculum Framework will outline the Minimum Learning Outcomes (MLOs) at the end of each Stage and at the end of each class. These are based on competencies, not content alone. Competencies refer to the ability to use knowledge, skills, and values to successfully perform a task or resolve a problem in a given context.</p>
+          <h4>Core Competencies Identified by NEP 2020</h4>
+          <ul>
+            <li>Literacy and Numeracy as foundational competencies</li>
+            <li>Scientific temper, mathematical reasoning, and computational thinking</li>
+            <li>Social awareness, ethics, and democratic participation</li>
+            <li>Critical and creative thinking</li>
+            <li>Communication skills across languages</li>
+            <li>Problem-solving in real-world contexts</li>
+          </ul>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Policy Mandate</div>
+            All Board examinations and high-stakes tests shall test for competency — the ability to apply learning in varied contexts — rather than the reproduction of memorized content.
+          </div>
+
+          <div class="diagram-container">
+            <div class="diagram-title">Competency Assessment Model — NEP 2020</div>
+            <svg viewBox="0 0 500 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;">
+              <defs>
+                <linearGradient id="cg1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#0a1628"/>
+                  <stop offset="100%" style="stop-color:#1a3a5c"/>
+                </linearGradient>
+              </defs>
+              <!-- Knowledge -->
+              <rect x="20" y="100" width="100" height="60" rx="4" fill="url(#cg1)" stroke="#c97d2e" stroke-width="1.5"/>
+              <text x="70" y="126" text-anchor="middle" fill="#fff" font-size="10" font-family="Georgia">Knowledge</text>
+              <text x="70" y="142" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="8">Content &amp; Concepts</text>
+              <!-- Arrow -->
+              <path d="M120 130 L155 130" stroke="#c97d2e" stroke-width="1.5" marker-end="url(#arr)"/>
+              <!-- Skills -->
+              <rect x="155" y="100" width="100" height="60" rx="4" fill="url(#cg1)" stroke="#c97d2e" stroke-width="1.5"/>
+              <text x="205" y="126" text-anchor="middle" fill="#fff" font-size="10" font-family="Georgia">Skills</text>
+              <text x="205" y="142" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="8">Process &amp; Practice</text>
+              <!-- Arrow -->
+              <path d="M255 130 L290 130" stroke="#c97d2e" stroke-width="1.5" marker-end="url(#arr)"/>
+              <!-- Values -->
+              <rect x="290" y="100" width="100" height="60" rx="4" fill="url(#cg1)" stroke="#c97d2e" stroke-width="1.5"/>
+              <text x="340" y="126" text-anchor="middle" fill="#fff" font-size="10" font-family="Georgia">Values</text>
+              <text x="340" y="142" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="8">Attitudes &amp; Beliefs</text>
+              <!-- Arrow -->
+              <path d="M390 130 L425 130" stroke="#c97d2e" stroke-width="1.5" marker-end="url(#arr)"/>
+              <!-- Competency -->
+              <rect x="425" y="90" width="60" height="80" rx="4" fill="#c97d2e" stroke="none"/>
+              <text x="455" y="125" text-anchor="middle" fill="#fff" font-size="10" font-family="Georgia">Com-</text>
+              <text x="455" y="140" text-anchor="middle" fill="#fff" font-size="10" font-family="Georgia">petency</text>
+              <!-- Arrowhead -->
+              <defs>
+                <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                  <polygon points="0 0, 8 3, 0 6" fill="#c97d2e"/>
+                </marker>
+              </defs>
+              <text x="250" y="195" text-anchor="middle" fill="#666" font-size="10" font-family="Georgia">Knowledge + Skills + Values = Competency</text>
+            </svg>
+          </div>
+        `
+      },
+      {
+        id: 'nep-3',
+        number: '3',
+        title: 'Holistic Progress Card',
+        source: 'nep',
+        sourceLabel: 'NEP 2020',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            National Education Policy 2020 — Paragraph 4.40 and Annexure
+          </div>
+          <h3>4.40 — 360-Degree Holistic Progress Card</h3>
+          <p>A new Holistic Progress Card (HPC) shall be introduced for all students from Grade 3 onwards, which will track and display student progress in a multidimensional manner, going well beyond the traditional marks or grades on individual subjects.</p>
+          <p>The HPC will track and display the student's progress in cognitive, affective, and psychomotor domains. The HPC will have a significant component contributed by self-assessment of the student, peer-assessment by fellow students, and the overall assessment by teachers and the school.</p>
+          <h3>Components of the Holistic Progress Card</h3>
+          <ul>
+            <li><strong>Academic Attainment:</strong> Subject-wise performance based on competency descriptors, not merely marks</li>
+            <li><strong>Co-curricular Participation:</strong> Engagement in arts, sports, extracurricular activities</li>
+            <li><strong>Personal Development:</strong> Social skills, communication, teamwork, leadership</li>
+            <li><strong>Values and Attitudes:</strong> Ethical conduct, civic responsibility, empathy</li>
+            <li><strong>Self-Assessment:</strong> Student's own reflection on learning and growth</li>
+            <li><strong>Teacher Observations:</strong> Qualitative remarks and behavioral observations</li>
+          </ul>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Implementation Note</div>
+            The HPC is envisioned as a narrative tool, not just a report card. It is designed to tell the story of a child's learning journey rather than simply recording grades.
+          </div>
+
+          <div class="diagram-container">
+            <div class="diagram-title">Holistic Progress Card — Structural Layout</div>
+            <svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px;">
+              <!-- Card border -->
+              <rect x="10" y="10" width="460" height="300" rx="6" fill="#f8fafd" stroke="#d1dae8" stroke-width="1.5"/>
+              <!-- Header -->
+              <rect x="10" y="10" width="460" height="44" rx="6" fill="#0a1628"/>
+              <text x="30" y="38" fill="white" font-size="13" font-family="Georgia" font-weight="bold">HOLISTIC PROGRESS CARD</text>
+              <text x="380" y="38" fill="#c97d2e" font-size="10" font-family="monospace">NEP 2020</text>
+              <!-- Domains -->
+              <rect x="20" y="65" width="135" height="70" rx="3" fill="#dbeafe" stroke="#93c5fd"/>
+              <text x="88" y="88" text-anchor="middle" fill="#1d4ed8" font-size="9" font-family="Georgia" font-weight="bold">COGNITIVE</text>
+              <text x="88" y="103" text-anchor="middle" fill="#3b82f6" font-size="8">Subject Competencies</text>
+              <text x="88" y="117" text-anchor="middle" fill="#3b82f6" font-size="8">Critical Thinking</text>
+              <rect x="165" y="65" width="135" height="70" rx="3" fill="#d1fae5" stroke="#6ee7b7"/>
+              <text x="233" y="88" text-anchor="middle" fill="#065f46" font-size="9" font-family="Georgia" font-weight="bold">AFFECTIVE</text>
+              <text x="233" y="103" text-anchor="middle" fill="#059669" font-size="8">Values &amp; Attitudes</text>
+              <text x="233" y="117" text-anchor="middle" fill="#059669" font-size="8">Social-Emotional</text>
+              <rect x="310" y="65" width="135" height="70" rx="3" fill="#fef3c7" stroke="#fcd34d"/>
+              <text x="378" y="88" text-anchor="middle" fill="#92400e" font-size="9" font-family="Georgia" font-weight="bold">PSYCHOMOTOR</text>
+              <text x="378" y="103" text-anchor="middle" fill="#d97706" font-size="8">Physical Education</text>
+              <text x="378" y="117" text-anchor="middle" fill="#d97706" font-size="8">Arts &amp; Crafts</text>
+              <!-- Assessment sources -->
+              <rect x="20" y="148" width="96" height="50" rx="3" fill="#f3e8ff" stroke="#c084fc"/>
+              <text x="68" y="168" text-anchor="middle" fill="#6b21a8" font-size="8">Self</text>
+              <text x="68" y="182" text-anchor="middle" fill="#6b21a8" font-size="8">Assessment</text>
+              <rect x="126" y="148" width="96" height="50" rx="3" fill="#fce7f3" stroke="#f9a8d4"/>
+              <text x="174" y="168" text-anchor="middle" fill="#9d174d" font-size="8">Peer</text>
+              <text x="174" y="182" text-anchor="middle" fill="#9d174d" font-size="8">Assessment</text>
+              <rect x="232" y="148" width="96" height="50" rx="3" fill="#e0f2fe" stroke="#7dd3fc"/>
+              <text x="280" y="168" text-anchor="middle" fill="#0c4a6e" font-size="8">Teacher</text>
+              <text x="280" y="182" text-anchor="middle" fill="#0c4a6e" font-size="8">Observation</text>
+              <rect x="338" y="148" width="102" height="50" rx="3" fill="#ecfdf5" stroke="#86efac"/>
+              <text x="389" y="168" text-anchor="middle" fill="#14532d" font-size="8">School</text>
+              <text x="389" y="182" text-anchor="middle" fill="#14532d" font-size="8">Portfolio</text>
+              <!-- Final -->
+              <rect x="100" y="215" width="280" height="40" rx="3" fill="#0a1628"/>
+              <text x="240" y="240" text-anchor="middle" fill="white" font-size="10" font-family="Georgia">HOLISTIC DEVELOPMENT NARRATIVE</text>
+              <!-- Arrows -->
+              <path d="M240 200 L240 215" stroke="#c97d2e" stroke-width="1.5" marker-end="url(#arr2)"/>
+              <defs>
+                <marker id="arr2" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
+                  <polygon points="0 0, 6 2.5, 0 5" fill="#c97d2e"/>
+                </marker>
+              </defs>
+            </svg>
+          </div>
+        `
+      },
+      {
+        id: 'nep-4',
+        number: '4',
+        title: 'Reduction of High-Stakes Examinations',
+        source: 'nep',
+        sourceLabel: 'NEP 2020',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            National Education Policy 2020 — Paragraphs 4.41–4.43
+          </div>
+          <h3>4.41 — Reducing High-Stakes Nature of Board Exams</h3>
+          <p>Examinations for Grades 3, 5, and 8 shall be conducted by the appropriate authority. School examinations shall be held in these classes to test achievement of basic learning outcomes. Such school examinations, along with the sample-based National Achievement Survey (NAS) conducted by NCERT, will help the system to track the progress of students at all levels of schooling and improve the quality of learning outcomes.</p>
+          <h3>4.42 — Board Examination Restructuring</h3>
+          <p>Board Exams for Grade 10 and Grade 12 will be continued, but restructured so as to eliminate the need for rote learning, and instead test the core competencies of a student. These exams will focus primarily on testing the student's conceptual understanding rather than content memorisation. The content will be streamlined and rationalized, while the examinations will focus on a small number of core concepts and skill sets.</p>
+          <p>These examinations will also be made easier to attempt so that they test knowledge, understanding, and abilities rather than the ability to study for and pass an examination. To this end, students will be provided the flexibility of choosing subjects according to their interests and career aspirations.</p>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Key Policy Direction</div>
+            Students will be offered the opportunity to take Board Exams on at least two occasions during any given school year, one main examination and one for improvement if desired. This significantly reduces the 'one-shot, high-pressure' nature of Board Examinations.
+          </div>
+          <h3>Milestones and Assessment Gates</h3>
+          <ul>
+            <li>Foundational Stage (Grades 1–2): No formal summative assessment; only play-based formative observation</li>
+            <li>Preparatory Stage (Grades 3–5): School-level assessments with teacher-observation focus</li>
+            <li>Middle Stage (Grades 6–8): Holistic Progress Card introduced; standardized test in Grade 8</li>
+            <li>Secondary Stage (Grades 9–12): Board Examinations in Grades 10 and 12; semester-based option explored</li>
+          </ul>
+        `
+      },
+      {
+        id: 'nep-5',
+        number: '5',
+        title: 'Board Examination Reform',
+        source: 'nep',
+        sourceLabel: 'NEP 2020',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            National Education Policy 2020 — Paragraphs 4.44–4.46
+          </div>
+          <h3>4.44 — Redesigning Board Examinations</h3>
+          <p>The National Assessment Centre, PARAKH (Performance Assessment, Review, and Analysis of Knowledge for Holistic Development) shall set norms, standards, and guidelines for student assessment and evaluation for all recognized school boards of India. It will guide the State Achievement Survey (SAS) and the National Achievement Survey (NAS), shall encourage and help design competency-based assessment and evaluation in place of rote-learning-based assessment.</p>
+          <h3>4.45 — Modular Examinations</h3>
+          <p>Board Exams will be made modular — that is, students will be able to take exams in different subjects in different semesters, rather than having to take all subjects in a single high-stakes sitting. This makes the exams less stressful and more flexible for students. Students would also be allowed to appear for Board exams for specific subjects in which they wish to improve their scores.</p>
+          <h3>4.46 — Question Paper Reforms</h3>
+          <p>All question papers will include a significant proportion of questions that test higher-order thinking, including application, analysis, synthesis, and evaluation. The proportion of questions that test only recall will be progressively reduced. By 2025, at least 50% of questions in Board Examinations shall be competency-based, and this proportion shall increase to 100% over time.</p>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Timeline</div>
+            2025: Minimum 50% competency-based questions in all Board Examinations. Progressive increase to 100% competency-based assessment in subsequent years.
+          </div>
+        `
+      },
+      {
+        id: 'nep-6',
+        number: '6',
+        title: 'Multidimensional Assessment',
+        source: 'nep',
+        sourceLabel: 'NEP 2020',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            National Education Policy 2020 — Section 4.47–4.49
+          </div>
+          <h3>4.47 — Multidimensional Assessment Vision</h3>
+          <p>Students will be assessed on a multidimensional basis. Marks and grades will continue to be given for academic subjects. However, an additional component of the transcript will include a description of the student's co-curricular accomplishments, participation in school activities, projects undertaken, and personal qualities observed by teachers.</p>
+          <p>The new transcript will thus be a rich multidimensional document rather than a simple numerical score sheet. It will include performance in arts, sports, yoga, and other activities, in addition to academic performance.</p>
+          <h3>4.48 — The Role of Self-Assessment</h3>
+          <p>A significant and systematic component of student self-assessment will be included in the overall assessment. Students must develop the capacity to evaluate their own learning, to understand their strengths and weaknesses, and to set realistic learning goals. This is itself an important academic competency to be cultivated from early years of schooling.</p>
+          <h3>4.49 — Moving Towards Portfolio Assessment</h3>
+          <p>Portfolio-based assessment, where students collect their best work over time, shall be encouraged at all levels. Portfolios allow students to demonstrate mastery and progress across multiple domains and over extended time periods, giving a richer and more authentic picture of their abilities than a single-point examination can provide.</p>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Implementation Principle</div>
+            The future school transcript will be a rich, multidimensional document that tells the story of the whole child — academic, physical, artistic, and personal — not merely a numerical grade report.
+          </div>
+        `
+      },
+      {
+        id: 'nep-7',
+        number: '7',
+        title: 'Diagnostic Assessment Vision',
+        source: 'nep',
+        sourceLabel: 'NEP 2020',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            National Education Policy 2020 — Chapter 5: Teachers
+          </div>
+          <h3>Diagnostic Purpose of Assessment</h3>
+          <p>Assessment in NEP 2020 is conceptualized primarily as a diagnostic tool. Its purpose is to identify learning gaps at the individual, classroom, school, and system levels so that corrective interventions can be made in a timely manner.</p>
+          <p>The National Achievement Survey (NAS) and State Achievement Surveys (SAS) provide system-level diagnostic data that enable policymakers to understand where learning outcomes are lagging and to design targeted support. At the classroom level, formative assessment serves the same diagnostic purpose for individual students.</p>
+          <h3>Remedial and Enrichment Action</h3>
+          <p>Diagnostic assessment must be followed by remedial action. Teachers are expected to use assessment data to design differentiated instruction — providing additional support to students who need it and enrichment opportunities for those who are performing at or above grade level. This requires teachers to have high assessment literacy.</p>
+          <h3>Assessment Literacy for Teachers</h3>
+          <p>All teacher training programs will include comprehensive training in assessment literacy — the knowledge and skills required to design, administer, interpret, and act on assessment data. Teachers must be equipped to use assessment as a tool for improving learning outcomes for every student in their class.</p>
+        `
+      },
+      {
+        id: 'nep-8',
+        number: '8',
+        title: '360-Degree Report Card',
+        source: 'nep',
+        sourceLabel: 'NEP 2020',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            National Education Policy 2020 — Annex and PARAKH Guidelines
+          </div>
+          <h3>360-Degree Assessment Framework</h3>
+          <p>The 360-degree report card represents a comprehensive view of the student from multiple vantage points: self, peers, teachers, and the school community. It is so called because it gathers assessments from all directions — a complete circular view of the student as a whole person.</p>
+          <h3>Components of 360-Degree Assessment</h3>
+          <ul>
+            <li><strong>Academic Performance (40%):</strong> Competency-based achievement in core subjects</li>
+            <li><strong>Co-Curricular Engagement (20%):</strong> Participation and achievement in arts, sports, and other activities</li>
+            <li><strong>Personal and Social Development (20%):</strong> Teacher-observed social, emotional, and ethical development</li>
+            <li><strong>Self-Assessment (10%):</strong> Student's own reflection and goal-setting</li>
+            <li><strong>Peer Assessment (10%):</strong> Peer feedback on collaborative and social skills</li>
+          </ul>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Key Shift</div>
+            The 360-Degree Report Card replaces the narrow, grade-only report card with a narrative, multisource assessment document that recognizes the full range of a student's abilities and character.
+          </div>
+        `
+      }
+    ]
+  },
+  {
+    id: 'section-ii',
+    number: 'SECTION II',
+    title: 'NCF 2023 Assessment Framework',
+    desc: 'National Curriculum Framework for School Education 2023',
+    source: 'ncf',
+    chapters: [
+      {
+        id: 'ncf-1',
+        number: '9',
+        title: 'Learning Outcomes Alignment',
+        source: 'ncf',
+        sourceLabel: 'NCF 2023',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            National Curriculum Framework for School Education 2023 (NCF-SE 2023) — Chapter on Assessment
+          </div>
+          <h3>Learning Outcomes as Assessment Anchors</h3>
+          <p>The NCF 2023 frames all assessment around clearly articulated learning outcomes. A learning outcome is a statement of what a learner is expected to know, understand, and be able to do at the end of a specific period of learning. All assessment tasks — whether formative or summative — must be directly aligned to stated learning outcomes.</p>
+          <p>The NCF 2023 articulates learning outcomes at the level of each Competency (broad capability), each Learning Outcome (specific observable behavior), and each Sub-skill (granular ability within a learning outcome). This three-tier structure provides teachers with a precise map for designing both instruction and assessment.</p>
+          <h3>Alignment Principle</h3>
+          <p>There must be a clear and direct alignment between: (a) the Curriculum Goals and Competencies; (b) the Classroom Instruction and Pedagogy; and (c) the Assessment Tasks and Instruments. This principle of constructive alignment ensures that what is taught is what is assessed, and that what is assessed actually measures what the curriculum intends students to learn.</p>
+          <div class="callout callout-saffron">
+            <div class="callout-label">NCF 2023 Principle</div>
+            Assessment must be valid — it must actually measure what it is intended to measure. Validity requires that assessment tasks directly reflect the learning outcomes to which they are aligned.
+          </div>
+        `
+      },
+      {
+        id: 'ncf-2',
+        number: '10',
+        title: 'Stage-Wise Assessment',
+        source: 'ncf',
+        sourceLabel: 'NCF 2023',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            NCF-SE 2023 — Stage-Wise Curriculum and Assessment Framework
+          </div>
+          <h3>The Five-Stage Structure</h3>
+          <p>The NCF 2023 organizes school education into five stages, each with its own distinct assessment philosophy and practices:</p>
+          <h4>Stage 1: Foundational Stage (Grades 1–2, Ages 3–8 including pre-primary)</h4>
+          <p>Assessment at this stage is entirely formative, play-based, and observation-driven. There are no written tests or grades. Teachers document learning through anecdotal records, portfolios of children's work, and structured observation checklists. The emphasis is on developmental readiness, social-emotional development, and emerging literacy and numeracy.</p>
+          <h4>Stage 2: Preparatory Stage (Grades 3–5, Ages 8–11)</h4>
+          <p>Assessment remains primarily formative with some structured periodic assessment. Teachers use a variety of assessment tools including oral questioning, group activities, projects, and brief written tasks. Report cards at this stage include descriptive comments alongside simple competency ratings. No numerical grades are assigned.</p>
+          <h4>Stage 3: Middle Stage (Grades 6–8, Ages 11–14)</h4>
+          <p>Both formative and summative assessments are used. Students receive grades on summative assessments but continue to receive qualitative feedback on their learning process. The Holistic Progress Card is introduced. Students begin to participate in self-assessment and peer-assessment activities.</p>
+          <h4>Stage 4: Secondary Stage (Grades 9–10, Ages 14–16)</h4>
+          <p>Assessment becomes more formal and includes both internal (school-based) and external (Board) components. Competency-based questions become the norm. The grade structure is transparent and aligned to competency descriptors.</p>
+          <h4>Stage 5: Senior Secondary Stage (Grades 11–12, Ages 16–18)</h4>
+          <p>Board examinations are the primary summative measure, redesigned to test higher-order competencies. Students have flexibility in subject choice. The transcript is multidimensional, capturing both academic and co-curricular achievements.</p>
+        `
+      },
+      {
+        id: 'ncf-3',
+        number: '11',
+        title: 'Formative Assessment Practices',
+        source: 'ncf',
+        sourceLabel: 'NCF 2023',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            NCF-SE 2023 — Formative Assessment Practices Section
+          </div>
+          <h3>Principles of Formative Assessment</h3>
+          <p>Formative assessment is not a single activity or event, but an ongoing process of gathering, interpreting, and using evidence of student learning to make informed instructional decisions. The NCF 2023 identifies six key principles of effective formative assessment practice:</p>
+          <ul>
+            <li><strong>Clarifying learning intentions:</strong> Students must know what they are expected to learn and at what standard</li>
+            <li><strong>Engineering effective discussions:</strong> Classroom dialogue that elicits evidence of learning</li>
+            <li><strong>Providing feedback that moves learning forward:</strong> Descriptive, actionable feedback focused on the task</li>
+            <li><strong>Activating students as owners of their own learning:</strong> Self-regulation and metacognitive awareness</li>
+            <li><strong>Activating students as instructional resources for one another:</strong> Peer feedback and collaborative learning</li>
+            <li><strong>Using assessment evidence to adjust instruction:</strong> Data-driven responsive teaching</li>
+          </ul>
+          <h3>Formative Assessment Tools</h3>
+          <p>The NCF 2023 recommends a wide variety of formative assessment tools and techniques, selected based on the learning outcome being assessed and the stage of the learner. These include: exit tickets, think-pair-share, concept mapping, oral questioning, observation, portfolios, learning journals, project work, performance tasks, and peer assessment.</p>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Core Distinction</div>
+            Formative assessment is distinguished not by the tool used, but by how the evidence gathered is used. An activity becomes formative when its results are used to adjust instruction or support student self-regulation of learning.
+          </div>
+
+          <div class="diagram-container">
+            <div class="diagram-title">Formative Assessment Feedback Loop</div>
+            <svg viewBox="0 0 440 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;">
+              <defs>
+                <marker id="arr3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                  <polygon points="0 0, 8 3, 0 6" fill="#1a3a5c"/>
+                </marker>
+              </defs>
+              <!-- Step 1 -->
+              <rect x="10" y="80" width="90" height="50" rx="4" fill="#0a1628" stroke="#c97d2e" stroke-width="1.5"/>
+              <text x="55" y="101" text-anchor="middle" fill="white" font-size="8.5" font-family="Georgia">Clarify</text>
+              <text x="55" y="115" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="7.5">Learning Goals</text>
+              <!-- arrow -->
+              <path d="M100 105 L130 105" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr3)"/>
+              <!-- Step 2 -->
+              <rect x="130" y="80" width="90" height="50" rx="4" fill="#0a1628" stroke="#c97d2e" stroke-width="1.5"/>
+              <text x="175" y="101" text-anchor="middle" fill="white" font-size="8.5" font-family="Georgia">Gather</text>
+              <text x="175" y="115" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="7.5">Evidence</text>
+              <!-- arrow -->
+              <path d="M220 105 L250 105" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr3)"/>
+              <!-- Step 3 -->
+              <rect x="250" y="80" width="90" height="50" rx="4" fill="#0a1628" stroke="#c97d2e" stroke-width="1.5"/>
+              <text x="295" y="101" text-anchor="middle" fill="white" font-size="8.5" font-family="Georgia">Interpret</text>
+              <text x="295" y="115" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="7.5">&amp; Analyse</text>
+              <!-- arrow -->
+              <path d="M340 105 L370 105" stroke="#1a3a5c" stroke-width="1.5" marker-end="url(#arr3)"/>
+              <!-- Step 4 -->
+              <rect x="370" y="80" width="65" height="50" rx="4" fill="#c97d2e"/>
+              <text x="403" y="101" text-anchor="middle" fill="white" font-size="8.5" font-family="Georgia">Adjust</text>
+              <text x="403" y="115" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="7.5">Teaching</text>
+              <!-- Feedback curve back -->
+              <path d="M403 130 Q403 185 220 185 Q55 185 55 130" stroke="#c97d2e" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arr3)"/>
+              <text x="220" y="200" text-anchor="middle" fill="#c97d2e" font-size="8" font-family="monospace">CONTINUOUS FEEDBACK CYCLE</text>
+            </svg>
+          </div>
+        `
+      },
+      {
+        id: 'ncf-4',
+        number: '12',
+        title: 'Classroom-Based Assessment',
+        source: 'ncf',
+        sourceLabel: 'NCF 2023',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            NCF-SE 2023 — Classroom Assessment Practices
+          </div>
+          <h3>Classroom as the Primary Assessment Site</h3>
+          <p>The NCF 2023 firmly situates the primary locus of assessment in the classroom rather than in external examination halls. The classroom teacher is positioned as the primary assessor, with the knowledge, proximity, and contextual understanding needed to make valid and reliable assessments of student learning.</p>
+          <h3>Characteristics of High-Quality Classroom Assessment</h3>
+          <ul>
+            <li><strong>Purposeful:</strong> Every assessment task is designed with a specific learning outcome in mind</li>
+            <li><strong>Varied:</strong> Multiple modes of assessment are used, not just written tests</li>
+            <li><strong>Regular:</strong> Assessment is ongoing and frequent, not only at term-end</li>
+            <li><strong>Responsive:</strong> Assessment results are used to adjust instruction in real time</li>
+            <li><strong>Transparent:</strong> Criteria and expectations are shared with students in advance</li>
+            <li><strong>Inclusive:</strong> Tasks are designed to be accessible for all students, including those with diverse learning needs</li>
+          </ul>
+          <h3>Internal Assessment Weight</h3>
+          <p>The NCF 2023 recommends that internal (classroom-based) assessment carry a significant weight in the overall assessment scheme — moving progressively from 100% internal assessment in the Foundational Stage to a substantial internal component (at least 40%) in Board-level assessments at the Secondary Stage.</p>
+        `
+      },
+      {
+        id: 'ncf-5',
+        number: '13',
+        title: 'Feedback Mechanisms',
+        source: 'ncf',
+        sourceLabel: 'NCF 2023',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            NCF-SE 2023 — Chapter on Feedback in Assessment
+          </div>
+          <h3>Feedback as the Engine of Learning</h3>
+          <p>Research consistently demonstrates that feedback is the single most powerful intervention for improving student learning outcomes. The NCF 2023 therefore places feedback at the heart of its assessment framework. All assessment must be followed by meaningful, specific, and actionable feedback to students.</p>
+          <h3>Principles of Effective Feedback</h3>
+          <ul>
+            <li><strong>Specific:</strong> Feedback should refer to specific aspects of the student's work, not vague generalities</li>
+            <li><strong>Actionable:</strong> Feedback should tell the student what they can do differently to improve</li>
+            <li><strong>Timely:</strong> Feedback should be given as close to the learning moment as possible</li>
+            <li><strong>Feed-forward:</strong> Feedback should be oriented toward future improvement, not past performance</li>
+            <li><strong>Balanced:</strong> Feedback should recognize strengths as well as identify areas for growth</li>
+            <li><strong>Student-owned:</strong> Feedback should be presented in a way that the student can understand and act on</li>
+          </ul>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Critical Distinction</div>
+            There is a critical difference between feedback and mere evaluation. Evaluation tells a student where they stand. Feedback tells them how to move forward. Assessment without feedback is evaluation; assessment with feedback is learning.
+          </div>
+        `
+      },
+      {
+        id: 'ncf-6',
+        number: '14',
+        title: 'Inclusive Assessment',
+        source: 'ncf',
+        sourceLabel: 'NCF 2023',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            NCF-SE 2023 — Inclusive Education and Assessment
+          </div>
+          <h3>Universal Design for Assessment</h3>
+          <p>The NCF 2023 requires that all assessment be designed according to Universal Design for Learning (UDL) principles, which means providing multiple means of representation, multiple means of action and expression, and multiple means of engagement. This ensures that assessment tasks do not inadvertently disadvantage students due to disability, language background, or socioeconomic circumstances.</p>
+          <h3>Accommodations and Modifications</h3>
+          <p>For students with identified learning disabilities, physical disabilities, or other special needs, assessment accommodations shall be provided. Accommodations change how a student demonstrates learning without changing what is being assessed. They may include: extended time, alternative formats (oral rather than written), assistive technology, separate testing environments, or adapted question formats.</p>
+          <h3>Linguistic Accessibility</h3>
+          <p>Assessment in multilingual India must grapple with the challenge of language. The NCF 2023 recommends that, particularly at the Foundational and Preparatory Stages, assessment be conducted in the student's home language or mother tongue. At higher stages, students should not be penalized for grammatical errors in a second or third language when the concept or competency being assessed is in another domain.</p>
+        `
+      },
+      {
+        id: 'ncf-7',
+        number: '15',
+        title: 'Competency Mapping',
+        source: 'ncf',
+        sourceLabel: 'NCF 2023',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            NCF-SE 2023 — Competency Framework and Mapping
+          </div>
+          <h3>The Competency Framework Structure</h3>
+          <p>The NCF 2023 provides a comprehensive Competency Framework that maps all expected student learning from Grades 1 through 12. This framework is organized hierarchically: Aims → Curriculum Goals → Competencies → Learning Outcomes → Sub-skills. This detailed map allows teachers, curriculum designers, and assessment developers to precisely locate any specific ability within the broader educational landscape.</p>
+          <h3>Competency Descriptors</h3>
+          <p>Each competency is accompanied by descriptor statements that describe observable student behaviors at different levels of mastery. These descriptors range from Beginning Learner through Developing Learner to Proficient Learner and Advanced Learner. Teachers use these descriptors to determine each student's current level and to identify appropriate next steps in learning.</p>
+          <h3>Cross-Curricular Competencies</h3>
+          <p>In addition to subject-specific competencies, the NCF 2023 identifies a set of cross-curricular competencies that all students should develop across all subjects and stages. These include: critical and creative thinking, communication, collaboration, problem-solving, self-management, and civic responsibility. These competencies are assessed through classroom observation and portfolio-based documentation rather than through standardized tests.</p>
+        `
+      },
+      {
+        id: 'ncf-8',
+        number: '16',
+        title: 'Question Design Principles',
+        source: 'ncf',
+        sourceLabel: 'NCF 2023',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            NCF-SE 2023 — Assessment Design and Question Framing
+          </div>
+          <h3>Bloom's Taxonomy as the Design Framework</h3>
+          <p>The NCF 2023 recommends that question papers and assessment tasks be designed using Bloom's Revised Taxonomy as a guiding framework. This ensures that assessment tasks are distributed across the six cognitive levels: Remembering, Understanding, Applying, Analysing, Evaluating, and Creating. The taxonomy ensures a balanced cognitive demand profile in every assessment.</p>
+          <h3>Recommended Question Type Distribution</h3>
+          <ul>
+            <li><strong>Knowledge/Recall (Level 1):</strong> Maximum 20% of marks</li>
+            <li><strong>Understanding/Comprehension (Level 2):</strong> 20–25% of marks</li>
+            <li><strong>Application (Level 3):</strong> 25–30% of marks</li>
+            <li><strong>Analysis (Level 4):</strong> 15–20% of marks</li>
+            <li><strong>Evaluation and Creation (Levels 5–6):</strong> 10–15% of marks</li>
+          </ul>
+          <h3>HOTS and Case-Based Questions</h3>
+          <p>All examination papers shall include a minimum proportion of Higher-Order Thinking Skills (HOTS) questions and Case-Based/Source-Based questions. HOTS questions require students to analyse, evaluate, or create rather than merely recall. Case-Based questions present a scenario or data set and ask students to interpret, apply, or draw inferences.</p>
+          <div class="callout callout-saffron">
+            <div class="callout-label">NCF 2023 Design Mandate</div>
+            No question paper should contain more than 20% of marks from pure recall questions. The majority of marks should be allocated to questions that require students to demonstrate understanding and application of knowledge in new or unfamiliar contexts.
+          </div>
+        `
+      }
+    ]
+  },
+  {
+    id: 'section-iii',
+    number: 'SECTION III',
+    title: 'PARAKH Framework',
+    desc: 'Performance Assessment, Review, and Analysis of Knowledge for Holistic Development',
+    source: 'parakh',
+    chapters: [
+      {
+        id: 'parakh-1',
+        number: '17',
+        title: 'Standard Setting for Examinations',
+        source: 'parakh',
+        sourceLabel: 'PARAKH',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            PARAKH — National Assessment Centre: Standard Setting Framework, NCERT, 2022
+          </div>
+          <h3>PARAKH's Mandate</h3>
+          <p>PARAKH (Performance Assessment, Review, and Analysis of Knowledge for Holistic Development) was established as a constituent unit of NCERT under the mandate of the National Education Policy 2020. Its primary responsibility is to set norms, standards, and guidelines for student assessment and evaluation for all recognized school boards of India, with the goal of ensuring comparability and validity of assessment outcomes across the country.</p>
+          <h3>Standard Setting Methods</h3>
+          <p>PARAKH employs internationally recognized standard-setting methodologies to establish performance standards for national and state-level assessments. These include the Bookmark Method, the Modified Angoff Method, and the Body of Work Method, each suited to different assessment contexts and purposes.</p>
+          <h3>Performance Level Descriptors</h3>
+          <p>For each subject and stage, PARAKH develops Performance Level Descriptors (PLDs) that describe what a student at each performance level — Beginning, Developing, Proficient, and Advanced — knows and can do. These descriptors are grounded in the learning outcomes of the National Curriculum Framework and serve as the basis for score interpretation and reporting.</p>
+          <div class="callout callout-saffron">
+            <div class="callout-label">PARAKH Core Function</div>
+            Standard setting is not merely a technical exercise. It is a process of defining educational expectations and communicating them clearly to all stakeholders — students, parents, teachers, and the public.
+          </div>
+        `
+      },
+      {
+        id: 'parakh-2',
+        number: '18',
+        title: 'Blueprint Design for Assessments',
+        source: 'parakh',
+        sourceLabel: 'PARAKH',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            PARAKH — Assessment Blueprint Framework and Specifications
+          </div>
+          <h3>What is an Assessment Blueprint?</h3>
+          <p>An assessment blueprint (also called a test blueprint or table of specifications) is a planning document that specifies the content, cognitive demand, question types, and mark distribution of an examination before any questions are written. It ensures that the examination is valid — that it actually tests the full range of the curriculum in the proportions intended.</p>
+          <h3>Components of a PARAKH-Aligned Blueprint</h3>
+          <ul>
+            <li><strong>Competency Coverage:</strong> Which competencies are assessed and to what extent</li>
+            <li><strong>Content Coverage:</strong> Which topics are included and their proportional weight</li>
+            <li><strong>Cognitive Demand:</strong> Distribution across Bloom's Taxonomy levels</li>
+            <li><strong>Question Type Mix:</strong> Proportion of MCQs, short answers, long answers, case studies</li>
+            <li><strong>Difficulty Distribution:</strong> Easy (30%), Medium (50%), Difficult (20%)</li>
+            <li><strong>Total Marks and Duration</strong></li>
+          </ul>
+
+          <div class="diagram-container">
+            <div class="diagram-title">Blueprint Distribution Framework — PARAKH Standard</div>
+            <svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+              <!-- Bars representing distribution -->
+              <text x="230" y="20" text-anchor="middle" fill="#1a2942" font-size="11" font-family="Georgia">Cognitive Level Distribution in Question Paper</text>
+              <!-- Bar chart base -->
+              <line x1="40" y1="160" x2="430" y2="160" stroke="#d1dae8" stroke-width="1"/>
+              <line x1="40" y1="40" x2="40" y2="160" stroke="#d1dae8" stroke-width="1"/>
+              <!-- Bars -->
+              <rect x="60" y="140" width="50" height="20" fill="#0a1628"/>
+              <text x="85" y="135" text-anchor="middle" fill="#0a1628" font-size="9">20%</text>
+              <text x="85" y="175" text-anchor="middle" fill="#666" font-size="8">Recall</text>
+              <rect x="130" y="110" width="50" height="50" fill="#1a3a5c"/>
+              <text x="155" y="105" text-anchor="middle" fill="#1a3a5c" font-size="9">25%</text>
+              <text x="155" y="175" text-anchor="middle" fill="#666" font-size="8">Understand</text>
+              <rect x="200" y="90" width="50" height="70" fill="#c97d2e"/>
+              <text x="225" y="85" text-anchor="middle" fill="#c97d2e" font-size="9">30%</text>
+              <text x="225" y="175" text-anchor="middle" fill="#666" font-size="8">Apply</text>
+              <rect x="270" y="110" width="50" height="50" fill="#3d5a80"/>
+              <text x="295" y="105" text-anchor="middle" fill="#3d5a80" font-size="9">15%</text>
+              <text x="295" y="175" text-anchor="middle" fill="#666" font-size="8">Analyse</text>
+              <rect x="340" y="130" width="50" height="30" fill="#4a90c4"/>
+              <text x="365" y="125" text-anchor="middle" fill="#4a90c4" font-size="9">10%</text>
+              <text x="365" y="175" text-anchor="middle" fill="#666" font-size="8">Evaluate/Create</text>
+            </svg>
+          </div>
+        `
+      },
+      {
+        id: 'parakh-3',
+        number: '19',
+        title: 'Benchmarking Across Boards',
+        source: 'parakh',
+        sourceLabel: 'PARAKH',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            PARAKH — National Benchmarking and Equating Framework
+          </div>
+          <h3>The Benchmarking Challenge</h3>
+          <p>India has over 60 recognized school education boards, each operating independently with different curricula, different question paper designs, different marking schemes, and different grading scales. This makes it impossible to compare student achievement across boards, or to use Board marks as a fair basis for admission to higher education institutions. PARAKH's benchmarking mission is to address this challenge.</p>
+          <h3>PARAKH's Equating Approach</h3>
+          <p>PARAKH employs statistical equating methods to develop comparable score scales across different Board examinations. By administering a common set of anchor items to students from different boards, and using Item Response Theory (IRT) to calibrate item difficulty, PARAKH can establish how a score in one board corresponds to a score in another.</p>
+          <h3>National Reference Test</h3>
+          <p>PARAKH has proposed the development of a National Reference Test — a voluntary, sample-based examination administered to students from all boards simultaneously — to establish a common reference point for inter-board comparisons. This is not intended to be a selection examination but a benchmarking instrument for system-level quality monitoring.</p>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Long-Term Vision</div>
+            The goal of PARAKH's benchmarking work is to create a single, nationally recognized competency scale against which all Board examinations can be mapped, providing comparability and equity in higher education admissions.
+          </div>
+        `
+      },
+      {
+        id: 'parakh-4',
+        number: '20',
+        title: 'Assessment Literacy Framework',
+        source: 'parakh',
+        sourceLabel: 'PARAKH',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            PARAKH — Assessment Literacy and Teacher Capacity Building Framework
+          </div>
+          <h3>Defining Assessment Literacy</h3>
+          <p>Assessment literacy refers to the knowledge, skills, and dispositions that enable teachers, school leaders, curriculum developers, and policymakers to understand, interpret, and use assessment effectively to improve learning. PARAKH has developed a comprehensive Assessment Literacy Framework that defines what assessment-literate educators need to know and be able to do at each level of the education system.</p>
+          <h3>Assessment Literacy Domains</h3>
+          <ul>
+            <li><strong>Domain 1: Assessment Foundations</strong> — Understanding the purposes, principles, and types of assessment</li>
+            <li><strong>Domain 2: Assessment Design</strong> — Ability to develop valid and reliable assessment instruments</li>
+            <li><strong>Domain 3: Assessment Administration</strong> — Capacity to administer assessments with integrity and fairness</li>
+            <li><strong>Domain 4: Assessment Analysis</strong> — Skill in interpreting assessment results quantitatively and qualitatively</li>
+            <li><strong>Domain 5: Assessment Use</strong> — Ability to use assessment data to improve instruction and learning</li>
+            <li><strong>Domain 6: Assessment Communication</strong> — Competency in communicating assessment results to diverse audiences</li>
+          </ul>
+          <h3>Teacher Capacity Building</h3>
+          <p>PARAKH works with NCERT, SCERTs, and DIETs to deliver assessment literacy training to teachers at all levels. Training programs include both pre-service preparation (teacher education programs) and in-service professional development (workshops, online courses, and on-site mentoring).</p>
+        `
+      },
+      {
+        id: 'parakh-5',
+        number: '21',
+        title: 'Performance Reporting Standards',
+        source: 'parakh',
+        sourceLabel: 'PARAKH',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            PARAKH — Performance Reporting and Score Communication Guidelines
+          </div>
+          <h3>Principles of Fair Reporting</h3>
+          <p>PARAKH has established standards for how assessment results should be reported to ensure they are interpreted accurately, used appropriately, and do not cause harm to students or schools. These principles apply to all national and state assessments.</p>
+          <h3>Reporting Standards</h3>
+          <ul>
+            <li>Results shall be reported in terms of performance levels and competency descriptors, not just marks or percentages</li>
+            <li>Confidence intervals shall be reported alongside point estimates to acknowledge measurement error</li>
+            <li>Disaggregated data shall be reported by gender, socioeconomic background, and geography to identify equity gaps</li>
+            <li>Results shall be accompanied by guidance for educators and parents on how to interpret and act on them</li>
+            <li>Year-on-year comparability shall be maintained through statistical equating procedures</li>
+          </ul>
+          <h3>The Shift from Marks to Proficiency</h3>
+          <p>PARAKH advocates for a fundamental shift in how we think about and report assessment results — from a numerical score (e.g., 78 out of 100) to a proficiency description (e.g., "This student demonstrates proficiency in applying mathematical concepts to real-world problems, but has gaps in algebraic reasoning"). This shift makes results more meaningful and more actionable for students, parents, and teachers.</p>
+        `
+      },
+      {
+        id: 'parakh-6',
+        number: '22',
+        title: 'Digital Assessment Framework',
+        source: 'parakh',
+        sourceLabel: 'PARAKH',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            PARAKH — Digital Assessment and Technology Integration Framework
+          </div>
+          <h3>Digital Assessment in Indian Schools</h3>
+          <p>PARAKH recognizes that digital assessment offers significant potential advantages over paper-based testing: adaptive testing that adjusts to student ability, immediate automated scoring of objective items, rich media items that cannot be presented on paper, and faster reporting of results. However, it also acknowledges the significant digital divide in Indian schools and the need for equitable access.</p>
+          <h3>Adaptive Testing</h3>
+          <p>Computerized Adaptive Tests (CATs) are examinations in which the difficulty of subsequent questions is adjusted based on a student's responses to earlier questions. Students who answer questions correctly are given harder questions; students who struggle are given easier ones. This results in more precise measurement of student ability across the full ability range, with fewer questions.</p>
+          <h3>Technology-Enhanced Items (TEIs)</h3>
+          <p>Technology-Enhanced Items are question types that can only be delivered digitally. They include: drag-and-drop ordering tasks, simulation-based items, audio and video stimulus items, and interactive graph interpretation tasks. These items can assess competencies — particularly process skills and higher-order thinking — that are difficult or impossible to assess through traditional paper-and-pencil methods.</p>
+          <h3>Equity Considerations</h3>
+          <p>All digital assessment initiatives must be accompanied by robust equity safeguards. Schools and students without reliable electricity or internet access must be provided appropriate alternatives. No student should be disadvantaged in assessment due to the digital divide. The principle of equity shall override the principle of digital efficiency.</p>
+        `
+      },
+      {
+        id: 'parakh-7',
+        number: '23',
+        title: 'Governance and Regulation',
+        source: 'parakh',
+        sourceLabel: 'PARAKH',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            PARAKH — Governance Structure and Regulatory Framework
+          </div>
+          <h3>PARAKH's Governance Mandate</h3>
+          <p>PARAKH functions as the national coordinating body for all school-level assessments in India. It does not replace State Boards or CBSE/CISCE but provides an overarching framework of standards, norms, and guidelines within which all boards must operate. It functions in an advisory and standard-setting capacity, with the power to issue guidelines binding on all recognized boards.</p>
+          <h3>Inter-Board Coordination</h3>
+          <p>PARAKH convenes regular meetings of the heads of all recognized school boards to share assessment data, discuss common challenges, and coordinate implementation of NEP-mandated reforms. This creates a national dialogue on assessment quality and ensures that reform efforts are aligned across the country.</p>
+          <h3>Quality Assurance Mechanism</h3>
+          <p>PARAKH conducts periodic audits of Board examination processes to assess compliance with established standards. These audits cover: question paper design and blueprint adherence, examination administration and security procedures, marking and moderation processes, and result processing and reporting systems. Boards that fail to meet minimum standards are required to submit improvement plans.</p>
+          <div class="callout callout-saffron">
+            <div class="callout-label">Constitutional Basis</div>
+            PARAKH's authority derives from the Right of Children to Free and Compulsory Education Act (RTE Act) and the National Education Policy 2020, both of which vest the Central Government with the responsibility to establish national standards for school education, including assessment.
+          </div>
+        `
+      }
+    ]
+  },
+  {
+    id: 'section-iv',
+    number: 'SECTION IV',
+    title: 'JKBOSE Examination Framework',
+    desc: 'Jammu & Kashmir Board of School Education — Examination Regulations & Policies',
+    source: 'jkbose',
+    chapters: [
+      {
+        id: 'jkbose-1',
+        number: '24',
+        title: 'Examination Structure',
+        source: 'jkbose',
+        sourceLabel: 'JKBOSE',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            Jammu &amp; Kashmir Board of School Education — Examination Rules and Regulations (Latest Edition)
+          </div>
+          <h3>JKBOSE Examination System Overview</h3>
+          <p>The Jammu and Kashmir Board of School Education (JKBOSE) conducts public examinations for students in the Union Territory of Jammu and Kashmir at the Secondary (Class 10) and Higher Secondary (Class 11 and Class 12) levels. It is the apex body for school-level public examinations in the UT and is governed by the J&K Board of School Education Act.</p>
+          <h3>Examination Schedule</h3>
+          <p>JKBOSE conducts examinations twice annually — the Annual Regular examination (held in March–April for the Kashmir Division and in October–November for the Jammu Division) and the Annual Bi-Annual examination for students who appear as private candidates or wish to improve their performance. The bifurcated schedule accommodates the different academic calendar requirements of the two divisions.</p>
+          <h3>Classes for Which JKBOSE Conducts Examinations</h3>
+          <ul>
+            <li>Class 8 — Middle School Terminal Examination</li>
+            <li>Class 10 — Secondary School Examination (Matriculation)</li>
+            <li>Class 11 — Higher Secondary Part I Examination</li>
+            <li>Class 12 — Higher Secondary Part II Examination (Final)</li>
+          </ul>
+          <h3>Examination Centres</h3>
+          <p>JKBOSE designates government and government-aided schools as examination centres. Private schools whose students appear through JKBOSE may be designated as examination centres subject to fulfillment of prescribed norms regarding infrastructure, personnel, and security. The Board issues detailed instructions to Centre Superintendents and Invigilators for each examination.</p>
+        `
+      },
+      {
+        id: 'jkbose-2',
+        number: '25',
+        title: 'Internal vs External Assessment',
+        source: 'jkbose',
+        sourceLabel: 'JKBOSE',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            JKBOSE — Assessment Scheme for Secondary and Higher Secondary Classes
+          </div>
+          <h3>Assessment Scheme Structure</h3>
+          <p>In alignment with NCF 2023 and NEP 2020 mandates, JKBOSE has revised its assessment scheme to incorporate both Internal Assessment (conducted by schools) and External Assessment (conducted by JKBOSE through public examinations). The ratio of Internal to External assessment is being progressively adjusted in accordance with national policy directives.</p>
+          <h3>Current Assessment Weightage (Class 10)</h3>
+          <ul>
+            <li><strong>External Examination (Theory):</strong> 80 marks per subject</li>
+            <li><strong>Internal Assessment (School-Based):</strong> 20 marks per subject</li>
+            <li><strong>Practical/Project Work:</strong> As per subject specifications</li>
+          </ul>
+          <h3>Internal Assessment Components (20 Marks)</h3>
+          <ul>
+            <li>Periodic Tests / Unit Tests: 10 marks</li>
+            <li>Notebook Submission and Completeness: 5 marks</li>
+            <li>Subject Enrichment Activities: 5 marks</li>
+          </ul>
+          <h3>Current Assessment Weightage (Class 12)</h3>
+          <ul>
+            <li><strong>External Examination (Theory):</strong> 70 marks per subject (for theory subjects)</li>
+            <li><strong>Practical / Internal Assessment:</strong> 30 marks per subject</li>
+          </ul>
+          <div class="callout callout-saffron">
+            <div class="callout-label">JKBOSE Policy Direction</div>
+            In accordance with NEP 2020, JKBOSE is working toward a progressive increase in the weight of Internal Assessment, with the long-term goal of achieving a 40:60 or 50:50 internal-to-external ratio at the Secondary Stage.
+          </div>
+        `
+      },
+      {
+        id: 'jkbose-3',
+        number: '26',
+        title: 'Moderation Policy',
+        source: 'jkbose',
+        sourceLabel: 'JKBOSE',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            JKBOSE — Moderation and Standardization of Marks Policy
+          </div>
+          <h3>Purpose of Moderation</h3>
+          <p>Moderation is a process by which the marks awarded in an examination are adjusted to account for inter-paper difficulty variations, inter-examiner marking variations, and statistical anomalies in the score distribution. Its purpose is to ensure that the final marks awarded to students are fair and comparable, regardless of which specific question paper they received or which examiner marked their work.</p>
+          <h3>JKBOSE Moderation Procedures</h3>
+          <p>JKBOSE employs the following moderation procedures for all Board examinations:</p>
+          <ul>
+            <li><strong>Head Examiner Moderation:</strong> The Head Examiner reviews a sample of scripts marked by each examiner to check for consistency with the marking scheme</li>
+            <li><strong>Statistical Moderation:</strong> Score distributions are analyzed across different centres and regions; extreme deviations from expected distributions are investigated</li>
+            <li><strong>Paper-Level Moderation:</strong> Where a question paper is found to have been unusually difficult or easy, a uniform statistical adjustment may be applied to all candidates</li>
+          </ul>
+          <h3>Transparency in Moderation</h3>
+          <p>JKBOSE maintains records of all moderation decisions and the rationale for them. Any moderation applied to a paper's scores is documented and archived. Students have the right to know that moderation has been applied, though the specific technical details of the moderation calculation need not be disclosed.</p>
+        `
+      },
+      {
+        id: 'jkbose-4',
+        number: '27',
+        title: 'Re-evaluation and Scrutiny Rules',
+        source: 'jkbose',
+        sourceLabel: 'JKBOSE',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            JKBOSE — Re-evaluation, Scrutiny, and Challenge Valuation Regulations
+          </div>
+          <h3>Scrutiny of Answer Sheets</h3>
+          <p>A student who is dissatisfied with the marks awarded in any subject may apply for scrutiny of the answer sheet within the prescribed time limit after the declaration of results. Scrutiny involves a check of: (a) that all questions have been valued; (b) that all marks have been correctly totalled; and (c) that no question has been left without being considered by the examiner. Scrutiny does not involve re-reading or re-marking of the answers.</p>
+          <h3>Re-evaluation (Challenge Valuation)</h3>
+          <p>In addition to scrutiny, JKBOSE provides a re-evaluation mechanism wherein a student may apply for their answer sheet to be valued afresh by a different examiner. Re-evaluation is available for theory papers only and must be applied for within the prescribed window. The marks obtained through re-evaluation shall be the final marks, whether higher or lower than the original marks.</p>
+          <h3>Fees and Timelines</h3>
+          <p>Applications for scrutiny and re-evaluation must be submitted along with the prescribed fees within the notified time period. Applications received after the deadline shall not be entertained. Refund of fees is admissible only in cases where scrutiny reveals an error in totalling.</p>
+          <h3>Photocopy of Answer Sheet</h3>
+          <p>Students may apply for a photocopy of their evaluated answer sheet for the purpose of personal review and to inform any decision about applying for re-evaluation. The photocopy facility is subject to the payment of prescribed fees and is available within a specified period after declaration of results.</p>
+        `
+      },
+      {
+        id: 'jkbose-5',
+        number: '28',
+        title: 'Result Processing',
+        source: 'jkbose',
+        sourceLabel: 'JKBOSE',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            JKBOSE — Result Processing, Tabulation, and Declaration Procedures
+          </div>
+          <h3>Result Processing Chain</h3>
+          <p>The processing of JKBOSE examination results involves a multi-stage chain from the answer sheet to the final mark sheet. Each stage involves verification and cross-checking to minimize errors.</p>
+
+          <div class="diagram-container">
+            <div class="diagram-title">JKBOSE Result Processing Flow</div>
+            <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;">
+              <defs>
+                <marker id="arr4" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                  <polygon points="0 0, 8 3, 0 6" fill="#c97d2e"/>
+                </marker>
+              </defs>
+              <!-- Box 1 -->
+              <rect x="170" y="10" width="120" height="36" rx="4" fill="#0a1628" stroke="#c97d2e" stroke-width="1.5"/>
+              <text x="230" y="32" text-anchor="middle" fill="white" font-size="9.5" font-family="Georgia">Answer Scripts</text>
+              <path d="M230 46 L230 66" stroke="#c97d2e" stroke-width="1.5" marker-end="url(#arr4)"/>
+              <rect x="170" y="66" width="120" height="36" rx="4" fill="#112240" stroke="#c97d2e" stroke-width="1"/>
+              <text x="230" y="88" text-anchor="middle" fill="white" font-size="9.5" font-family="Georgia">Examiner Valuation</text>
+              <path d="M230 102 L230 122" stroke="#c97d2e" stroke-width="1.5" marker-end="url(#arr4)"/>
+              <rect x="170" y="122" width="120" height="36" rx="4" fill="#112240" stroke="#c97d2e" stroke-width="1"/>
+              <text x="230" y="144" text-anchor="middle" fill="white" font-size="9.5" font-family="Georgia">Head Examiner Review</text>
+              <path d="M230 158 L230 178" stroke="#c97d2e" stroke-width="1.5" marker-end="url(#arr4)"/>
+              <rect x="170" y="178" width="120" height="36" rx="4" fill="#112240" stroke="#c97d2e" stroke-width="1"/>
+              <text x="230" y="200" text-anchor="middle" fill="white" font-size="9.5" font-family="Georgia">Data Entry &amp; Tabulation</text>
+              <path d="M230 214 L230 234" stroke="#c97d2e" stroke-width="1.5" marker-end="url(#arr4)"/>
+              <rect x="140" y="234" width="180" height="36" rx="4" fill="#c97d2e"/>
+              <text x="230" y="256" text-anchor="middle" fill="white" font-size="9.5" font-family="Georgia">Result Declaration &amp; Mark Sheet</text>
+            </svg>
+          </div>
+
+          <h3>Tabulation Process</h3>
+          <p>Marks from all subjects are tabulated for each candidate to calculate the aggregate marks, percentage, division, and grades. The tabulation process is computerized and subject to multiple verification checks. Discrepancies flagged by the system are investigated manually before results are finalized.</p>
+          <h3>Division and Grade Assignment</h3>
+          <ul>
+            <li>First Division with Distinction: 75% and above in aggregate</li>
+            <li>First Division: 60% and above in aggregate</li>
+            <li>Second Division: 45% and above in aggregate</li>
+            <li>Third Division/Pass: 33% and above in aggregate</li>
+            <li>Compartment/Fail: Below pass in one or more subjects</li>
+          </ul>
+        `
+      },
+      {
+        id: 'jkbose-6',
+        number: '29',
+        title: 'Compartment Examination Policy',
+        source: 'jkbose',
+        sourceLabel: 'JKBOSE',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            JKBOSE — Compartment and Improvement Examination Regulations
+          </div>
+          <h3>Eligibility for Compartment Examination</h3>
+          <p>A student who fails in one subject only at the Annual examination shall be placed in the Compartment category and shall be eligible to appear in the Compartment examination conducted by JKBOSE. A student who fails in two or more subjects shall not be eligible for the Compartment examination and must repeat the class or appear as a Private candidate in the subsequent Annual examination.</p>
+          <h3>Compartment Examination Details</h3>
+          <p>The Compartment examination is conducted approximately two months after the declaration of the Annual examination results. Students placed in Compartment may appear in the compartment examination for the subject in which they have failed. The marks obtained in the Compartment examination shall supersede the marks obtained in the Annual examination for the failed subject, whether higher or lower, for the purposes of calculating the aggregate and determining the division.</p>
+          <h3>Compartment Result</h3>
+          <p>A student who passes the Compartment examination shall be awarded a Compartment Pass certificate, which shall indicate the year in which the student appeared in the Compartment examination. This notation appears on the marksheet. A student who fails the Compartment examination shall need to repeat the full Annual examination in the subsequent year.</p>
+          <h3>Number of Compartment Attempts</h3>
+          <p>A student is eligible to appear in the Compartment examination only once for a given Annual examination. If the student fails the Compartment examination, subsequent appearances must be made as a private candidate in the Annual examination. There is no restriction on the total number of times a student may appear at the Annual examination as a private candidate.</p>
+        `
+      },
+      {
+        id: 'jkbose-7',
+        number: '30',
+        title: 'Examination Integrity and Malpractice',
+        source: 'jkbose',
+        sourceLabel: 'JKBOSE',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            JKBOSE — Unfair Means and Examination Malpractice Regulations
+          </div>
+          <h3>Definition of Unfair Means</h3>
+          <p>JKBOSE defines the use of Unfair Means (UFM) as any act by a candidate that gives or seeks to give an unfair advantage in the examination, including but not limited to: possession of written material or books not permitted in the examination hall; copying from another candidate's answer sheet; impersonation or allowing oneself to be impersonated; possession or use of electronic devices; communicating with another candidate; receiving help from an invigilator or any other person; and tampering with the answer sheet.</p>
+          <h3>Procedure on Detection of UFM</h3>
+          <p>When a Centre Superintendent or Invigilator detects or suspects use of unfair means, they shall: (a) seize the unfair means material; (b) record the incident in the UFM report; (c) allow the candidate to complete the examination (unless the offence is serious enough to warrant expulsion from the examination hall); and (d) forward the UFM report and seized material to JKBOSE for adjudication.</p>
+          <h3>Penalties for UFM</h3>
+          <ul>
+            <li>Cancellation of the examination of the subject in which UFM was used</li>
+            <li>Cancellation of all subjects in the examination session, in serious cases</li>
+            <li>Debarment from appearing in JKBOSE examinations for a specified period</li>
+            <li>In cases involving impersonation or organized malpractice: debarment for up to three years and referral to law enforcement authorities</li>
+          </ul>
+          <h3>Appeals Mechanism</h3>
+          <p>A candidate against whom a UFM decision has been made has the right to appeal to the JKBOSE Appeal Committee within the prescribed time period. The Appeal Committee shall review the evidence and give the candidate an opportunity to present their case before issuing a final decision.</p>
+        `
+      },
+      {
+        id: 'jkbose-8',
+        number: '31',
+        title: 'Private Candidates Regulations',
+        source: 'jkbose',
+        sourceLabel: 'JKBOSE',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            JKBOSE — Private Candidate Rules and Eligibility Conditions
+          </div>
+          <h3>Who is a Private Candidate?</h3>
+          <p>A Private Candidate is a person who appears in the Board examination without being enrolled in a recognized school. JKBOSE permits private candidature at the Class 10 (Secondary) and Class 12 (Higher Secondary) levels subject to fulfillment of prescribed eligibility conditions.</p>
+          <h3>Eligibility for Private Candidature at Class 10</h3>
+          <ul>
+            <li>The candidate must be at least 16 years of age as on the date of commencement of the examination</li>
+            <li>The candidate must have passed Class 8 from a recognized institution</li>
+            <li>The candidate may have been enrolled in Class 10 in a recognized school but failed the examination in a previous year</li>
+            <li>Married women are eligible to appear as private candidates regardless of their previous enrolment status</li>
+          </ul>
+          <h3>Restricted Subjects for Private Candidates</h3>
+          <p>Certain subjects that include a compulsory practical examination component are not available to private candidates. These include science practicals, physical education practicals, and vocational subjects with on-site skill assessment requirements. Private candidates appearing in such subjects shall be examined only on the theory component and the practical component shall be condoned.</p>
+        `
+      },
+      {
+        id: 'jkbose-9',
+        number: '32',
+        title: 'Special Provisions and Concessions',
+        source: 'jkbose',
+        sourceLabel: 'JKBOSE',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            JKBOSE — Special Provisions for Candidates with Disabilities and Other Categories
+          </div>
+          <h3>Concessions for Differently-Abled Candidates</h3>
+          <p>In accordance with the Rights of Persons with Disabilities Act 2016 and the provisions of NEP 2020, JKBOSE provides the following concessions to candidates with certified disabilities:</p>
+          <ul>
+            <li>Extra time of 20 minutes per hour of examination duration</li>
+            <li>Provision of a scribe (amanuensis) for candidates who are unable to write</li>
+            <li>Exemption from the language paper, to be replaced by an alternative paper at a lower difficulty level</li>
+            <li>Use of assistive technology (magnifiers, CCTV, etc.) as certified by a competent medical authority</li>
+            <li>Separate examination room if required by the nature of the disability</li>
+          </ul>
+          <h3>Concessions for Candidates from Disturbed Areas</h3>
+          <p>Candidates from areas declared as disturbed under applicable law, or areas affected by natural disasters during the examination period, may be given relaxation in attendance requirements, additional examination opportunities, or other concessions as decided by the JKBOSE on a case-by-case basis.</p>
+          <h3>National Sports and Cultural Concessions</h3>
+          <p>Candidates who have represented the Union Territory or the country in national-level sports or cultural events during the academic year may be given attendance concessions and, in exceptional cases, re-examination opportunities for subjects they may have missed due to their participation.</p>
+        `
+      },
+      {
+        id: 'jkbose-10',
+        number: '33',
+        title: 'Mark Sheet and Certificate Issuance',
+        source: 'jkbose',
+        sourceLabel: 'JKBOSE',
+        content: `
+          <div class="callout callout-blue">
+            <div class="callout-label">Source Document</div>
+            JKBOSE — Documents, Certificates, and Verification Procedures
+          </div>
+          <h3>Documents Issued by JKBOSE</h3>
+          <p>Upon successful completion of a Board examination, JKBOSE issues the following documents to candidates:</p>
+          <ul>
+            <li><strong>Detailed Marks Certificate (DMC):</strong> Subject-wise marks and grades, aggregate percentage, and division obtained</li>
+            <li><strong>Pass Certificate:</strong> Formal certificate of having passed the examination, required for admission to higher classes and for employment purposes</li>
+            <li><strong>Migration Certificate:</strong> For students wishing to continue their education under a different board</li>
+            <li><strong>Character Certificate:</strong> Attesting to the student's character and conduct, issued on request</li>
+          </ul>
+          <h3>Duplicate Documents</h3>
+          <p>Candidates who have misplaced or damaged their original documents may apply for duplicate certificates. Applications must be supported by an affidavit, FIR (in case of theft), and the prescribed fee. Duplicate documents are issued with the endorsement "Duplicate" and are equally valid for all official purposes.</p>
+          <h3>Digital Documents and DigiLocker</h3>
+          <p>JKBOSE has implemented the issuance of digital mark sheets and certificates through the DigiLocker platform. Students may access their verified digital documents through their DigiLocker account. These digital documents carry a digital signature and QR code for verification and are accepted by all central government institutions for official purposes.</p>
+          <h3>Verification of Documents</h3>
+          <p>Employers, educational institutions, and other organizations requiring verification of a candidate's JKBOSE credentials may submit a verification request to the Board. Verification is also available online through the JKBOSE website using the roll number and year of examination.</p>
+        `
+      }
+    ]
+  }
+];
+
+// ─── BUILD NAVIGATION ─────────────────────────────────────────────────────
+function buildNav() {
+  const container = document.getElementById('nav-container');
+  container.innerHTML = '';
+
+  PARTS.forEach(part => {
+    const section = document.createElement('div');
+    section.className = 'nav-section';
+    section.dataset.source = part.source;
+
+    const title = document.createElement('div');
+    title.className = 'nav-section-title';
+    title.innerHTML = `${part.number}: ${part.title} <span class="toggle-icon">▾</span>`;
+    title.addEventListener('click', () => {
+      section.classList.toggle('collapsed');
+    });
+
+    const items = document.createElement('div');
+    items.className = 'nav-items';
+
+    part.chapters.forEach(ch => {
+      const a = document.createElement('div');
+      a.className = 'nav-item';
+      a.dataset.chapterId = ch.id;
+      a.dataset.source = ch.source;
+      a.innerHTML = `${ch.number}. ${ch.title} <span class="bookmark-dot"></span>`;
+      a.addEventListener('click', () => {
+        scrollToChapter(ch.id);
+        if (window.innerWidth <= 700) closeSidebar();
+      });
+      items.appendChild(a);
+    });
+
+    section.appendChild(title);
+    section.appendChild(items);
+    container.appendChild(section);
+  });
+}
+
+// ─── BUILD CONTENT ─────────────────────────────────────────────────────────
+function buildContent() {
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+
+  PARTS.forEach(part => {
+    // Part Header
+    const partEl = document.createElement('div');
+    partEl.className = 'part-header';
+    partEl.id = part.id;
+    partEl.innerHTML = `
+      <div class="part-number">${part.number}</div>
+      <div class="part-title">${part.title}</div>
+      <div class="part-desc">${part.desc}</div>
+    `;
+    content.appendChild(partEl);
+
+    // Chapters
+    part.chapters.forEach(ch => {
+      const wpm = 200;
+      const words = ch.content.replace(/<[^>]*>/g, '').split(/\s+/).length;
+      const mins = Math.max(1, Math.ceil(words / wpm));
+
+      const chEl = document.createElement('div');
+      chEl.className = 'chapter';
+      chEl.id = ch.id;
+      chEl.dataset.source = ch.source;
+      chEl.innerHTML = `
+        <div class="chapter-header">
+          <div class="chapter-number">§ ${ch.number}</div>
+          <div class="chapter-title-wrap">
+            <div class="chapter-title">${ch.title}</div>
+            <span class="source-badge ${ch.source}">${ch.sourceLabel}</span>
+          </div>
+          <div class="chapter-actions">
+            <button class="action-btn bookmark-btn" data-id="${ch.id}" title="Bookmark">☆</button>
+            <button class="action-btn print-btn" title="Print" onclick="window.print()">⎙</button>
+          </div>
+        </div>
+        <div class="reading-time">⏱ Estimated reading time: ${mins} min · ${words} words</div>
+        <div class="chapter-content">${ch.content}</div>
+      `;
+      content.appendChild(chEl);
+
+      // Bookmark button
+      chEl.querySelector('.bookmark-btn').addEventListener('click', function() {
+        toggleBookmark(ch.id, this);
+      });
+    });
+  });
+
+  // Update bookmark states
+  loadBookmarks();
+}
+
+// ─── BOOKMARKS ─────────────────────────────────────────────────────────────
+function getBookmarks() {
+  try {
+    return JSON.parse(localStorage.getItem('ar_bookmarks') || '[]');
+  } catch(e) { return []; }
+}
+
+function saveBookmarks(bm) {
+  try { localStorage.setItem('ar_bookmarks', JSON.stringify(bm)); } catch(e) {}
+}
+
+function toggleBookmark(id, btn) {
+  let bm = getBookmarks();
+  const idx = bm.indexOf(id);
+  if (idx === -1) {
+    bm.push(id);
+    btn.textContent = '★';
+    btn.classList.add('bookmarked');
+  } else {
+    bm.splice(idx, 1);
+    btn.textContent = '☆';
+    btn.classList.remove('bookmarked');
+  }
+  saveBookmarks(bm);
+  updateNavBookmarks(bm);
+}
+
+function loadBookmarks() {
+  const bm = getBookmarks();
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    const id = btn.dataset.id;
+    if (bm.includes(id)) {
+      btn.textContent = '★';
+      btn.classList.add('bookmarked');
+    }
+  });
+  updateNavBookmarks(bm);
+}
+
+function updateNavBookmarks(bm) {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const id = item.dataset.chapterId;
+    item.classList.toggle('bookmarked', bm.includes(id));
+  });
+}
+
+// ─── SCROLL SPY ────────────────────────────────────────────────────────────
+let scrollSpyTimer;
+function updateScrollSpy() {
+  const chapters = document.querySelectorAll('.chapter');
+  let activeId = null;
+  chapters.forEach(ch => {
+    const rect = ch.getBoundingClientRect();
+    if (rect.top <= 120) activeId = ch.id;
+  });
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.chapterId === activeId);
+  });
+}
+
+// ─── PROGRESS BAR ──────────────────────────────────────────────────────────
+function updateProgress() {
+  const scrolled = window.scrollY;
+  const total = document.body.scrollHeight - window.innerHeight;
+  const pct = total > 0 ? (scrolled / total) * 100 : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+// ─── SEARCH ────────────────────────────────────────────────────────────────
+function buildSearchIndex() {
+  const idx = [];
+  PARTS.forEach(part => {
+    part.chapters.forEach(ch => {
+      const text = ch.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
+      idx.push({ id: ch.id, title: ch.title, source: ch.sourceLabel, text });
+    });
+  });
+  return idx;
+}
+
+const searchIndex = buildSearchIndex();
+
+function performSearch(query) {
+  if (!query || query.length < 2) {
+    closeSearch();
+    return;
+  }
+  const q = query.toLowerCase();
+  const results = searchIndex.filter(item =>
+    item.title.toLowerCase().includes(q) || item.text.toLowerCase().includes(q)
+  );
+  showSearchResults(query, results);
+}
+
+function showSearchResults(query, results) {
+  const panel = document.getElementById('search-results');
+  const list = document.getElementById('results-list');
+  panel.classList.add('visible');
+
+  if (results.length === 0) {
+    list.innerHTML = '<p style="color:var(--text-secondary)">No results found for "' + escapeHtml(query) + '"</p>';
+    return;
+  }
+
+  list.innerHTML = results.map(r => {
+    const idx = r.text.toLowerCase().indexOf(query.toLowerCase());
+    const snippet = idx >= 0
+      ? r.text.substring(Math.max(0, idx - 60), idx + 120).replace(
+          new RegExp(escapeRegex(query), 'gi'), m => `<mark>${m}</mark>`
+        )
+      : r.text.substring(0, 120);
+    return `
+      <div class="search-result-item" onclick="goToResult('${r.id}')">
+        <div class="search-result-title">${r.title}</div>
+        <span class="source-badge ${r.source.toLowerCase().replace(' ','')}" style="margin-bottom:8px;display:inline-block">${r.source}</span>
+        <div class="search-result-snippet">…${snippet}…</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function goToResult(id) {
+  closeSearch();
+  setTimeout(() => scrollToChapter(id), 100);
+}
+
+function closeSearch() {
+  document.getElementById('search-results').classList.remove('visible');
+  document.getElementById('search-input').value = '';
+}
+
+function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+// ─── NAVIGATION ────────────────────────────────────────────────────────────
+function scrollToChapter(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ─── FILTER BY SOURCE ──────────────────────────────────────────────────────
+document.querySelectorAll('.source-filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.source-filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const filter = this.dataset.filter;
+    document.querySelectorAll('.nav-section').forEach(section => {
+      section.style.display = (filter === 'all' || section.dataset.source === filter) ? '' : 'none';
+    });
+    document.querySelectorAll('.chapter').forEach(ch => {
+      ch.style.display = (filter === 'all' || ch.dataset.source === filter) ? '' : 'none';
+    });
+    document.querySelectorAll('.part-header').forEach(ph => {
+      ph.style.display = (filter === 'all' || ph.id.includes(filter === 'nep' ? 'section-i' : filter === 'ncf' ? 'section-ii' : filter === 'parakh' ? 'section-iii' : 'section-iv')) ? '' : 'none';
+    });
+  });
+});
+
+// ─── DARK MODE ─────────────────────────────────────────────────────────────
+const darkToggle = document.getElementById('dark-toggle');
+function setTheme(dark) {
+  document.documentElement.dataset.theme = dark ? 'dark' : '';
+  darkToggle.textContent = dark ? '☀ Light Mode' : '⬡ Toggle Dark Mode';
+  try { localStorage.setItem('ar_dark', dark ? '1' : '0'); } catch(e) {}
+}
+
+darkToggle.addEventListener('click', () => {
+  setTheme(document.documentElement.dataset.theme !== 'dark');
+});
+
+// Restore dark mode
+try {
+  if (localStorage.getItem('ar_dark') === '1') setTheme(true);
+} catch(e) {}
+
+// ─── MOBILE MENU ───────────────────────────────────────────────────────────
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+const menuToggle = document.getElementById('menu-toggle');
+
+menuToggle.addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('visible'); });
+overlay.addEventListener('click', closeSidebar);
+function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('visible'); }
+
+// ─── SEARCH INPUT ──────────────────────────────────────────────────────────
+let searchTimer;
+document.getElementById('search-input').addEventListener('input', function() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => performSearch(this.value.trim()), 300);
+});
+
+// ─── SCROLL EVENTS ─────────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  updateProgress();
+  clearTimeout(scrollSpyTimer);
+  scrollSpyTimer = setTimeout(updateScrollSpy, 50);
+}, { passive: true });
+
+// ─── INIT ──────────────────────────────────────────────────────────────────
+buildNav();
+buildContent();
+updateProgress();
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integrated National Competency Benchmarking Simulator</title>
+<meta name="description" content="NEP 2020 | NCF 2023 | PARAKH Aligned Benchmarking Simulator">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a1628">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0a1628;
+  --navy-mid: #0f2040;
+  --navy-light: #162d55;
+  --steel: #1e3a5f;
+  --accent: #c8a84b;
+  --accent-light: #e8c96a;
+  --white: #f0f4f8;
+  --grey: #8ba3be;
+  --grey-light: #cdd9e5;
+  --danger: #e05252;
+  --warn: #e08a2a;
+  --success: #3aa876;
+  --info: #4a9eda;
+  --chart1: #4a9eda;
+  --chart2: #e08a2a;
+  --chart3: #3aa876;
+  --chart4: #c8a84b;
+  --font-head: 'Playfair Display', Georgia, serif;
+  --font-body: 'Source Sans 3', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ── NAVIGATION ── */
+#nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: rgba(10,22,40,0.97);
+  border-bottom: 1px solid rgba(200,168,75,0.25);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 56px;
+  backdrop-filter: blur(10px);
+}
+#nav .logo {
+  font-family: var(--font-head); font-size: 13px; color: var(--accent);
+  letter-spacing: 0.04em; max-width: 260px; line-height: 1.2;
+}
+.nav-links { display: flex; gap: 4px; }
+.nav-btn {
+  background: none; border: none; color: var(--grey); cursor: pointer;
+  font-family: var(--font-body); font-size: 11px; font-weight: 600;
+  padding: 6px 10px; border-radius: 4px; letter-spacing: 0.06em;
+  text-transform: uppercase; transition: all 0.2s;
+}
+.nav-btn:hover, .nav-btn.active { background: var(--navy-light); color: var(--accent); }
+#hamburger {
+  display: none; background: none; border: none; color: var(--accent);
+  font-size: 22px; cursor: pointer; padding: 4px;
+}
+#mobile-menu {
+  display: none; position: fixed; top: 56px; left: 0; right: 0;
+  background: var(--navy-mid); z-index: 998; padding: 12px;
+  flex-direction: column; gap: 4px; border-bottom: 1px solid rgba(200,168,75,0.2);
+}
+#mobile-menu.open { display: flex; }
+#mobile-menu .nav-btn { text-align: left; font-size: 13px; padding: 10px 14px; }
+
+/* ── SCREENS ── */
+.screen { display: none; min-height: 100vh; padding-top: 56px; }
+.screen.active { display: block; }
+
+/* ── HOME ── */
+#screen-home {
+  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 40%, #0b1e3a 100%);
+  position: relative; overflow: hidden;
+}
+.home-bg {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(200,168,75,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(74,158,218,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+.home-grid {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    linear-gradient(rgba(200,168,75,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,168,75,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+.home-inner {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: calc(100vh - 56px);
+  padding: 48px 24px; text-align: center;
+}
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(200,168,75,0.1); border: 1px solid rgba(200,168,75,0.3);
+  color: var(--accent); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 6px 16px; border-radius: 20px; margin-bottom: 28px;
+}
+.badge::before { content: '◆'; font-size: 8px; }
+.home-title {
+  font-family: var(--font-head); font-size: clamp(22px, 4vw, 42px);
+  color: var(--white); line-height: 1.2; max-width: 800px; margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.home-title span { color: var(--accent); }
+.home-sub {
+  font-size: 13px; color: var(--grey); letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.home-author {
+  font-size: 15px; color: var(--grey-light); margin-bottom: 4px;
+}
+.home-author strong { color: var(--accent-light); }
+.home-dept { font-size: 12px; color: var(--grey); margin-bottom: 40px; }
+
+.author-photo-wrap {
+  width: 90px; height: 90px; border-radius: 50%;
+  border: 2px solid var(--accent); overflow: hidden; margin: 0 auto 20px;
+  box-shadow: 0 0 24px rgba(200,168,75,0.2);
+}
+.author-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+.home-buttons {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px; max-width: 780px; width: 100%;
+}
+.home-btn {
+  display: flex; flex-direction: column; align-items: flex-start;
+  background: rgba(15,32,64,0.8); border: 1px solid rgba(200,168,75,0.2);
+  border-radius: 10px; padding: 18px 20px; cursor: pointer;
+  transition: all 0.25s; text-align: left;
+  position: relative; overflow: hidden;
+}
+.home-btn::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0; transition: opacity 0.25s;
+}
+.home-btn:hover { background: rgba(22,45,85,0.9); border-color: var(--accent); transform: translateY(-2px); }
+.home-btn:hover::after { opacity: 1; }
+.home-btn .btn-icon { font-size: 24px; margin-bottom: 10px; }
+.home-btn .btn-label { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+.home-btn .btn-desc { font-size: 11px; color: var(--grey); line-height: 1.4; }
+
+/* ── SECTION WRAPPER ── */
+.section-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+.section-head { margin-bottom: 32px; }
+.section-head h2 {
+  font-family: var(--font-head); font-size: clamp(22px, 3vw, 32px);
+  color: var(--white); margin-bottom: 6px;
+}
+.section-head .underline {
+  width: 48px; height: 3px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  margin-top: 8px;
+}
+.section-head p { color: var(--grey); font-size: 13px; margin-top: 8px; }
+
+/* ── CARDS ── */
+.card {
+  background: rgba(15,32,64,0.7); border: 1px solid rgba(200,168,75,0.12);
+  border-radius: 12px; padding: 24px; margin-bottom: 18px;
+}
+.card h3 { font-family: var(--font-head); color: var(--accent-light); font-size: 18px; margin-bottom: 12px; }
+.card p { color: var(--grey-light); line-height: 1.7; margin-bottom: 10px; font-size: 14px; }
+.card p:last-child { margin-bottom: 0; }
+.card ul { padding-left: 18px; color: var(--grey-light); font-size: 14px; }
+.card ul li { margin-bottom: 6px; }
+
+/* ── POLICY PAGES ── */
+.policy-nav {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px;
+}
+.policy-nav button {
+  background: rgba(15,32,64,0.7); border: 1px solid rgba(200,168,75,0.15);
+  color: var(--grey); font-family: var(--font-body); font-size: 11px;
+  padding: 5px 12px; border-radius: 4px; cursor: pointer; transition: all 0.2s;
+  font-weight: 600;
+}
+.policy-nav button.active, .policy-nav button:hover {
+  background: var(--navy-light); color: var(--accent); border-color: var(--accent);
+}
+.policy-page { display: none; }
+.policy-page.active { display: block; }
+.policy-page h2 { font-family: var(--font-head); font-size: 26px; color: var(--white); margin-bottom: 16px; }
+.policy-page h3 { font-size: 16px; color: var(--accent-light); margin: 20px 0 8px; font-weight: 700; }
+.policy-page p { color: var(--grey-light); line-height: 1.75; margin-bottom: 12px; font-size: 14px; }
+.policy-page .highlight {
+  background: rgba(200,168,75,0.08); border-left: 3px solid var(--accent);
+  padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 16px 0;
+  font-size: 13px; color: var(--grey-light);
+}
+.policy-page .highlight strong { color: var(--accent); }
+.policy-page .reflection {
+  background: rgba(74,158,218,0.08); border-left: 3px solid var(--info);
+  padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 16px 0;
+  font-size: 13px; color: var(--grey-light);
+}
+.policy-page .leader-note {
+  background: rgba(58,168,118,0.08); border: 1px solid rgba(58,168,118,0.25);
+  padding: 12px 16px; border-radius: 8px; margin: 16px 0;
+  font-size: 13px; color: var(--grey-light);
+}
+.policy-page .leader-note::before { content: '🏫 Leadership Note: '; font-weight: 700; color: var(--success); }
+
+/* ── FORMS ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media(max-width:600px){ .form-grid { grid-template-columns: 1fr; } }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label {
+  font-size: 11px; font-weight: 700; color: var(--grey);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.form-group input, .form-group select {
+  background: rgba(10,22,40,0.8); border: 1px solid rgba(200,168,75,0.2);
+  color: var(--white); font-family: var(--font-body); font-size: 14px;
+  padding: 10px 14px; border-radius: 6px; outline: none;
+  transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+.form-group select option { background: var(--navy-mid); }
+.form-group .hint { font-size: 11px; color: var(--grey); }
+.form-full { grid-column: 1/-1; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: var(--navy); border: none; font-family: var(--font-body);
+  font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 12px 28px; border-radius: 6px;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(200,168,75,0.3); }
+.btn-secondary {
+  background: rgba(15,32,64,0.8); border: 1px solid rgba(200,168,75,0.3);
+  color: var(--accent); font-family: var(--font-body); font-size: 13px;
+  font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 12px 28px; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+}
+.btn-secondary:hover { background: var(--navy-light); }
+
+/* ── VALIDATION ── */
+.validation-msg {
+  padding: 10px 14px; border-radius: 6px; font-size: 13px;
+  margin-top: 12px; display: none;
+}
+.validation-msg.error { background: rgba(224,82,82,0.15); border: 1px solid var(--danger); color: #ff8888; display: block; }
+.validation-msg.success { background: rgba(58,168,118,0.15); border: 1px solid var(--success); color: #7fddb0; display: block; }
+
+/* ── DASHBOARD ── */
+.dash-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px; margin-bottom: 28px;
+}
+.stat-card {
+  background: rgba(15,32,64,0.7); border: 1px solid rgba(200,168,75,0.12);
+  border-radius: 10px; padding: 16px; text-align: center;
+}
+.stat-card .val {
+  font-family: var(--font-head); font-size: 28px; font-weight: 700;
+  margin-bottom: 4px;
+}
+.stat-card .lbl { font-size: 11px; color: var(--grey); text-transform: uppercase; letter-spacing: 0.06em; }
+.stat-card.green .val { color: var(--success); }
+.stat-card.yellow .val { color: var(--accent); }
+.stat-card.red .val { color: var(--danger); }
+.stat-card.blue .val { color: var(--info); }
+
+/* Canvas charts */
+.chart-wrap {
+  background: rgba(15,32,64,0.7); border: 1px solid rgba(200,168,75,0.12);
+  border-radius: 12px; padding: 20px; margin-bottom: 18px;
+}
+.chart-wrap h4 {
+  font-size: 13px; font-weight: 700; color: var(--grey);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;
+}
+.chart-container { position: relative; height: 220px; width: 100%; }
+
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media(max-width:700px){ .chart-grid { grid-template-columns: 1fr; } }
+
+/* ── ALERT BADGES ── */
+.alert-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.alert-badge {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 700;
+}
+.alert-badge.high { background: rgba(224,82,82,0.15); border: 1px solid var(--danger); color: #ff8888; }
+.alert-badge.moderate { background: rgba(224,138,42,0.15); border: 1px solid var(--warn); color: #ffb866; }
+.alert-badge.low { background: rgba(58,168,118,0.15); border: 1px solid var(--success); color: #7fddb0; }
+
+/* ── FORMULAS ── */
+.formula-box {
+  background: rgba(10,22,40,0.9); border: 1px solid rgba(200,168,75,0.2);
+  border-radius: 8px; padding: 16px 20px; margin: 12px 0;
+  font-family: var(--font-mono); font-size: 13px; color: var(--accent-light);
+  overflow-x: auto;
+}
+.formula-label { font-family: var(--font-body); font-size: 11px; color: var(--grey); margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ── INTERVENTION TABLE ── */
+.intervention-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.intervention-table th {
+  background: rgba(10,22,40,0.8); color: var(--grey);
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 10px 14px; text-align: left; font-weight: 700;
+  border-bottom: 1px solid rgba(200,168,75,0.15);
+}
+.intervention-table td {
+  padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: var(--grey-light); vertical-align: top;
+}
+.intervention-table tr:hover td { background: rgba(255,255,255,0.02); }
+.priority-high { color: var(--danger); font-weight: 700; }
+.priority-moderate { color: var(--warn); font-weight: 700; }
+.priority-low { color: var(--success); font-weight: 700; }
+
+/* ── COMPARISON ── */
+.school-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.school-tab {
+  background: rgba(15,32,64,0.7); border: 1px solid rgba(200,168,75,0.15);
+  color: var(--grey); font-family: var(--font-body); font-size: 12px;
+  padding: 7px 16px; border-radius: 4px; cursor: pointer; font-weight: 700;
+  transition: all 0.2s;
+}
+.school-tab.active { background: var(--navy-light); color: var(--accent); border-color: var(--accent); }
+
+/* ── TREND ── */
+.scenario-controls {
+  background: rgba(10,22,40,0.8); border: 1px solid rgba(200,168,75,0.15);
+  border-radius: 10px; padding: 20px; margin-bottom: 20px;
+}
+.scenario-controls label { font-size: 12px; color: var(--grey); display: block; margin-bottom: 4px; }
+.scenario-controls input[type=range] { width: 100%; accent-color: var(--accent); }
+.scenario-controls .range-val { font-family: var(--font-mono); color: var(--accent); font-size: 14px; font-weight: 700; }
+
+/* ── REPORT ── */
+#report-output {
+  background: #fff; color: #1a1a1a; border-radius: 10px; padding: 40px;
+  font-family: 'Source Sans 3', sans-serif; font-size: 14px; line-height: 1.7;
+  display: none;
+}
+#report-output h1 { font-size: 20px; color: #0a1628; border-bottom: 2px solid #c8a84b; padding-bottom: 8px; margin-bottom: 20px; }
+#report-output h2 { font-size: 16px; color: #0f2040; margin: 18px 0 8px; }
+#report-output table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+#report-output th { background: #0a1628; color: #c8a84b; padding: 8px 12px; text-align: left; }
+#report-output td { padding: 7px 12px; border-bottom: 1px solid #eee; }
+#report-output .risk-high { color: #e05252; font-weight: 700; }
+#report-output .risk-moderate { color: #e08a2a; font-weight: 700; }
+#report-output .risk-low { color: #3aa876; font-weight: 700; }
+
+/* ── ENTRIES LIST ── */
+.entry-item {
+  background: rgba(15,32,64,0.5); border: 1px solid rgba(200,168,75,0.1);
+  border-radius: 8px; padding: 14px 16px; margin-bottom: 10px;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; transition: all 0.2s;
+}
+.entry-item:hover { border-color: var(--accent); }
+.entry-item .ei-title { font-size: 13px; font-weight: 700; color: var(--white); }
+.entry-item .ei-meta { font-size: 11px; color: var(--grey); margin-top: 2px; }
+.entry-item .ei-pi { font-family: var(--font-mono); font-size: 18px; color: var(--accent); }
+
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--grey); font-size: 14px;
+}
+.empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+
+/* ── PROGRESS BAR ── */
+.level-bars { display: flex; flex-direction: column; gap: 10px; }
+.level-bar-row { display: flex; align-items: center; gap: 10px; }
+.level-bar-label { font-size: 12px; color: var(--grey); width: 80px; flex-shrink: 0; text-align: right; }
+.level-bar-track { flex: 1; background: rgba(255,255,255,0.07); border-radius: 4px; height: 18px; overflow: hidden; }
+.level-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; display: flex; align-items: center; justify-content: center; }
+.level-bar-fill span { font-size: 10px; font-weight: 700; color: var(--navy); }
+.bar-l1 { background: var(--danger); }
+.bar-l2 { background: var(--warn); }
+.bar-l3 { background: var(--info); }
+.bar-l4 { background: var(--success); }
+
+/* ── PRINT ── */
+@media print {
+  #nav, #hamburger, #mobile-menu, .no-print { display: none !important; }
+  body { background: white !important; color: #111 !important; }
+  #report-output { display: block !important; box-shadow: none; }
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--navy-mid); }
+::-webkit-scrollbar-thumb { background: var(--steel); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ── RESPONSIVE NAV ── */
+@media(max-width:768px) {
+  .nav-links { display: none; }
+  #hamburger { display: block; }
+}
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center; padding: 24px; font-size: 11px;
+  color: var(--grey); border-top: 1px solid rgba(200,168,75,0.1);
+}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav id="nav">
+  <div class="logo">INCBS — Competency Benchmarking Simulator</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showScreen('home')">Home</button>
+    <button class="nav-btn" onclick="showScreen('policy')">Policy</button>
+    <button class="nav-btn" onclick="showScreen('entry')">Data Entry</button>
+    <button class="nav-btn" onclick="showScreen('dashboard')">Dashboard</button>
+    <button class="nav-btn" onclick="showScreen('gap')">Gap Analysis</button>
+    <button class="nav-btn" onclick="showScreen('intervention')">Intervention</button>
+    <button class="nav-btn" onclick="showScreen('trend')">Trend Sim</button>
+    <button class="nav-btn" onclick="showScreen('comparison')">Comparison</button>
+    <button class="nav-btn" onclick="showScreen('report')">Report</button>
+  </div>
+  <button id="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+<div id="mobile-menu">
+  <button class="nav-btn" onclick="showScreen('home');toggleMenu()">🏠 Home</button>
+  <button class="nav-btn" onclick="showScreen('policy');toggleMenu()">📚 Policy Foundation</button>
+  <button class="nav-btn" onclick="showScreen('entry');toggleMenu()">📝 Data Entry</button>
+  <button class="nav-btn" onclick="showScreen('dashboard');toggleMenu()">📊 Dashboard</button>
+  <button class="nav-btn" onclick="showScreen('gap');toggleMenu()">🔍 Gap Analysis</button>
+  <button class="nav-btn" onclick="showScreen('intervention');toggleMenu()">🎯 Intervention</button>
+  <button class="nav-btn" onclick="showScreen('trend');toggleMenu()">📈 Trend Simulation</button>
+  <button class="nav-btn" onclick="showScreen('comparison');toggleMenu()">🏫 Comparison</button>
+  <button class="nav-btn" onclick="showScreen('report');toggleMenu()">📋 Report</button>
+</div>
+
+<!-- ═══════════════════════════ HOME ═══════════════════════════ -->
+<div id="screen-home" class="screen active">
+  <div class="home-bg"></div>
+  <div class="home-grid"></div>
+  <div class="home-inner">
+    <div class="badge">Aligned with NEP 2020 | NCF 2023 | PARAKH Benchmarking</div>
+    <div class="author-photo-wrap">
+      <img src="author.jpg" alt="Mateen Yousuf" id="author-photo">
+    </div>
+    <h1 class="home-title">Integrated National <span>Competency</span> Benchmarking Simulator</h1>
+    <p class="home-sub">Offline Edition — Evidence-Based School Reform Tool</p>
+    <p class="home-author">Developed by <strong>Mateen Yousuf</strong></p>
+    <p class="home-dept">Teacher, School Education Department Kashmir</p>
+    <div class="home-buttons">
+      <button class="home-btn" onclick="showScreen('entry')">
+        <div class="btn-icon">📝</div>
+        <div class="btn-label">Enter Benchmark Data</div>
+        <div class="btn-desc">Input grade, subject, competency level distributions & attendance</div>
+      </button>
+      <button class="home-btn" onclick="showScreen('dashboard')">
+        <div class="btn-icon">📊</div>
+        <div class="btn-label">View Benchmark Dashboard</div>
+        <div class="btn-desc">Visual charts: proficiency index, distribution, equity gaps</div>
+      </button>
+      <button class="home-btn" onclick="showScreen('gap')">
+        <div class="btn-icon">🔍</div>
+        <div class="btn-label">Gap & Priority Analysis</div>
+        <div class="btn-desc">Rule-based risk alerts, equity flags, intervention priorities</div>
+      </button>
+      <button class="home-btn" onclick="showScreen('policy')">
+        <div class="btn-icon">📚</div>
+        <div class="btn-label">Policy & Framework</div>
+        <div class="btn-desc">15 structured pages: NEP 2020, NCF 2023, PARAKH, benchmarking theory</div>
+      </button>
+      <button class="home-btn" onclick="showScreen('intervention')">
+        <div class="btn-icon">🎯</div>
+        <div class="btn-label">Intervention Generator</div>
+        <div class="btn-desc">School Benchmark Response Plan with CPD & remedial strategies</div>
+      </button>
+      <button class="home-btn" onclick="showScreen('trend')">
+        <div class="btn-icon">📈</div>
+        <div class="btn-label">Trend Simulation</div>
+        <div class="btn-desc">Simulate improvement scenarios and project future benchmarks</div>
+      </button>
+      <button class="home-btn" onclick="showScreen('comparison')">
+        <div class="btn-icon">🏫</div>
+        <div class="btn-label">Multi-School Comparison</div>
+        <div class="btn-desc">Compare up to 3 schools analytically — no ranking labels</div>
+      </button>
+      <button class="home-btn" onclick="showScreen('report')">
+        <div class="btn-icon">📋</div>
+        <div class="btn-label">Generate Report</div>
+        <div class="btn-desc">Comprehensive benchmark response plan — exportable as PDF</div>
+      </button>
+    </div>
+  </div>
+  <div class="footer">Integrated National Competency Benchmarking Simulator — Offline Edition — Mateen Yousuf, SED Kashmir</div>
+</div>
+
+<!-- ═══════════════════════════ POLICY ═══════════════════════════ -->
+<div id="screen-policy" class="screen">
+  <div class="section-wrap">
+    <div class="section-head">
+      <h2>Policy & Framework Foundation</h2>
+      <div class="underline"></div>
+      <p>15 structured pages covering NEP 2020, NCF 2023, PARAKH, and benchmarking theory</p>
+    </div>
+    <div class="policy-nav" id="policy-nav"></div>
+    <div id="policy-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DATA ENTRY ═══════════════════════════ -->
+<div id="screen-entry" class="screen">
+  <div class="section-wrap">
+    <div class="section-head">
+      <h2>Benchmark Data Entry</h2>
+      <div class="underline"></div>
+      <p>Enter school competency distribution data. All values stored locally on your device.</p>
+    </div>
+    <div class="card">
+      <h3>School Information</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>School Name</label>
+          <input type="text" id="f-school" placeholder="e.g. Government High School Srinagar">
+        </div>
+        <div class="form-group">
+          <label>Academic Year</label>
+          <input type="text" id="f-year" placeholder="e.g. 2025-26">
+        </div>
+        <div class="form-group">
+          <label>Grade / Class</label>
+          <select id="f-grade">
+            <option value="">Select Grade</option>
+            <option>Grade 3</option><option>Grade 4</option><option>Grade 5</option>
+            <option>Grade 6</option><option>Grade 7</option><option>Grade 8</option>
+            <option>Grade 9</option><option>Grade 10</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <select id="f-subject">
+            <option value="">Select Subject</option>
+            <option>Mathematics</option><option>Language (English)</option>
+            <option>Language (Urdu)</option><option>Science</option>
+            <option>Social Studies</option><option>Hindi</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Total Students Assessed</label>
+          <input type="number" id="f-total" placeholder="e.g. 120" min="1">
+        </div>
+        <div class="form-group">
+          <label>Attendance Rate (%)</label>
+          <input type="number" id="f-attend" placeholder="e.g. 78" min="0" max="100">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Competency Level Distribution</h3>
+      <p>Enter the percentage of students at each level. <strong>Total must equal 100%.</strong></p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Level 1 — Below Basic (%)</label>
+          <input type="number" id="f-l1" placeholder="0–100" min="0" max="100" oninput="updateLevelTotal()">
+          <span class="hint">Students with significant foundational gaps</span>
+        </div>
+        <div class="form-group">
+          <label>Level 2 — Basic (%)</label>
+          <input type="number" id="f-l2" placeholder="0–100" min="0" max="100" oninput="updateLevelTotal()">
+          <span class="hint">Students with partial competency development</span>
+        </div>
+        <div class="form-group">
+          <label>Level 3 — Proficient (%)</label>
+          <input type="number" id="f-l3" placeholder="0–100" min="0" max="100" oninput="updateLevelTotal()">
+          <span class="hint">Students meeting grade-level expectations</span>
+        </div>
+        <div class="form-group">
+          <label>Level 4 — Advanced (%)</label>
+          <input type="number" id="f-l4" placeholder="0–100" min="0" max="100" oninput="updateLevelTotal()">
+          <span class="hint">Students exceeding grade-level expectations</span>
+        </div>
+      </div>
+      <div id="level-total-display" style="margin-top:12px; font-family:var(--font-mono); font-size:14px; color:var(--grey);">
+        Total: <span id="level-total">0</span>% <span id="level-total-status"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Gender Distribution (for Equity Analysis)</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>% Girls at Proficiency (Level 3+4)</label>
+          <input type="number" id="f-girls-pi" placeholder="e.g. 45" min="0" max="100">
+        </div>
+        <div class="form-group">
+          <label>% Boys at Proficiency (Level 3+4)</label>
+          <input type="number" id="f-boys-pi" placeholder="e.g. 52" min="0" max="100">
+        </div>
+      </div>
+    </div>
+
+    <div id="entry-msg" class="validation-msg"></div>
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="btn-primary" onclick="saveBenchmarkEntry()">💾 Save Entry</button>
+      <button class="btn-secondary" onclick="clearEntryForm()">✕ Clear Form</button>
+    </div>
+
+    <div style="margin-top:32px;">
+      <h3 style="font-family:var(--font-head);font-size:16px;color:var(--accent-light);margin-bottom:14px;">Saved Entries</h3>
+      <div id="entries-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DASHBOARD ═══════════════════════════ -->
+<div id="screen-dashboard" class="screen">
+  <div class="section-wrap">
+    <div class="section-head">
+      <h2>Benchmark Dashboard</h2>
+      <div class="underline"></div>
+      <p>Select an entry to view competency visualizations and indices</p>
+    </div>
+    <div style="margin-bottom:20px;">
+      <label style="font-size:11px;color:var(--grey);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:6px;">Select Entry</label>
+      <select id="dash-select" style="background:rgba(10,22,40,0.8);border:1px solid rgba(200,168,75,0.2);color:var(--white);font-family:var(--font-body);font-size:14px;padding:10px 14px;border-radius:6px;width:100%;max-width:400px;" onchange="renderDashboard()">
+        <option value="">-- Select benchmark entry --</option>
+      </select>
+    </div>
+    <div id="dashboard-content">
+      <div class="empty-state"><div class="icon">📊</div>Select an entry above to view the dashboard</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ GAP ANALYSIS ═══════════════════════════ -->
+<div id="screen-gap" class="screen">
+  <div class="section-wrap">
+    <div class="section-head">
+      <h2>Gap & Priority Analysis Engine</h2>
+      <div class="underline"></div>
+      <p>Rule-based risk detection and equity analysis</p>
+    </div>
+    <div style="margin-bottom:20px;">
+      <label style="font-size:11px;color:var(--grey);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:6px;">Select Entry</label>
+      <select id="gap-select" style="background:rgba(10,22,40,0.8);border:1px solid rgba(200,168,75,0.2);color:var(--white);font-family:var(--font-body);font-size:14px;padding:10px 14px;border-radius:6px;width:100%;max-width:400px;" onchange="renderGapAnalysis()">
+        <option value="">-- Select benchmark entry --</option>
+      </select>
+    </div>
+    <div id="gap-content">
+      <div class="empty-state"><div class="icon">🔍</div>Select an entry above to run gap analysis</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ INTERVENTION ═══════════════════════════ -->
+<div id="screen-intervention" class="screen">
+  <div class="section-wrap">
+    <div class="section-head">
+      <h2>Priority Intervention Generator</h2>
+      <div class="underline"></div>
+      <p>Evidence-based intervention strategies tailored to your benchmarking data</p>
+    </div>
+    <div style="margin-bottom:20px;">
+      <label style="font-size:11px;color:var(--grey);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:6px;">Select Entry</label>
+      <select id="int-select" style="background:rgba(10,22,40,0.8);border:1px solid rgba(200,168,75,0.2);color:var(--white);font-family:var(--font-body);font-size:14px;padding:10px 14px;border-radius:6px;width:100%;max-width:400px;" onchange="renderIntervention()">
+        <option value="">-- Select benchmark entry --</option>
+      </select>
+    </div>
+    <div id="intervention-content">
+      <div class="empty-state"><div class="icon">🎯</div>Select an entry to generate intervention plan</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ TREND SIMULATION ═══════════════════════════ -->
+<div id="screen-trend" class="screen">
+  <div class="section-wrap">
+    <div class="section-head">
+      <h2>Trend Simulation Mode</h2>
+      <div class="underline"></div>
+      <p>Simulate proficiency improvement scenarios and project future benchmarks</p>
+    </div>
+    <div style="margin-bottom:20px;">
+      <label style="font-size:11px;color:var(--grey);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:6px;">Base Entry</label>
+      <select id="trend-select" style="background:rgba(10,22,40,0.8);border:1px solid rgba(200,168,75,0.2);color:var(--white);font-family:var(--font-body);font-size:14px;padding:10px 14px;border-radius:6px;width:100%;max-width:400px;" onchange="renderTrend()">
+        <option value="">-- Select benchmark entry --</option>
+      </select>
+    </div>
+    <div id="trend-content">
+      <div class="empty-state"><div class="icon">📈</div>Select an entry to begin simulation</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ COMPARISON ═══════════════════════════ -->
+<div id="screen-comparison" class="screen">
+  <div class="section-wrap">
+    <div class="section-head">
+      <h2>Multi-School Comparison</h2>
+      <div class="underline"></div>
+      <p>Analytical comparison of up to 3 schools — no ranking labels, equity-focused</p>
+    </div>
+    <div class="school-tabs">
+      <button class="school-tab active" onclick="showSchoolTab(0)">School A</button>
+      <button class="school-tab" onclick="showSchoolTab(1)">School B</button>
+      <button class="school-tab" onclick="showSchoolTab(2)">School C</button>
+    </div>
+    <div id="comp-forms"></div>
+    <div style="margin:20px 0; display:flex; gap:12px;">
+      <button class="btn-primary" onclick="runComparison()">📊 Generate Comparison</button>
+    </div>
+    <div id="comparison-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ REPORT ═══════════════════════════ -->
+<div id="screen-report" class="screen">
+  <div class="section-wrap">
+    <div class="section-head">
+      <h2>Benchmark Report Generator</h2>
+      <div class="underline"></div>
+      <p>Generate a comprehensive School Benchmark Response Plan</p>
+    </div>
+    <div style="margin-bottom:20px;">
+      <label style="font-size:11px;color:var(--grey);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:6px;">Select Entry</label>
+      <select id="report-select" style="background:rgba(10,22,40,0.8);border:1px solid rgba(200,168,75,0.2);color:var(--white);font-family:var(--font-body);font-size:14px;padding:10px 14px;border-radius:6px;width:100%;max-width:400px;">
+        <option value="">-- Select benchmark entry --</option>
+      </select>
+    </div>
+    <div style="display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+      <button class="btn-primary" onclick="generateReport()">📋 Generate Report</button>
+      <button class="btn-secondary no-print" onclick="window.print()">🖨️ Print / Save PDF</button>
+    </div>
+    <div id="report-output"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════ NAVIGATION ═══════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const idx = ['home','policy','entry','dashboard','gap','intervention','trend','comparison','report'];
+  const btns = document.querySelectorAll('.nav-links .nav-btn');
+  const i = idx.indexOf(id);
+  if(i>=0 && btns[i]) btns[i].classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='policy') initPolicy();
+  if(id==='dashboard'||id==='gap'||id==='intervention'||id==='trend'||id==='report') populateSelects();
+  if(id==='entry') renderEntriesList();
+  if(id==='comparison') initComparison();
+}
+function toggleMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+// ═══════════════════════ LOCAL STORAGE ═══════════════════════
+const LS_KEY = 'incbs_benchmark_data';
+function loadEntries() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch(e){ return []; }
+}
+function saveEntries(arr) { localStorage.setItem(LS_KEY, JSON.stringify(arr)); }
+
+// ═══════════════════════ FORMULAS ═══════════════════════
+function calcPI(e) { return (parseFloat(e.l3)||0)+(parseFloat(e.l4)||0); }
+function calcWCS(e) {
+  return ((1*(parseFloat(e.l1)||0))+(2*(parseFloat(e.l2)||0))+(3*(parseFloat(e.l3)||0))+(4*(parseFloat(e.l4)||0)))/4;
+}
+function calcEquityGap(e) { return Math.abs((parseFloat(e.girlsPI)||0)-(parseFloat(e.boysPI)||0)); }
+function calcRiskSeverity(e) {
+  const l1 = parseFloat(e.l1)||0;
+  const att = parseFloat(e.attend)||80;
+  const attFactor = Math.max(0,(80-att)/10);
+  return (l1*1.5)+attFactor;
+}
+function calcSustainability(e) {
+  const pi = calcPI(e), wcs = calcWCS(e), att = parseFloat(e.attend)||0;
+  return Math.min(100, (pi*0.5)+(wcs*12.5)+(att*0.2)).toFixed(1);
+}
+
+// ═══════════════════════ DATA ENTRY ═══════════════════════
+function updateLevelTotal() {
+  const vals = ['f-l1','f-l2','f-l3','f-l4'].map(id=>parseFloat(document.getElementById(id).value)||0);
+  const total = vals.reduce((a,b)=>a+b,0);
+  document.getElementById('level-total').textContent = total.toFixed(1);
+  const st = document.getElementById('level-total-status');
+  if(total===100){ st.textContent='✓ Valid'; st.style.color='var(--success)'; }
+  else if(total>100){ st.textContent='⚠ Exceeds 100%'; st.style.color='var(--danger)'; }
+  else { st.textContent=''; }
+}
+function saveBenchmarkEntry() {
+  const school = document.getElementById('f-school').value.trim()||'Unnamed School';
+  const year = document.getElementById('f-year').value.trim()||'2025-26';
+  const grade = document.getElementById('f-grade').value;
+  const subject = document.getElementById('f-subject').value;
+  const total = document.getElementById('f-total').value;
+  const attend = document.getElementById('f-attend').value;
+  const l1 = parseFloat(document.getElementById('f-l1').value)||0;
+  const l2 = parseFloat(document.getElementById('f-l2').value)||0;
+  const l3 = parseFloat(document.getElementById('f-l3').value)||0;
+  const l4 = parseFloat(document.getElementById('f-l4').value)||0;
+  const girlsPI = document.getElementById('f-girls-pi').value;
+  const boysPI = document.getElementById('f-boys-pi').value;
+  const msg = document.getElementById('entry-msg');
+  if(!grade||!subject){ msg.className='validation-msg error'; msg.textContent='Please select Grade and Subject.'; return; }
+  if(Math.abs((l1+l2+l3+l4)-100)>0.5){ msg.className='validation-msg error'; msg.textContent='Level percentages must sum to 100%. Current total: '+(l1+l2+l3+l4).toFixed(1)+'%'; return; }
+  const entry = { id: Date.now(), school, year, grade, subject, total, attend, l1, l2, l3, l4, girlsPI, boysPI, date: new Date().toLocaleDateString('en-IN') };
+  const entries = loadEntries();
+  entries.push(entry);
+  saveEntries(entries);
+  msg.className='validation-msg success';
+  msg.textContent='✓ Entry saved successfully! Grade '+grade+' '+subject+' — Proficiency Index: '+calcPI(entry).toFixed(1)+'%';
+  renderEntriesList();
+}
+function clearEntryForm() {
+  ['f-school','f-year','f-total','f-attend','f-l1','f-l2','f-l3','f-l4','f-girls-pi','f-boys-pi'].forEach(id=>{
+    document.getElementById(id).value='';
+  });
+  document.getElementById('f-grade').value='';
+  document.getElementById('f-subject').value='';
+  document.getElementById('level-total').textContent='0';
+  document.getElementById('level-total-status').textContent='';
+  document.getElementById('entry-msg').className='validation-msg';
+}
+function renderEntriesList() {
+  const entries = loadEntries();
+  const el = document.getElementById('entries-list');
+  if(!entries.length){ el.innerHTML='<div class="empty-state"><div class="icon">📝</div>No entries yet. Add your first benchmark above.</div>'; return; }
+  el.innerHTML = entries.map((e,i)=>`
+    <div class="entry-item" onclick="loadEntry(${i})">
+      <div>
+        <div class="ei-title">${e.school} — ${e.grade} ${e.subject}</div>
+        <div class="ei-meta">${e.year} · ${e.total||'?'} students · Attendance: ${e.attend||'?'}% · ${e.date}</div>
+      </div>
+      <div>
+        <div class="ei-pi">${calcPI(e).toFixed(0)}%</div>
+        <div style="font-size:10px;color:var(--grey);text-align:center;">PI</div>
+      </div>
+      <button onclick="event.stopPropagation();deleteEntry(${i})" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:18px;padding:4px;">✕</button>
+    </div>
+  `).join('');
+}
+function loadEntry(i){ /* just for UX feedback */ }
+function deleteEntry(i) {
+  const entries = loadEntries(); entries.splice(i,1); saveEntries(entries); renderEntriesList();
+}
+function populateSelects() {
+  const entries = loadEntries();
+  const opts = '<option value="">-- Select benchmark entry --</option>'+entries.map((e,i)=>`<option value="${i}">${e.school} — ${e.grade} ${e.subject} (${e.year})</option>`).join('');
+  ['dash-select','gap-select','int-select','trend-select','report-select'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.innerHTML=opts;
+  });
+}
+
+// ═══════════════════════ DASHBOARD ═══════════════════════
+let dashCharts = {};
+function renderDashboard() {
+  const idx = document.getElementById('dash-select').value;
+  if(idx==='') { document.getElementById('dashboard-content').innerHTML='<div class="empty-state"><div class="icon">📊</div>Select an entry above to view the dashboard</div>'; return; }
+  const e = loadEntries()[parseInt(idx)];
+  const pi = calcPI(e), wcs = calcWCS(e), eq = calcEquityGap(e), rs = calcRiskSeverity(e), sus = calcSustainability(e);
+  const riskColor = rs>30?'red':(rs>15?'yellow':'green');
+  const piColor = pi>=60?'green':(pi>=40?'yellow':'red');
+  document.getElementById('dashboard-content').innerHTML = `
+    <div class="dash-stats">
+      <div class="stat-card ${piColor}"><div class="val">${pi.toFixed(1)}%</div><div class="lbl">Proficiency Index</div></div>
+      <div class="stat-card blue"><div class="val">${wcs.toFixed(2)}</div><div class="lbl">Weighted Comp. Score</div></div>
+      <div class="stat-card ${eq>10?'red':'green'}"><div class="val">${eq.toFixed(1)}%</div><div class="lbl">Equity Gap Index</div></div>
+      <div class="stat-card ${riskColor}"><div class="val">${rs.toFixed(1)}</div><div class="lbl">Risk Severity Index</div></div>
+      <div class="stat-card yellow"><div class="val">${sus}%</div><div class="lbl">Sustainability Score</div></div>
+      <div class="stat-card blue"><div class="val">${e.attend||'–'}%</div><div class="lbl">Attendance Rate</div></div>
+    </div>
+    <div class="card" style="margin-bottom:18px;">
+      <h4 style="font-size:13px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;">Competency Level Distribution</h4>
+      <div class="level-bars">
+        <div class="level-bar-row"><div class="level-bar-label">L1 Below Basic</div><div class="level-bar-track"><div class="level-bar-fill bar-l1" style="width:${e.l1}%"><span>${e.l1}%</span></div></div></div>
+        <div class="level-bar-row"><div class="level-bar-label">L2 Basic</div><div class="level-bar-track"><div class="level-bar-fill bar-l2" style="width:${e.l2}%"><span>${e.l2}%</span></div></div></div>
+        <div class="level-bar-row"><div class="level-bar-label">L3 Proficient</div><div class="level-bar-track"><div class="level-bar-fill bar-l3" style="width:${e.l3}%"><span>${e.l3}%</span></div></div></div>
+        <div class="level-bar-row"><div class="level-bar-label">L4 Advanced</div><div class="level-bar-track"><div class="level-bar-fill bar-l4" style="width:${e.l4}%"><span>${e.l4}%</span></div></div></div>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-wrap"><h4>Level Distribution</h4><div class="chart-container"><canvas id="chart-dist"></canvas></div></div>
+      <div class="chart-wrap"><h4>Gender Equity — Proficiency %</h4><div class="chart-container"><canvas id="chart-equity"></canvas></div></div>
+    </div>
+    <div class="card">
+      <h3>Formula Breakdown</h3>
+      <div class="formula-label">Proficiency Index (PI)</div>
+      <div class="formula-box">PI = Level3% + Level4% = ${e.l3} + ${e.l4} = ${pi.toFixed(1)}%</div>
+      <div class="formula-label">Weighted Competency Score (WCS)</div>
+      <div class="formula-box">WCS = (1×${e.l1} + 2×${e.l2} + 3×${e.l3} + 4×${e.l4}) ÷ 4 = ${wcs.toFixed(3)}</div>
+      <div class="formula-label">Risk Severity Index (RSI)</div>
+      <div class="formula-box">RSI = (L1% × 1.5) + Low-Attendance Factor = ${rs.toFixed(2)}</div>
+      <div class="formula-label">Equity Gap Index (EGI)</div>
+      <div class="formula-box">EGI = |Girls PI% − Boys PI%| = |${e.girlsPI||0} − ${e.boysPI||0}| = ${eq.toFixed(1)}%</div>
+    </div>
+  `;
+  setTimeout(()=>drawDashCharts(e), 100);
+}
+function drawDashCharts(e) {
+  // Distribution pie
+  const c1 = document.getElementById('chart-dist');
+  if(!c1) return;
+  const ctx1 = c1.getContext('2d');
+  drawDonut(ctx1, [e.l1,e.l2,e.l3,e.l4], ['#e05252','#e08a2a','#4a9eda','#3aa876'], ['L1 Below Basic','L2 Basic','L3 Proficient','L4 Advanced']);
+  // Equity bar
+  const c2 = document.getElementById('chart-equity');
+  if(!c2) return;
+  const ctx2 = c2.getContext('2d');
+  drawBarChart(ctx2, ['Girls','Boys'], [parseFloat(e.girlsPI)||0, parseFloat(e.boysPI)||0], ['#e8c96a','#4a9eda']);
+}
+function drawDonut(ctx, values, colors, labels) {
+  const canvas = ctx.canvas;
+  const W = canvas.offsetWidth||canvas.width; canvas.width=W;
+  const H = canvas.offsetHeight||220; canvas.height=H;
+  const cx=W/2, cy=H/2, r=Math.min(W,H)*0.35, inner=r*0.55;
+  const total=values.reduce((a,b)=>a+b,0)||1;
+  let angle=-Math.PI/2;
+  values.forEach((v,i)=>{
+    const sweep=(v/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+sweep);
+    ctx.closePath(); ctx.fillStyle=colors[i]; ctx.fill();
+    angle+=sweep;
+  });
+  ctx.beginPath(); ctx.arc(cx,cy,inner,0,Math.PI*2);
+  ctx.fillStyle='rgba(10,22,40,0.95)'; ctx.fill();
+  ctx.fillStyle='rgba(240,244,248,0.8)'; ctx.font='bold 11px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('Distribution', cx, cy);
+  // Legend
+  const lx=8, ly=12;
+  values.forEach((v,i)=>{
+    ctx.fillStyle=colors[i]; ctx.fillRect(lx,ly+i*20,12,12);
+    ctx.fillStyle='rgba(200,200,200,0.8)'; ctx.font='10px sans-serif'; ctx.textAlign='left'; ctx.textBaseline='top';
+    ctx.fillText(labels[i]+': '+v+'%', lx+16, ly+i*20+1);
+  });
+}
+function drawBarChart(ctx, labels, values, colors) {
+  const canvas=ctx.canvas;
+  const W=canvas.offsetWidth||canvas.width; canvas.width=W;
+  const H=canvas.offsetHeight||220; canvas.height=H;
+  const pad=40, bw=(W-pad*2)/labels.length*0.6, gap=(W-pad*2)/labels.length;
+  const maxV=Math.max(...values,100);
+  ctx.fillStyle='rgba(0,0,0,0)'; ctx.fillRect(0,0,W,H);
+  // Grid lines
+  for(let i=0;i<=4;i++){
+    const y=pad+(H-pad*2)*(1-i/4);
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-pad,y);
+    ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillStyle='rgba(200,200,200,0.4)'; ctx.font='9px sans-serif'; ctx.textAlign='right'; ctx.textBaseline='middle';
+    ctx.fillText((i*25)+'%', pad-4, y);
+  }
+  values.forEach((v,i)=>{
+    const bh=(v/maxV)*(H-pad*2);
+    const x=pad+i*gap+(gap-bw)/2;
+    const y=H-pad-bh;
+    // Gradient
+    const grd=ctx.createLinearGradient(x,y,x,H-pad);
+    grd.addColorStop(0,colors[i]); grd.addColorStop(1,colors[i]+'44');
+    ctx.fillStyle=grd; ctx.beginPath();
+    ctx.roundRect?ctx.roundRect(x,y,bw,bh,4):ctx.rect(x,y,bw,bh);
+    ctx.fill();
+    ctx.fillStyle='rgba(240,244,248,0.9)'; ctx.font='bold 11px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.fillText(v+'%', x+bw/2, y-2);
+    ctx.fillStyle='rgba(200,200,200,0.6)'; ctx.font='10px sans-serif'; ctx.textBaseline='top';
+    ctx.fillText(labels[i], x+bw/2, H-pad+4);
+  });
+}
+
+// ═══════════════════════ GAP ANALYSIS ═══════════════════════
+const NATIONAL_TARGET = 60; // 60% at proficiency
+const L1_THRESHOLD = 25;
+const EQUITY_THRESHOLD = 10;
+const ATTEND_THRESHOLD = 75;
+function renderGapAnalysis() {
+  const idx = document.getElementById('gap-select').value;
+  if(idx==='') { document.getElementById('gap-content').innerHTML='<div class="empty-state"><div class="icon">🔍</div>Select an entry above to run gap analysis</div>'; return; }
+  const e = loadEntries()[parseInt(idx)];
+  const pi = calcPI(e), eq = calcEquityGap(e), rs = calcRiskSeverity(e);
+  const alerts = [];
+  if(e.l1>L1_THRESHOLD) alerts.push({level:'high',msg:`⚠ HIGH RISK: ${e.l1}% students at Level 1 (Below Basic) — threshold is ${L1_THRESHOLD}%`});
+  if(pi<NATIONAL_TARGET) alerts.push({level:'moderate',msg:`📌 PRIORITY: Proficiency Index ${pi.toFixed(1)}% is below national target of ${NATIONAL_TARGET}%`});
+  if(eq>EQUITY_THRESHOLD) alerts.push({level:'high',msg:`⚖ EQUITY ALERT: Gender gap in proficiency is ${eq.toFixed(1)}% — exceeds ${EQUITY_THRESHOLD}% threshold`});
+  if((parseFloat(e.attend)||100)<ATTEND_THRESHOLD) alerts.push({level:'moderate',msg:`📅 ATTENDANCE: Rate of ${e.attend}% is below minimum threshold of ${ATTEND_THRESHOLD}%`});
+  if(e.l2>40) alerts.push({level:'moderate',msg:`📊 LARGE BASIC COHORT: ${e.l2}% students at Level 2 — targeted uplift to Level 3 is strategic priority`});
+  if(pi>=NATIONAL_TARGET && e.l1<=L1_THRESHOLD) alerts.push({level:'low',msg:`✅ PERFORMING WELL: School meets national proficiency target and L1 threshold`});
+  document.getElementById('gap-content').innerHTML = `
+    <div class="alert-row">${alerts.map(a=>`<div class="alert-badge ${a.level}">${a.msg}</div>`).join('')}</div>
+    <div class="card">
+      <h3>Gap Analysis Summary</h3>
+      <table class="intervention-table">
+        <thead><tr><th>Indicator</th><th>School Value</th><th>Benchmark</th><th>Gap</th><th>Urgency</th></tr></thead>
+        <tbody>
+          <tr><td>Proficiency Index</td><td>${pi.toFixed(1)}%</td><td>${NATIONAL_TARGET}%</td><td>${Math.max(0,NATIONAL_TARGET-pi).toFixed(1)}%</td><td class="${pi<NATIONAL_TARGET?'priority-high':'priority-low'}">${pi<NATIONAL_TARGET?'High':'Met'}</td></tr>
+          <tr><td>Below Basic (L1)</td><td>${e.l1}%</td><td>< ${L1_THRESHOLD}%</td><td>${Math.max(0,e.l1-L1_THRESHOLD).toFixed(1)}%</td><td class="${e.l1>L1_THRESHOLD?'priority-high':'priority-low'}">${e.l1>L1_THRESHOLD?'High':'Acceptable'}</td></tr>
+          <tr><td>Gender Equity Gap</td><td>${eq.toFixed(1)}%</td><td>< ${EQUITY_THRESHOLD}%</td><td>${Math.max(0,eq-EQUITY_THRESHOLD).toFixed(1)}%</td><td class="${eq>EQUITY_THRESHOLD?'priority-high':'priority-low'}">${eq>EQUITY_THRESHOLD?'High':'Acceptable'}</td></tr>
+          <tr><td>Attendance Rate</td><td>${e.attend||'?'}%</td><td>> ${ATTEND_THRESHOLD}%</td><td>${Math.max(0,ATTEND_THRESHOLD-(parseFloat(e.attend)||100)).toFixed(1)}%</td><td class="${(parseFloat(e.attend)||100)<ATTEND_THRESHOLD?'priority-moderate':'priority-low'}">${(parseFloat(e.attend)||100)<ATTEND_THRESHOLD?'Moderate':'Acceptable'}</td></tr>
+          <tr><td>Risk Severity Index</td><td>${rs.toFixed(2)}</td><td>< 20</td><td>${Math.max(0,rs-20).toFixed(2)}</td><td class="${rs>30?'priority-high':(rs>15?'priority-moderate':'priority-low')}">${rs>30?'High':(rs>15?'Moderate':'Low')}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Priority Skill Domains</h3>
+      <p>Based on the Level 1 concentration and low proficiency, the following competency domains require immediate focus:</p>
+      <ul style="padding-left:18px;color:var(--grey-light);font-size:14px;">
+        ${e.l1>30?'<li>Foundational literacy / numeracy — immediate remedial priority</li>':''} 
+        ${pi<40?'<li>Grade-level competency anchoring — structured catch-up curriculum</li>':''}
+        ${eq>15?'<li>Gender-specific learning support — investigate differential access & participation</li>':''}
+        ${(parseFloat(e.attend)||100)<ATTEND_THRESHOLD?'<li>Attendance improvement — community engagement and home visits</li>':''}
+        <li>Formative assessment integration — regular low-stakes checks</li>
+        <li>Teacher capacity in differentiated instruction</li>
+      </ul>
+    </div>
+  `;
+}
+
+// ═══════════════════════ INTERVENTION ═══════════════════════
+function renderIntervention() {
+  const idx = document.getElementById('int-select').value;
+  if(idx==='') { document.getElementById('intervention-content').innerHTML='<div class="empty-state"><div class="icon">🎯</div>Select an entry to generate intervention plan</div>'; return; }
+  const e = loadEntries()[parseInt(idx)];
+  const pi = calcPI(e), eq = calcEquityGap(e);
+  const interventions = [];
+  if(e.l1>25) interventions.push({domain:'Remedial Learning Cycles',urgency:'High',action:'Implement bi-weekly foundational skill bootcamps targeting L1 students. Use structured peer tutoring with L3/L4 mentors.',owner:'Subject Teacher + Remedial Coordinator',timeline:'Weeks 1–6'});
+  if(pi<60) interventions.push({domain:'Curriculum Focus Realignment',urgency:'High',action:'Identify and prioritize NCF 2023 core competency anchors. Reduce peripheral content in favour of deep foundational competency building.',owner:'HM + Subject Teachers',timeline:'Immediate'});
+  if(eq>10) interventions.push({domain:'Equity & Gender Inclusion',urgency:'High',action:'Conduct classroom observation for differential participation. Design gender-responsive assessment and seating arrangements.',owner:'School Counselor + Class Teacher',timeline:'Month 1'});
+  if((parseFloat(e.attend)||100)<75) interventions.push({domain:'Attendance Improvement Strategy',urgency:'Moderate',action:'Launch home-visit protocol for chronically absent students. Engage community leaders and SMC members for awareness campaigns.',owner:'Principal + SMC',timeline:'Month 1–2'});
+  interventions.push({domain:'Teacher CPD — Formative Assessment',urgency:'Moderate',action:'Conduct school-based CPD on designing and using formative assessment tools aligned with competency descriptors.',owner:'Cluster Resource Coordinator',timeline:'Month 2'});
+  interventions.push({domain:'Assessment Redesign',urgency:'Moderate',action:'Shift unit assessments from recall-based to competency-evidencing tasks. Align with PARAKH descriptors for criterion-referencing.',owner:'Subject HOD',timeline:'Month 2–3'});
+  interventions.push({domain:'Progress Monitoring System',urgency:'Low',action:'Establish monthly competency tracking using standardized observation checklists. Share results with SMC quarterly.',owner:'Principal',timeline:'Ongoing'});
+  document.getElementById('intervention-content').innerHTML = `
+    <div class="card" style="margin-bottom:18px;">
+      <h3>School Benchmark Response Plan — ${e.school}</h3>
+      <p style="color:var(--grey);font-size:12px;">${e.grade} · ${e.subject} · ${e.year} · Generated: ${new Date().toLocaleDateString('en-IN')}</p>
+      <p>Proficiency Index: <strong style="color:var(--accent)">${pi.toFixed(1)}%</strong> | Risk Severity: <strong style="color:${calcRiskSeverity(e)>25?'var(--danger)':'var(--warn)'}">${calcRiskSeverity(e).toFixed(1)}</strong></p>
+    </div>
+    <div class="card" style="overflow-x:auto;">
+      <table class="intervention-table">
+        <thead><tr><th>Domain</th><th>Urgency</th><th>Action Strategy</th><th>Responsible</th><th>Timeline</th></tr></thead>
+        <tbody>${interventions.map(i=>`
+          <tr>
+            <td style="font-weight:700;color:var(--white)">${i.domain}</td>
+            <td class="priority-${i.urgency.toLowerCase()}">${i.urgency}</td>
+            <td>${i.action}</td>
+            <td style="font-size:12px;color:var(--grey)">${i.owner}</td>
+            <td style="font-size:12px;color:var(--accent)">${i.timeline}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Monitoring Plan</h3>
+      <p>Review proficiency data monthly. Conduct formative audit at 6-week interval. Present progress to School Management Committee at end of each term.</p>
+      <div class="formula-label">Success Criteria</div>
+      <div class="formula-box">Target: PI ≥ 60% within 2 terms | L1 ≤ 15% | Attendance ≥ 80% | Equity Gap ≤ 10%</div>
+    </div>
+  `;
+}
+
+// ═══════════════════════ TREND SIMULATION ═══════════════════════
+let trendSimData = {};
+function renderTrend() {
+  const idx = document.getElementById('trend-select').value;
+  if(idx==='') { document.getElementById('trend-content').innerHTML='<div class="empty-state"><div class="icon">📈</div>Select an entry to begin simulation</div>'; return; }
+  const e = loadEntries()[parseInt(idx)];
+  trendSimData = {...e, sim_boost: 5, sim_attend_boost: 3};
+  renderTrendSim();
+}
+function renderTrendSim() {
+  const e = trendSimData;
+  const boost = parseFloat(e.sim_boost)||0;
+  const aBoost = parseFloat(e.sim_attend_boost)||0;
+  // Simulate: boost increases L3+L4, reduces L1
+  const newL1 = Math.max(0, (parseFloat(e.l1)||0) - boost*0.4);
+  const newL2 = Math.max(0, (parseFloat(e.l2)||0) - boost*0.2);
+  const newL3 = Math.min(100, (parseFloat(e.l3)||0) + boost*0.7);
+  const newL4 = Math.min(100, (parseFloat(e.l4)||0) + boost*0.3);
+  const newAttend = Math.min(100, (parseFloat(e.attend)||0) + aBoost);
+  const simEntry = {l1:newL1,l2:newL2,l3:newL3,l4:newL4,attend:newAttend,girlsPI:e.girlsPI,boysPI:e.boysPI};
+  const curPI = calcPI(e), simPI = calcPI(simEntry);
+  const curRS = calcRiskSeverity(e), simRS = calcRiskSeverity(simEntry);
+  const piGrowth = simPI - curPI;
+  const riskReduction = curRS - simRS;
+  document.getElementById('trend-content').innerHTML = `
+    <div class="scenario-controls">
+      <h4 style="font-size:13px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;">Simulation Controls</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div>
+          <label>Proficiency Boost Intervention (+<span class="range-val" id="boost-val">${boost}</span>% shift)</label>
+          <input type="range" min="0" max="20" step="1" value="${boost}" oninput="trendSimData.sim_boost=this.value;document.getElementById('boost-val').textContent=this.value;renderTrendSim()">
+        </div>
+        <div>
+          <label>Attendance Improvement (+<span class="range-val" id="aboost-val">${aBoost}</span>%)</label>
+          <input type="range" min="0" max="20" step="1" value="${aBoost}" oninput="trendSimData.sim_attend_boost=this.value;document.getElementById('aboost-val').textContent=this.value;renderTrendSim()">
+        </div>
+      </div>
+    </div>
+    <div class="dash-stats">
+      <div class="stat-card blue"><div class="val">${curPI.toFixed(1)}%</div><div class="lbl">Current PI</div></div>
+      <div class="stat-card green"><div class="val">${simPI.toFixed(1)}%</div><div class="lbl">Projected PI</div></div>
+      <div class="stat-card yellow"><div class="val">+${piGrowth.toFixed(1)}%</div><div class="lbl">PI Growth</div></div>
+      <div class="stat-card ${riskReduction>0?'green':'red'}"><div class="val">${riskReduction.toFixed(1)}</div><div class="lbl">Risk Reduction</div></div>
+    </div>
+    <div class="card">
+      <h3>Simulated Level Distribution</h3>
+      <div class="level-bars">
+        <div class="level-bar-row"><div class="level-bar-label">L1 Below Basic</div><div class="level-bar-track"><div class="level-bar-fill bar-l1" style="width:${newL1.toFixed(1)}%"><span>${newL1.toFixed(1)}%</span></div></div></div>
+        <div class="level-bar-row"><div class="level-bar-label">L2 Basic</div><div class="level-bar-track"><div class="level-bar-fill bar-l2" style="width:${newL2.toFixed(1)}%"><span>${newL2.toFixed(1)}%</span></div></div></div>
+        <div class="level-bar-row"><div class="level-bar-label">L3 Proficient</div><div class="level-bar-track"><div class="level-bar-fill bar-l3" style="width:${newL3.toFixed(1)}%"><span>${newL3.toFixed(1)}%</span></div></div></div>
+        <div class="level-bar-row"><div class="level-bar-label">L4 Advanced</div><div class="level-bar-track"><div class="level-bar-fill bar-l4" style="width:${newL4.toFixed(1)}%"><span>${newL4.toFixed(1)}%</span></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="formula-label">Simulation Formula</div>
+      <div class="formula-box">Projected PI = (L3 + boost×0.7) + (L4 + boost×0.3)<br>Risk Reduction = Current RSI − Projected RSI<br>Sustainability Score = f(PI, WCS, Attendance)</div>
+    </div>
+  `;
+}
+
+// ═══════════════════════ COMPARISON ═══════════════════════
+let compSchools = [{},{},{}], activeSchoolTab = 0;
+function initComparison() {
+  renderCompForms();
+}
+function showSchoolTab(i) {
+  activeSchoolTab = i;
+  document.querySelectorAll('.school-tab').forEach((b,j)=>b.classList.toggle('active',i===j));
+  renderCompForms();
+}
+function renderCompForms() {
+  const s = compSchools[activeSchoolTab];
+  document.getElementById('comp-forms').innerHTML = `
+    <div class="card">
+      <h3>School ${['A','B','C'][activeSchoolTab]} — Data Entry</h3>
+      <div class="form-grid">
+        <div class="form-group"><label>School Name</label><input type="text" id="cs-name" value="${s.name||''}" placeholder="School name" oninput="updateCompSchool('name',this.value)"></div>
+        <div class="form-group"><label>Grade / Subject</label><input type="text" id="cs-gs" value="${s.gs||''}" placeholder="e.g. Grade 8 Mathematics" oninput="updateCompSchool('gs',this.value)"></div>
+        <div class="form-group"><label>Level 1 Below Basic (%)</label><input type="number" id="cs-l1" value="${s.l1||''}" min="0" max="100" oninput="updateCompSchool('l1',this.value)"></div>
+        <div class="form-group"><label>Level 2 Basic (%)</label><input type="number" id="cs-l2" value="${s.l2||''}" min="0" max="100" oninput="updateCompSchool('l2',this.value)"></div>
+        <div class="form-group"><label>Level 3 Proficient (%)</label><input type="number" id="cs-l3" value="${s.l3||''}" min="0" max="100" oninput="updateCompSchool('l3',this.value)"></div>
+        <div class="form-group"><label>Level 4 Advanced (%)</label><input type="number" id="cs-l4" value="${s.l4||''}" min="0" max="100" oninput="updateCompSchool('l4',this.value)"></div>
+        <div class="form-group"><label>Attendance (%)</label><input type="number" id="cs-att" value="${s.attend||''}" min="0" max="100" oninput="updateCompSchool('attend',this.value)"></div>
+      </div>
+    </div>
+  `;
+}
+function updateCompSchool(field, val) {
+  compSchools[activeSchoolTab][field] = val;
+}
+function runComparison() {
+  const schools = compSchools.filter(s=>s.name||s.gs);
+  if(!schools.length){ alert('Please enter data for at least one school.'); return; }
+  const rows = schools.map(s=>{
+    const pi=calcPI(s), wcs=calcWCS(s), rs=calcRiskSeverity(s);
+    return `<tr>
+      <td style="font-weight:700;color:var(--white)">${s.name||'Unnamed'}<br><span style="font-size:11px;color:var(--grey)">${s.gs||''}</span></td>
+      <td>${s.l1||0}%</td><td>${s.l2||0}%</td><td>${s.l3||0}%</td><td>${s.l4||0}%</td>
+      <td style="font-weight:700;color:${pi>=60?'var(--success)':pi>=40?'var(--warn)':'var(--danger)'}">${pi.toFixed(1)}%</td>
+      <td>${wcs.toFixed(2)}</td>
+      <td style="color:${rs>25?'var(--danger)':rs>15?'var(--warn)':'var(--success)'}">${rs.toFixed(1)}</td>
+      <td>${s.attend||'?'}%</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('comparison-content').innerHTML = `
+    <div class="card" style="overflow-x:auto;">
+      <h3>Analytical Comparison — No Ranking, Evidence-Only View</h3>
+      <table class="intervention-table">
+        <thead><tr><th>School</th><th>L1%</th><th>L2%</th><th>L3%</th><th>L4%</th><th>PI</th><th>WCS</th><th>RSI</th><th>Attend%</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Equity & Distribution Analysis</h3>
+      <p>The comparison above shows variation in competency distribution across schools. Differences in Level 1 concentration indicate differential access to foundational learning support. High RSI values signal schools requiring resource prioritization, not penalization.</p>
+      <p style="color:var(--accent);font-size:13px;">⚠ This comparison tool is designed for collaborative improvement planning, not competition or ranking.</p>
+    </div>
+  `;
+}
+
+// ═══════════════════════ REPORT ═══════════════════════
+function generateReport() {
+  const idx = document.getElementById('report-select').value;
+  if(idx==='') { alert('Please select an entry first.'); return; }
+  const e = loadEntries()[parseInt(idx)];
+  const pi = calcPI(e), wcs = calcWCS(e), eq = calcEquityGap(e), rs = calcRiskSeverity(e), sus = calcSustainability(e);
+  const riskLevel = rs>30?'High Risk':(rs>15?'Moderate Risk':'Low Risk');
+  const div = document.getElementById('report-output');
+  div.style.display='block';
+  div.innerHTML = `
+    <h1>School Benchmark Response Plan</h1>
+    <table><tr><th>School</th><td>${e.school||'Unnamed'}</td><th>Year</th><td>${e.year||'—'}</td></tr>
+    <tr><th>Grade</th><td>${e.grade}</td><th>Subject</th><td>${e.subject}</td></tr>
+    <tr><th>Total Students</th><td>${e.total||'—'}</td><th>Report Date</th><td>${new Date().toLocaleDateString('en-IN')}</td></tr></table>
+    <h2>1. Competency Distribution Summary</h2>
+    <table><tr><th>Level</th><th>Description</th><th>% Students</th></tr>
+    <tr><td>Level 1</td><td>Below Basic</td><td class="${e.l1>25?'risk-high':''}">${e.l1}%</td></tr>
+    <tr><td>Level 2</td><td>Basic</td><td>${e.l2}%</td></tr>
+    <tr><td>Level 3</td><td>Proficient</td><td>${e.l3}%</td></tr>
+    <tr><td>Level 4</td><td>Advanced</td><td>${e.l4}%</td></tr></table>
+    <h2>2. Key Indices</h2>
+    <table><tr><th>Index</th><th>Value</th><th>Benchmark</th><th>Status</th></tr>
+    <tr><td>Proficiency Index (PI)</td><td>${pi.toFixed(1)}%</td><td>≥ 60%</td><td class="${pi<60?'risk-high':'risk-low'}">${pi>=60?'✓ Met':'✗ Below Target'}</td></tr>
+    <tr><td>Weighted Competency Score</td><td>${wcs.toFixed(3)}</td><td>≥ 2.5</td><td class="${wcs<2.5?'risk-moderate':'risk-low'}">${wcs>=2.5?'✓ Acceptable':'⚠ Below Standard'}</td></tr>
+    <tr><td>Equity Gap Index</td><td>${eq.toFixed(1)}%</td><td>< 10%</td><td class="${eq>10?'risk-high':'risk-low'}">${eq<=10?'✓ Acceptable':'✗ Equity Alert'}</td></tr>
+    <tr><td>Risk Severity Index</td><td>${rs.toFixed(2)}</td><td>< 20</td><td class="${rs>25?'risk-high':rs>15?'risk-moderate':'risk-low'}">${riskLevel}</td></tr>
+    <tr><td>Attendance Rate</td><td>${e.attend||'?'}%</td><td>≥ 75%</td><td class="${(parseFloat(e.attend)||100)<75?'risk-moderate':'risk-low'}">${(parseFloat(e.attend)||100)>=75?'✓ Adequate':'⚠ Below Threshold'}</td></tr>
+    <tr><td>Sustainability Score</td><td>${sus}%</td><td>—</td><td>—</td></tr></table>
+    <h2>3. Risk Analysis</h2>
+    <p>The school's overall risk classification is <strong class="${rs>25?'risk-high':rs>15?'risk-moderate':'risk-low'}">${riskLevel}</strong>. 
+    ${rs>25?'Immediate systemic intervention is required across multiple domains.':rs>15?'Targeted interventions in priority areas are recommended.':'The school shows acceptable benchmarking performance. Continue monitoring.'}</p>
+    <h2>4. Equity Status</h2>
+    <p>Gender equity gap in proficiency: <strong>${eq.toFixed(1)}%</strong>. 
+    ${eq>10?'This exceeds the acceptable threshold of 10%. Equity-focused instructional strategies and gender-responsive assessment practices must be prioritized.':'Gender equity gap is within acceptable range. Continue monitoring.'}</p>
+    <h2>5. Priority Intervention Areas</h2>
+    <table><tr><th>#</th><th>Intervention Domain</th><th>Priority Level</th><th>Timeline</th></tr>
+    ${e.l1>25?'<tr><td>1</td><td>Foundational Remedial Learning Cycles</td><td class="risk-high">High</td><td>Immediate</td></tr>':''}
+    ${pi<60?'<tr><td>2</td><td>Curriculum Focus Realignment to NCF 2023 Anchors</td><td class="risk-high">High</td><td>Immediate</td></tr>':''}
+    ${eq>10?'<tr><td>3</td><td>Equity & Gender-Responsive Instruction</td><td class="risk-high">High</td><td>Month 1</td></tr>':''}
+    <tr><td>4</td><td>Teacher CPD — Formative Assessment</td><td class="risk-moderate">Moderate</td><td>Month 2</td></tr>
+    <tr><td>5</td><td>Assessment Redesign (Criterion-Referenced)</td><td class="risk-moderate">Moderate</td><td>Month 2–3</td></tr>
+    <tr><td>6</td><td>Progress Monitoring System</td><td class="risk-low">Low</td><td>Ongoing</td></tr></table>
+    <h2>6. Monitoring Plan</h2>
+    <p>Review competency data monthly. Conduct mid-term formative audit. Present quarterly progress to School Management Committee. Target PI ≥ 60%, L1 ≤ 15%, Attendance ≥ 80% within two academic terms.</p>
+    <p style="margin-top:24px;font-size:12px;color:#888;border-top:1px solid #eee;padding-top:12px;">
+    Generated by Integrated National Competency Benchmarking Simulator (Offline Edition)<br>
+    Developed by Mateen Yousuf, Teacher, School Education Department Kashmir<br>
+    Aligned with NEP 2020 | NCF 2023 | PARAKH Benchmarking Framework
+    </p>
+  `;
+  div.scrollIntoView({behavior:'smooth'});
+}
+
+// ═══════════════════════ POLICY CONTENT ═══════════════════════
+const policyPages = [
+  {
+    title: "NEP 2020 and National Benchmarking",
+    content: `<h2>NEP 2020 and National Benchmarking</h2>
+    <p>The National Education Policy 2020 represents the most comprehensive restructuring of India's educational framework since independence. At its core, NEP 2020 signals a decisive shift away from rote-based, examination-driven systems toward a competency-focused, evidence-based educational ecosystem. Central to this transformation is the concept of national benchmarking — a systematic process of measuring what students know and can do against defined national standards.</p>
+    <h3>What NEP 2020 Says About Assessment Reform</h3>
+    <p>NEP 2020 explicitly advocates for a "shift from summative to formative assessment," emphasising that assessment must serve learning, not just measure it. The policy calls for regular, standardised assessments at the national level to gauge overall learning outcomes, identify systemic gaps, and inform resource allocation. This is a paradigmatic shift: schools are no longer evaluated purely by enrolment or infrastructure — they are benchmarked by learning quality.</p>
+    <div class="highlight"><strong>Key Policy Direction:</strong> NEP 2020 mandates that all students in Grades 3, 5, and 8 undergo school-based standardised assessments to track competency attainment against national norms. Grade 10 and 12 board examinations are to be restructured to assess core competencies rather than content recall.</div>
+    <h3>The Role of National Standards in Equity</h3>
+    <p>One of NEP 2020's most significant contributions is its equity mandate. Benchmarking in the NEP framework is not about ranking schools or stigmatising underperformance — it is about identifying which schools, which regions, and which populations require additional support to achieve foundational competency. The policy recognises that without standardised measurement, equity gaps remain invisible and therefore unaddressed.</p>
+    <h3>Foundational Literacy and Numeracy (FLN) as Benchmark Zero</h3>
+    <p>NEP 2020 identifies Foundational Literacy and Numeracy as the non-negotiable baseline benchmark for all students by Grade 3. The National Initiative for Proficiency in Reading with Understanding and Numeracy (NIPUN Bharat) operationalises this through competency-based targets. Schools that fail to meet FLN benchmarks trigger intervention protocols — this is national benchmarking in action.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> How does your school currently measure whether students have achieved foundational competency targets? Is this data used to drive instructional decisions?</div>
+    <h3>Implications for School Leadership</h3>
+    <p>For school principals and education leaders, NEP 2020's benchmarking framework demands a new orientation: data literacy. Leaders must be able to read competency distribution data, interpret proficiency indices, and translate findings into action plans. This simulator is designed to build precisely that capacity — allowing leaders to engage with benchmarking data in a safe, offline environment before encountering real assessment results.</p>
+    <div class="leader-note">Effective implementation of NEP 2020 benchmarking begins with school leaders who treat assessment data as a mirror of systemic health — not a scorecard for judgment. Build a culture where data drives improvement, not anxiety.</div>`
+  },
+  {
+    title: "NCF 2023 Competency Continuum",
+    content: `<h2>NCF 2023 Competency Continuum</h2>
+    <p>The National Curriculum Framework 2023 (School Education) introduces one of the most significant conceptual innovations in Indian curriculum design: the Competency Continuum. Rather than organising learning as a series of topics to be covered annually, NCF 2023 conceives of learning as a developmental progression of interconnected competencies that build upon each other across the school years.</p>
+    <h3>From Coverage to Competency</h3>
+    <p>Traditional curriculum frameworks organised knowledge into annual "syllabi" — lists of content to be taught in a given year. NCF 2023 replaces this model with a competency continuum: a structured description of what students should be able to do, think, and demonstrate at each stage of their schooling journey. This is a fundamental epistemological shift, moving from "what is taught" to "what is learned."</p>
+    <div class="highlight"><strong>Competency Definition (NCF 2023):</strong> A competency is the ability to apply knowledge, skills, and values in a complex, real-world context. It encompasses not just subject matter knowledge, but reasoning, communication, problem-solving, and ethical action.</div>
+    <h3>The Four Stages of the Continuum</h3>
+    <p>NCF 2023 organises schooling into four stages: Foundational (ages 3–8), Preparatory (ages 8–11), Middle (ages 11–14), and Secondary (ages 14–18). Each stage has a distinct competency profile that specifies not merely content knowledge but the depth of understanding and application expected. The continuum ensures vertical coherence — each stage builds on the previous one, and gaps at earlier stages compound into significant deficits at later stages.</p>
+    <p>This is why benchmarking at multiple grade levels is essential: a child who leaves Grade 3 without foundational literacy competency will face exponentially greater challenges at Grade 6. Early detection through benchmarking enables early intervention.</p>
+    <h3>Competency Level Descriptors</h3>
+    <p>NCF 2023 introduces standardised Competency Level Descriptors (CLDs) — rubric-style descriptions of what student performance looks like at each level (Below Basic, Basic, Proficient, Advanced). These descriptors are the anchor for national benchmarking: they allow teachers, school leaders, and policymakers to make consistent judgments about student performance across diverse contexts.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> Can your teachers describe the difference between a "Proficient" and "Basic" student in each subject using observable evidence? NCF 2023's competency descriptors provide this language — how familiar is your staff with these?</div>
+    <h3>Cross-Curricular Competencies</h3>
+    <p>Beyond subject-specific competencies, NCF 2023 identifies critical cross-curricular competencies: communication, critical thinking, creativity, collaboration, and citizenship. These form a second axis of the competency continuum, reminding educators that schooling must develop the whole learner — not merely a repository of subject knowledge.</p>
+    <div class="leader-note">Map your school's assessment practices against the NCF 2023 competency continuum. Are you measuring the right things? Are your grade-level expectations aligned with the national descriptors? Alignment is prerequisite to meaningful benchmarking.</div>`
+  },
+  {
+    title: "PARAKH and Large-Scale Assessment",
+    content: `<h2>PARAKH and Large-Scale Assessment</h2>
+    <p>PARAKH — Performance Assessment, Review, and Analysis of Knowledge for Holistic Development — is the national assessment regulatory body established under NEP 2020. It serves as the apex body for standardising assessment practices across all Indian school boards, ensuring that assessment reform is not left to individual states or institutions but is driven by a coherent national vision.</p>
+    <h3>PARAKH's Mandate</h3>
+    <p>PARAKH is tasked with three core functions: developing competency-based assessment frameworks, designing sample assessments and blueprints aligned with NCF 2023 competency descriptors, and building the capacity of state boards and schools to implement these frameworks. Its work is foundational to the benchmarking project envisioned by NEP 2020.</p>
+    <div class="highlight"><strong>PARAKH's Role in Benchmarking:</strong> PARAKH provides the assessment architecture that makes national benchmarking possible — the common language of competency levels, the standardised instruments, and the interpretive frameworks that allow school-level data to be compared against national norms.</div>
+    <h3>Large-Scale Assessment: Principles and Challenges</h3>
+    <p>Large-scale assessments (LSAs) are standardised evaluations administered to large populations — districts, states, or nations — to generate data on learning outcomes at scale. Unlike classroom assessments, LSAs are designed to provide systemic insights rather than individual feedback. India's most prominent LSA is the National Achievement Survey (NAS), administered by NCERT, which benchmarks student performance at Grades 3, 5, 8, and 10 against national competency standards.</p>
+    <p>LSAs face inherent design challenges: ensuring that test items are culturally neutral, that administration is standardised, that results are interpreted with contextual sensitivity, and that findings are translated into actionable school-level plans — not merely statistical reports that gather dust in offices.</p>
+    <h3>From National Data to School Action</h3>
+    <p>The critical gap in India's assessment ecosystem has historically been the translation of national assessment data into school-level improvement. PARAKH's framework addresses this by designing "school-level benchmark reports" that allow individual schools to locate their performance within the national distribution and identify specific competency gaps requiring intervention.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> Has your school received NAS or state-level assessment reports? Were these used to plan teacher professional development or curriculum adjustments? What systemic barriers prevented action?</div>
+    <h3>Ethical Dimensions of Large-Scale Assessment</h3>
+    <p>PARAKH's framework emphasises that LSA data must be used responsibly. Schools in disadvantaged contexts — high poverty, conflict-affected, remote — face structural barriers to learning that are not captured in test scores alone. Benchmarking without contextual analysis risks misidentifying systemic inequity as school failure. PARAKH advocates for context-adjusted interpretation and equity-weighted analysis.</p>
+    <div class="leader-note">When your school receives PARAKH or NAS benchmarking data, convene a data interpretation meeting with your staff. The question is not "who failed?" but "what does this reveal about our collective teaching and learning system?"</div>`
+  },
+  {
+    title: "What is Benchmarking in Education?",
+    content: `<h2>What is Benchmarking in Education?</h2>
+    <p>Educational benchmarking is the systematic process of measuring student learning outcomes against defined standards, then using those measurements to drive improvement. At its best, benchmarking is not a ranking exercise — it is a diagnostic tool that reveals the gap between current performance and desired competency, enabling targeted, evidence-based interventions.</p>
+    <h3>Types of Benchmarking</h3>
+    <p><strong>Internal Benchmarking</strong> involves a school comparing its own performance over time — tracking whether proficiency rates are improving, whether equity gaps are narrowing, and whether interventions are producing measurable results. This is the most immediately actionable form of benchmarking for school leaders.</p>
+    <p><strong>External Benchmarking</strong> involves comparing performance against external standards — national competency targets, district averages, or the performance of similar schools. External benchmarking provides essential context: a school that appears to be performing well internally may still be significantly below national standards.</p>
+    <p><strong>Criterion-Referenced Benchmarking</strong> measures performance against absolute standards (competency level descriptors) rather than against other schools. This is the dominant model in NEP 2020 and PARAKH frameworks, and it is conceptually superior to norm-referencing for equity purposes.</p>
+    <div class="highlight"><strong>Key Distinction:</strong> Criterion-referenced benchmarking asks "Has this student achieved the defined competency?" Norm-referenced benchmarking asks "How does this student perform relative to peers?" The first drives improvement; the second can mask systemic failure.</div>
+    <h3>The Benchmarking Cycle</h3>
+    <p>Effective educational benchmarking follows a four-stage cycle: (1) Measure — administer standardised assessments and collect competency distribution data; (2) Analyse — compute proficiency indices, identify gaps, and classify risk levels; (3) Plan — develop targeted intervention plans based on gap analysis; (4) Monitor — track progress against benchmarks and adjust plans as needed. This cycle is continuous — benchmarking is not an event, it is a practice.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> Where does your school's benchmarking practice currently break down? Is the gap in measurement, analysis, planning, or monitoring? What one change would most strengthen your benchmarking cycle?</div>
+    <h3>What Benchmarking Is Not</h3>
+    <p>Benchmarking is not school inspection. It is not a mechanism for penalising teachers or shaming students. It is not a substitute for nuanced, relational understanding of learning contexts. Used correctly, benchmarking is a tool of professional inquiry — a structured way of asking "Are all our students learning? What does the evidence show? What do we do next?"</p>
+    <div class="leader-note">Frame benchmarking within your school as a collaborative professional inquiry rather than an accountability exercise. When teachers are partners in data interpretation, they develop deeper ownership of improvement actions.</div>`
+  },
+  {
+    title: "Competency Level Descriptors",
+    content: `<h2>Competency Level Descriptors</h2>
+    <p>Competency Level Descriptors (CLDs) are standardised rubric-style descriptions that define what student performance looks like at each level of the proficiency scale. They are the interpretive backbone of national benchmarking — without CLDs, numbers are meaningless. With them, assessment data becomes a precise, actionable language for describing student learning.</p>
+    <h3>The Four-Level Framework</h3>
+    <p><strong>Level 1 — Below Basic:</strong> Students at this level demonstrate limited or fragmented understanding of core competencies. They struggle with foundational tasks and require significant additional support to access grade-level content. In literacy, a Level 1 student may be unable to read connected text fluently; in numeracy, they may not have mastered single-digit operations. This does not reflect student potential — it reflects a gap between the student's current developmental point and the competency threshold for their grade level.</p>
+    <p><strong>Level 2 — Basic:</strong> Students at Level 2 demonstrate partial competency — they can perform familiar, routine tasks with support but struggle when concepts are applied in new contexts. They have acquired foundational skills but lack the consolidation and flexibility needed for independent, competency-level performance. Level 2 students are "close to the threshold" and represent the highest-leverage group for targeted intervention.</p>
+    <p><strong>Level 3 — Proficient:</strong> Students at Level 3 demonstrate solid, consistent competency at grade level. They can apply knowledge and skills in familiar and moderately novel contexts, demonstrating understanding rather than mere recall. Proficiency is the national target — the benchmark every student should reach by the end of their grade cycle.</p>
+    <p><strong>Level 4 — Advanced:</strong> Students at Level 4 exceed grade-level expectations, demonstrating sophisticated application, critical analysis, and creative synthesis. They serve as competency models within the classroom and can support peer learning. Advanced students require enrichment, not remediation.</p>
+    <div class="highlight"><strong>Benchmarking Principle:</strong> The national proficiency target is ≥ 60% of students at Level 3 or above. Schools below this threshold are classified as requiring priority intervention under PARAKH frameworks.</div>
+    <h3>Using CLDs in Daily Practice</h3>
+    <p>CLDs are most powerful when teachers internalise them as observational tools — not just grading rubrics. When a teacher can look at a student's written response and immediately classify it as Level 2 or Level 3 based on clear, shared descriptors, assessment becomes continuous rather than episodic. This is the vision of NCF 2023's "assessment as part of learning" paradigm.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> Can your teachers accurately classify a student's performance as Level 1, 2, 3, or 4 without a standardised test? What professional development would build this diagnostic capacity?</div>
+    <div class="leader-note">Conduct a "descriptor calibration" exercise with your staff: have each teacher independently rate the same student work sample, then discuss discrepancies. Calibration builds shared language and consistent assessment judgment.</div>`
+  },
+  {
+    title: "From Raw Scores to Standards",
+    content: `<h2>From Raw Scores to Standards</h2>
+    <p>One of the most common misconceptions in educational assessment is that raw scores — the number or percentage of correct answers — are inherently meaningful. They are not. A raw score of 65% on one test may represent very different levels of competency than a score of 65% on another, depending on the difficulty of the items, the alignment of the test with the curriculum, and the population being assessed. Moving from raw scores to standards is the critical interpretive work of benchmarking.</p>
+    <h3>Standard Setting: The Process</h3>
+    <p>Standard setting is the technical process by which cut scores are established — the points on a score scale that define the boundary between competency levels. In national assessments like NAS, standard setting is conducted by panels of expert teachers and assessment specialists who review test items, predict performance, and establish defensible cut points that reflect meaningful differences in student competency.</p>
+    <div class="highlight"><strong>Example:</strong> On a 50-item Mathematics test for Grade 5, the standard-setting panel may determine: scores 0–14 = Level 1 (Below Basic); 15–25 = Level 2 (Basic); 26–38 = Level 3 (Proficient); 39–50 = Level 4 (Advanced). These cut scores are anchored in competency descriptors, not arbitrary percentages.</div>
+    <h3>Scale Scores and Proficiency Indices</h3>
+    <p>Large-scale assessments convert raw scores to scale scores — statistically transformed values that allow for meaningful comparison across different test versions, years, and populations. The Proficiency Index used in this simulator is a simplified version of this concept: it represents the percentage of students scoring at or above the proficiency threshold (Level 3).</p>
+    <p>The Weighted Competency Score (WCS) adds granularity: by assigning weights of 1, 2, 3, and 4 to the four levels and computing a weighted average, WCS captures not just whether students are proficient, but the overall quality of competency distribution across all levels.</p>
+    <h3>Interpreting Score Distributions</h3>
+    <p>A single summary statistic (mean score, proficiency rate) conceals the distribution of performance. Two schools with identical Proficiency Indices may have very different distributions: School A may have 30% at Level 1, 10% at Level 2, 60% at Level 3; School B may have 5% at Level 1, 35% at Level 2, 60% at Level 3. The intervention implications are entirely different, despite identical proficiency rates.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> When your school receives assessment results as a mean score or pass percentage, do you also examine the distribution across competency levels? What structural changes would enable this kind of analysis?</div>
+    <div class="leader-note">Always examine the full competency distribution, not just summary statistics. The story of Level 1 students is as important as the headline proficiency rate — often more so for equity-focused leadership.</div>`
+  },
+  {
+    title: "Norm-Referenced vs Criterion-Referenced Analysis",
+    content: `<h2>Norm-Referenced vs Criterion-Referenced Analysis</h2>
+    <p>Understanding the difference between norm-referenced and criterion-referenced assessment is foundational to responsible benchmarking practice. These are not merely technical distinctions — they reflect fundamentally different philosophies about what assessment is for and what it should do.</p>
+    <h3>Norm-Referenced Assessment (NRA)</h3>
+    <p>Norm-referenced assessment compares a student's or school's performance to that of a reference population — the "norm group." Results are expressed in relative terms: percentile ranks, stanines, or Z-scores. A student at the 65th percentile has outperformed 65% of the reference group.</p>
+    <p>NRA is useful for selection and differentiation — identifying which students are performing above or below average. However, it is inherently competitive and zero-sum: by definition, 50% of students will always be "below average," regardless of whether absolute learning standards are being met. In a system where all students perform poorly, NRA hides systemic failure behind relative comparisons.</p>
+    <div class="highlight"><strong>Problem with NRA in equity contexts:</strong> If an entire district is performing below national competency standards, norm-referencing within that district will produce "average" and "above-average" students who are nonetheless failing to meet foundational competency benchmarks. NRA normalises underperformance.</div>
+    <h3>Criterion-Referenced Assessment (CRA)</h3>
+    <p>Criterion-referenced assessment measures performance against absolute, predefined standards — the competency level descriptors. Results are expressed in terms of what the student can or cannot do: "This student is at Level 3 — Proficient in Mathematics," regardless of how others in the class performed.</p>
+    <p>CRA is the foundation of PARAKH's framework and NCF 2023's competency approach. It is equitable because every student, school, and region is measured against the same absolute standard — not against the performance of peers who may themselves be disadvantaged. CRA asks: "Has the student achieved the competency?" — a question with a meaningful answer independent of group performance.</p>
+    <h3>Using Both in Practice</h3>
+    <p>In practice, school leaders can benefit from both frameworks. CRA tells you whether students have achieved the standard — essential for intervention planning. NRA tells you where your school sits within a broader distribution — useful for resource advocacy and identifying relative strengths. The key is to privilege CRA for improvement planning and use NRA only as supplementary contextual information.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> Does your school's current assessment system primarily use norm-referencing (grades on a curve, class ranks) or criterion-referencing (competency descriptors, mastery thresholds)? What would a shift toward CRA require?</div>
+    <div class="leader-note">Transition your school's reporting language from grades and ranks to competency level descriptors. This cultural shift — from "top of the class" to "all students at Level 3" — is the most practical step toward benchmarking-aligned practice.</div>`
+  },
+  {
+    title: "Percentile and Distribution Concepts",
+    content: `<h2>Percentile and Distribution Concepts</h2>
+    <p>Statistical literacy is a core competency for educational leaders in the era of national benchmarking. This page demystifies the key distributional concepts that appear in national assessment reports — equipping school leaders to read and interpret benchmarking data with confidence.</p>
+    <h3>The Normal Distribution and Its Implications</h3>
+    <p>Large-scale assessment results often approximate a normal distribution — a bell curve in which most students cluster near the mean, with progressively fewer students at extreme high and low ends. Understanding the shape of your school's distribution is more informative than knowing the mean alone.</p>
+    <p>A "left-skewed" distribution (disproportionately many students at lower levels) indicates systemic underperformance and signals urgent intervention. A "right-skewed" distribution (disproportionately many students at higher levels) indicates above-average performance but may also signal exclusion of struggling learners from the assessment.</p>
+    <h3>Percentile Ranks</h3>
+    <p>A percentile rank indicates the percentage of the reference population that scored at or below a given score. A school at the 40th percentile has performed better than 40% of comparable schools. Percentile ranks are norm-referenced: they tell you relative position but not absolute competency achievement.</p>
+    <div class="highlight"><strong>Interpretation Example:</strong> A school at the 55th percentile in Mathematics may still have 45% of its students at Level 1 (Below Basic) — below the national proficiency threshold. Percentile rank can be misleadingly positive when the overall distribution is low.</div>
+    <h3>Standard Deviation and Score Spread</h3>
+    <p>The standard deviation (SD) of a school's score distribution tells you about internal equity. A high SD indicates wide variation — some students performing very well while others struggle significantly. A low SD indicates homogeneous performance — either uniformly strong or uniformly weak. For equity-focused school leaders, a high SD is a signal to investigate differential access to learning support.</p>
+    <h3>Proficiency Rate vs Mean Score</h3>
+    <p>The proficiency rate (Proficiency Index in this simulator) is often more useful than the mean score for intervention planning. A mean score of 52% may obscure the fact that 30% of students are at Level 1 — a crucial piece of information for resource allocation. Always examine distribution alongside central tendency.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> When you receive your school's assessment report, what statistical information do you typically focus on? What distributional data would help you make better intervention decisions?</div>
+    <div class="leader-note">Build basic statistical literacy in your staff. Conduct a brief professional development session on reading distribution charts — even a 30-minute session can transform how teachers interpret classroom assessment data.</div>`
+  },
+  {
+    title: "Equity & Inclusion in Benchmarking",
+    content: `<h2>Equity & Inclusion in Benchmarking</h2>
+    <p>Benchmarking without an equity lens is not just incomplete — it is potentially harmful. Assessment data can reveal inequities or it can mask them, depending on how it is collected, analysed, and interpreted. Equity-conscious benchmarking requires intentional disaggregation of data and a systemic understanding of the structural factors that shape learning outcomes.</p>
+    <h3>Disaggregation: The Core Equity Tool</h3>
+    <p>Aggregate school-level data — mean scores, overall proficiency rates — can conceal significant performance gaps between subgroups. Equity benchmarking requires disaggregating data by gender, socioeconomic status, geographic location, language background, disability status, and other equity-relevant dimensions. Only when these subgroup data are visible can targeted, equity-focused interventions be designed.</p>
+    <div class="highlight"><strong>Gender Equity Gap Index:</strong> This simulator computes the absolute difference in proficiency rates between girls and boys. A gap above 10% triggers an equity alert — indicating that gender-differential barriers to learning may be operating in the classroom or wider community.</div>
+    <h3>Structural vs Individual Explanations</h3>
+    <p>A critical principle of equity benchmarking is the distinction between structural and individual explanations for performance gaps. When girls consistently underperform boys in science, the explanation is rarely individual ability — it is more likely found in differential expectations, limited role models, gender-stereotyped classroom interactions, or structural barriers to school attendance. Equity benchmarking demands structural analysis, not individual deficit framing.</p>
+    <h3>The Equity-Excellence Balance</h3>
+    <p>Equity-focused benchmarking does not abandon the pursuit of excellence — it redefines it. Excellence means that all students, regardless of background, achieve at least Level 3 proficiency. The equity goal is not to suppress high performance but to eliminate the structural predictability of underperformance. When a student's competency level can be predicted from their gender, language, or address — that is an equity failure, and benchmarking data should make it visible.</p>
+    <h3>Inclusive Assessment Design</h3>
+    <p>Equity in benchmarking also requires equity in assessment design. Tests that are culturally biased, that assume familiarity with urban contexts, or that penalise students for their language background do not measure competency — they measure social privilege. PARAKH's assessment development protocols include equity review processes to minimise construct-irrelevant variance.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> Does your school routinely disaggregate assessment data by gender, community background, or first language? What patterns have you noticed? What structural explanations might account for those patterns?</div>
+    <div class="leader-note">Make equity data the first data reviewed in every benchmarking meeting. Establishing this norm signals that your school treats equity not as an add-on but as a core accountability measure.</div>`
+  },
+  {
+    title: "Interpreting National Assessment Reports",
+    content: `<h2>Interpreting National Assessment Reports</h2>
+    <p>National Assessment Survey (NAS) reports and state-level assessment reports present schools and districts with rich, multi-layered data. Yet many school leaders report that these reports remain unread or misinterpreted. This page builds the practical skills needed to extract actionable insights from national assessment reports.</p>
+    <h3>Anatomy of a National Assessment Report</h3>
+    <p>A typical NAS district or school report includes: overall mean scores by subject and grade; competency level distribution (percentage of students at each level); subject-specific competency strand performance; gender disaggregation; rural-urban comparisons; and year-on-year trend data where available. Each section has different implications for school action.</p>
+    <div class="highlight"><strong>Priority Reading Order:</strong> Start with the competency level distribution chart — not the mean score. The distribution reveals the shape of your challenge. Then examine gender disaggregation. Then examine competency strand performance to identify subject-specific gap areas. The mean score is the last thing to examine.</div>
+    <h3>Competency Strand Performance</h3>
+    <p>National reports often break down performance by competency strands — sub-domains within a subject. In Mathematics, strands might include Number Sense, Operations, Measurement, Geometry, and Data Interpretation. A school may have an adequate overall Mathematics proficiency rate but critically low performance in Data Interpretation — a finding that would be invisible if you only examined the headline score.</p>
+    <h3>Trend Analysis</h3>
+    <p>Where multi-year data is available, trend analysis reveals whether improvement efforts are producing measurable results. A school that increased its Proficiency Index from 42% to 51% over two years is making meaningful progress, even if it has not yet reached the 60% national target. Trend data provides the narrative of improvement — or stagnation — that single-year snapshots cannot.</p>
+    <h3>Avoiding Common Misinterpretations</h3>
+    <p>Three common errors in reading national reports: (1) Treating a mean score improvement as evidence of universal progress when only the top performers improved; (2) Comparing schools with very different socioeconomic contexts without adjusting for structural factors; (3) Using "above national average" as a success criterion when the national average itself represents underperformance.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> What was the most important finding from the last national or state assessment report your school received? What action did it trigger? If no action followed, what systemic barriers prevented it?</div>
+    <div class="leader-note">Develop a "Report Reading Protocol" for your school: a structured process for reviewing assessment reports that ensures all relevant data is examined and that findings are connected to specific improvement actions. Make report reading a collective, professional activity — not a solitary administrative task.</div>`
+  },
+  {
+    title: "School-Level Gap Analysis",
+    content: `<h2>School-Level Gap Analysis</h2>
+    <p>Gap analysis is the systematic process of identifying the distance between current student performance and target competency levels. It is the analytical engine of the benchmarking cycle — converting raw data into a prioritised map of improvement actions. Effective gap analysis operates at multiple levels simultaneously: the school level, the subject level, the grade level, and the subgroup level.</p>
+    <h3>Defining the Gap</h3>
+    <p>A gap in competency benchmarking is the difference between actual performance and the defined standard. Gaps can be expressed as: the percentage of students below Level 3 (the non-proficiency rate); the distance between the school's Proficiency Index and the national target; the difference in proficiency rates between demographic subgroups (equity gap); or the deficit in specific competency strands relative to expected performance.</p>
+    <div class="highlight"><strong>Gap Analysis Formula:</strong> Proficiency Gap = National Target (60%) − School Proficiency Index. A positive gap indicates shortfall. A negative gap (PI above 60%) indicates the target has been met, but further disaggregation may reveal subgroup gaps requiring attention.</div>
+    <h3>Risk Classification</h3>
+    <p>Not all gaps are equal — they differ in severity, prevalence, and responsiveness to intervention. A school with 40% of students at Level 1 faces a fundamentally different challenge than a school with 28% at Level 2 and 52% at Level 3. Gap analysis must classify risk: High Risk (requiring immediate, intensive intervention), Moderate Risk (requiring targeted support), and Low Risk (requiring monitoring and enrichment).</p>
+    <h3>Multi-Dimensional Gap Mapping</h3>
+    <p>Comprehensive gap analysis examines: the proficiency gap (PI vs target); the equity gap (gender, community subgroup performance); the attendance gap (correlation between attendance rate and proficiency); the strand gap (subject-specific competency weaknesses); and the trend gap (rate of improvement relative to required trajectory).</p>
+    <h3>Prioritisation Principles</h3>
+    <p>When multiple gaps compete for limited school resources, prioritisation must be principle-driven. Prioritise by: magnitude (largest gaps first); leverage (gaps in foundational skills that enable all other learning); equity (gaps affecting already-disadvantaged groups); and responsiveness (gaps most likely to close with available interventions).</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> What are the top three competency gaps in your school right now? Are they primarily at Level 1 (remedial priority) or at the Level 2-3 boundary (mainstream uplift priority)? What does this distinction mean for your intervention design?</div>
+    <div class="leader-note">Conduct a formal gap analysis meeting with department heads at the start of each academic term. Use the data from this simulator to structure the discussion: present distribution charts, alert badges, and priority areas together as an integrated analysis package.</div>`
+  },
+  {
+    title: "Designing Priority Intervention Plans",
+    content: `<h2>Designing Priority Intervention Plans</h2>
+    <p>A gap analysis without a corresponding action plan is data theatre — it creates the appearance of evidence-based practice without producing actual improvement. Designing effective intervention plans requires translating gap analysis findings into specific, resourced, time-bound actions that address root causes rather than surface symptoms.</p>
+    <h3>Root Cause Analysis</h3>
+    <p>Before designing interventions, effective school leaders ask: Why does this gap exist? A low proficiency rate in Mathematics may reflect teacher subject knowledge gaps, curriculum pacing that leaves students behind, assessment practices that do not reveal misconceptions until it is too late, or attendance-related missed learning. Different root causes require different interventions — misdiagnosing the cause produces ineffective responses.</p>
+    <div class="highlight"><strong>Intervention Design Principle:</strong> Match the intervention to the root cause. Remedial learning cycles address student learning gaps; teacher CPD addresses instructional quality gaps; curriculum redesign addresses alignment gaps; attendance strategies address access gaps. Applying one solution to all problems dilutes impact.</div>
+    <h3>The SMART Intervention Framework</h3>
+    <p>Effective interventions are Specific (targeting identified competency gaps), Measurable (with defined success criteria), Achievable (within available resources), Relevant (addressing root causes of the gap), and Time-bound (with clear implementation timelines and review points). Vague interventions — "improve teaching quality," "support struggling students" — do not change outcomes.</p>
+    <h3>Tiered Intervention Structure</h3>
+    <p>Drawing on the Response to Intervention (RTI) model, intervention plans should be tiered: Tier 1 — high-quality core instruction for all students; Tier 2 — targeted small-group support for Level 2 students approaching the proficiency threshold; Tier 3 — intensive, individualised support for Level 1 students with significant foundational gaps. Each tier requires different resources, timelines, and teacher capacities.</p>
+    <h3>Teacher Professional Development as Intervention</h3>
+    <p>Teacher CPD is often the highest-leverage intervention available to school leaders. CPD that is content-specific (focused on the subject matter of the identified gap), classroom-embedded (directly applicable to teaching practice), and sustained over time (not single-day workshops) has the strongest evidence base for improving student outcomes.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> What are the three most important interventions your school has implemented this year? Do they address root causes identified through gap analysis, or are they generic "improvement activities"? What evidence do you have of their impact?</div>
+    <div class="leader-note">Write your School Benchmark Response Plan before the term begins, not after. Reactive planning produces reactive interventions. Proactive planning — informed by last cycle's benchmarking data — is what separates improving schools from stagnating ones.</div>`
+  },
+  {
+    title: "Monitoring Progress Over Time",
+    content: `<h2>Monitoring Progress Over Time</h2>
+    <p>Intervention without monitoring is hope — it may work or it may not, and without measurement, you cannot tell the difference. Monitoring progress over time transforms the benchmarking cycle from a single snapshot into a continuous improvement system. It creates the feedback loop through which school leaders can learn what is working, what is not, and what adjustments are needed.</p>
+    <h3>Setting Progress Benchmarks</h3>
+    <p>Before intervention begins, specify what success looks like at each monitoring checkpoint. If the current Proficiency Index is 43% and the target is 60%, a realistic improvement trajectory might be 47% at 6 weeks, 51% at 12 weeks, and 55% at end of term. These interim benchmarks allow early identification of whether the intervention is on track or needs adjustment.</p>
+    <div class="highlight"><strong>Trend Growth Percentage Formula:</strong> Trend Growth = ((Current PI − Baseline PI) / Baseline PI) × 100. This percentage indicates relative improvement rate. A school growing from 40% to 50% shows 25% growth — a strong improvement trajectory within a single intervention cycle.</div>
+    <h3>Monitoring Tools and Frequency</h3>
+    <p>Progress monitoring should use the same or equivalent assessment instruments as the initial benchmarking — this ensures comparability. Monthly classroom-based formative assessments aligned with competency descriptors provide the most frequent, actionable data. Mid-term progress reviews allow intervention adjustment before the summative assessment cycle. End-of-term benchmarking provides summative data for the next cycle's planning.</p>
+    <h3>Making Monitoring Manageable</h3>
+    <p>A common barrier to consistent monitoring is the perception that it requires additional assessment burden. In practice, effective monitoring can be integrated into existing teaching: exit tickets, structured observation, oral questioning using competency descriptors, and portfolio review are all valid monitoring tools. The key is consistency and systematic recording.</p>
+    <h3>When Progress Stalls</h3>
+    <p>When monitoring data reveals that a student is not progressing despite intervention, this is diagnostic information, not a judgment. Stalled progress typically signals either an incorrect root cause diagnosis (the intervention is addressing the wrong problem) or an implementation fidelity issue (the intervention is not being delivered as designed). Monitoring enables early course correction.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> How frequently does your school formally review the progress of students receiving targeted interventions? Is this review driving adjustments in teaching and support, or is it primarily compliance monitoring?</div>
+    <div class="leader-note">Establish a monthly "Benchmarking Review" meeting in your school calendar before the year begins. Make data review a protected, non-negotiable professional activity. The schools that consistently improve are those that consistently monitor.</div>`
+  },
+  {
+    title: "Ethical Reporting Practices",
+    content: `<h2>Ethical Reporting Practices</h2>
+    <p>The ethics of educational data are not abstract philosophical concerns — they have direct consequences for students, teachers, and communities. How assessment data is reported, to whom, in what format, and with what framing determines whether benchmarking drives improvement or drives harm. Ethical reporting practice is a non-negotiable dimension of responsible school leadership.</p>
+    <h3>Confidentiality and Data Protection</h3>
+    <p>Student-level assessment data is sensitive personal information. It must never be shared in identifiable form beyond the educational professionals directly responsible for that student's learning. Aggregated data — school-level or class-level — may be shared more broadly but must still be presented with appropriate contextual caveats. The principles of data minimisation (collect only what is needed), purpose limitation (use only for stated educational purposes), and storage limitation (retain only as long as necessary) must guide data management practices.</p>
+    <h3>Contextualised Reporting</h3>
+    <p>Raw benchmarking data without context is ethically incomplete. A school serving students from severely disadvantaged backgrounds may show a lower Proficiency Index than a school in a wealthy urban area, yet be achieving remarkable outcomes given its context. Ethical reporting acknowledges contextual factors — not as excuses, but as essential interpretive information.</p>
+    <div class="highlight"><strong>Ethical Standard:</strong> Always report benchmarking data alongside contextual information: student demographic profile, resource availability, prior achievement trajectory, and identified structural barriers. Data without context is data without meaning.</div>
+    <h3>The Anti-Shaming Principle</h3>
+    <p>Perhaps the most fundamental ethical principle in educational reporting is the anti-shaming principle: assessment data must never be used to publicly shame, stigmatise, or rank schools, teachers, or students. The international evidence is unequivocal: public ranking and shaming damages school culture, increases staff anxiety, and narrows curriculum without improving learning outcomes. PARAKH explicitly warns against this in its benchmarking guidelines.</p>
+    <h3>Communicating with Parents and Communities</h3>
+    <p>When sharing benchmarking data with parents and communities, the ethical communication principles are: plain language (avoid technical jargon); constructive framing (present data as a foundation for improvement, not a verdict); action orientation (always link data to specific school improvement actions); and two-way dialogue (invite community perspectives on barriers to learning).</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> How does your school currently communicate assessment data to parents? Is the communication primarily informational or genuinely dialogic? What ethical commitments would you want to strengthen?</div>
+    <div class="leader-note">Develop an "Assessment Communication Charter" for your school — a simple, clear statement of how data will be used, who has access to it, and what commitments the school makes to students and families about data ethics. Transparency builds trust.</div>`
+  },
+  {
+    title: "Benchmarking Without Ranking Culture",
+    content: `<h2>Benchmarking Without Ranking Culture</h2>
+    <p>In many educational systems, the word "benchmarking" has become synonymous with ranking — schools placed in league tables, students sorted into percentile bands, teachers evaluated against comparative performance metrics. This ranking culture represents a fundamental misunderstanding of what benchmarking is for and produces well-documented harms: teaching to the test, curriculum narrowing, exclusion of at-risk students from assessment, and relentless performance anxiety across the system.</p>
+    <h3>The International Evidence Against Ranking Culture</h3>
+    <p>PISA data consistently shows that high-performing education systems — Finland, Canada, Singapore — combine high standards with low stakes for individual schools and students. The competitive ranking culture seen in some systems correlates with increased inequality, not improved overall performance. The competitive dynamic disincentivises collaboration, the most powerful lever for system-wide improvement.</p>
+    <div class="highlight"><strong>NEP 2020 and PARAKH Position:</strong> National assessment data is explicitly not intended for school rankings or inter-school competition. It is designed for systemic diagnosis and equity-focused resource allocation. School leaders who use national benchmarking data for ranking violate the spirit and intent of the framework.</div>
+    <h3>Collaborative Benchmarking</h3>
+    <p>The alternative to ranking culture is collaborative benchmarking — a model in which schools use shared standards not to compete, but to collectively improve. In collaborative benchmarking, schools share practices that produced improvement, co-investigate persistent gaps, and pool expertise for joint professional development. This is the model embedded in NEP 2020's cluster-based school improvement framework.</p>
+    <h3>Building a Benchmarking Culture</h3>
+    <p>Shifting from ranking culture to improvement culture requires intentional leadership. Concretely: celebrate improvement trajectories, not just absolute positions; protect teachers from consequences for honest data reporting; make professional inquiry the purpose of data review; and frame "below target" as information, not failure.</p>
+    <h3>What Benchmarking Culture Looks Like in Practice</h3>
+    <p>In a school with healthy benchmarking culture: teachers discuss assessment data openly and non-defensively; gap analysis produces professional curiosity rather than anxiety; intervention plans are collaboratively designed and monitored; parents are partners in interpreting and responding to learning data; and benchmarking is experienced as continuous professional learning, not periodic judgment.</p>
+    <div class="reflection">🔎 <strong>Reflection Prompt:</strong> On a scale of 1–10, how would you rate your school's current benchmarking culture? What one leadership action in the next term could move that number by 2 points?</div>
+    <div class="leader-note">The most powerful thing a school leader can do to build a healthy benchmarking culture is to model data engagement themselves — presenting their own analysis of school data, acknowledging gaps openly, and demonstrating that benchmarking serves learning, not surveillance.</div>`
+  }
+];
+
+function initPolicy() {
+  const navEl = document.getElementById('policy-nav');
+  const contentEl = document.getElementById('policy-content');
+  if(navEl.childElementCount>0) return; // already initialised
+  navEl.innerHTML = policyPages.map((p,i)=>`<button class="${i===0?'active':''}" onclick="showPolicyPage(${i})">${i+1}. ${p.title.substring(0,22)}${p.title.length>22?'…':''}</button>`).join('');
+  showPolicyPage(0);
+}
+function showPolicyPage(i) {
+  const contentEl = document.getElementById('policy-content');
+  contentEl.innerHTML = `<div class="policy-page active card">${policyPages[i].content}</div>`;
+  document.querySelectorAll('.policy-nav button').forEach((b,j)=>b.classList.toggle('active',i===j));
+}
+
+// ═══════════════════════ INIT ═══════════════════════
+window.addEventListener('DOMContentLoaded', ()=>{
+  renderEntriesList();
+  // Try to fix author image if not found
+  const img = document.getElementById('author-photo');
+  img.onerror = ()=>{ img.style.display='none'; img.parentElement.innerHTML='<div style="width:100%;height:100%;background:var(--navy-light);display:flex;align-items:center;justify-content:center;font-size:32px;border-radius:50%;">👤</div>'; };
+});
+
+// Register service worker
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#0d2347"/>
+<meta name="description" content="Beyond Attendance: Real Learning Evidence Capture & Competency Mapping — PARAKH Aligned"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="PARAKH App"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<title>PARAKH Learning Evidence App</title>
+<style>
+/* ============================================================
+   PARAKH LEARNING EVIDENCE APP — MATEEN YOUSUF
+   Deep Navy + Saffron Gold + Emerald Green (Tricolor theme)
+   ============================================================ */
+:root {
+  --navy: #0d2347;
+  --navy2: #142c57;
+  --navy3: #1a3a6b;
+  --saffron: #FF9933;
+  --saffron2: #e67e00;
+  --gold: #f5c842;
+  --emerald: #138808;
+  --emerald2: #0fa006;
+  --white: #f0f4ff;
+  --gray: #8a9bc4;
+  --card: rgba(20,44,87,0.85);
+  --glass: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.1);
+  --red: #e53e3e;
+  --blue-light: #63b3ed;
+  --purple: #9f7aea;
+  --radius: 16px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;font-family:'Georgia',serif;background:var(--navy);color:var(--white);overflow:hidden;}
+
+/* FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* SPLASH SCREEN */
+#splash{
+  position:fixed;inset:0;background:linear-gradient(135deg,#0a1628 0%,#0d2347 50%,#142c57 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;
+  transition:opacity 0.8s ease;
+}
+.splash-logo{font-size:80px;animation:pulse 1.5s ease-in-out infinite;}
+.splash-title{font-family:'Cinzel',serif;font-size:22px;color:var(--saffron);margin-top:20px;text-align:center;letter-spacing:2px;}
+.splash-sub{font-size:13px;color:var(--gray);margin-top:8px;text-align:center;}
+.splash-loader{width:200px;height:3px;background:var(--navy3);border-radius:2px;margin-top:30px;overflow:hidden;}
+.splash-bar{height:100%;background:linear-gradient(90deg,var(--saffron),var(--gold),var(--emerald));animation:load 2s ease-in-out forwards;}
+@keyframes load{from{width:0}to{width:100%}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.splash-author{position:absolute;bottom:30px;font-size:12px;color:var(--gray);text-align:center;}
+
+/* BACKGROUND */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at 20% 20%,rgba(255,153,51,0.06) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 80%,rgba(19,136,8,0.06) 0%,transparent 50%),
+    radial-gradient(ellipse at 50% 50%,rgba(26,58,107,0.4) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+/* MAIN APP */
+#app{display:none;flex-direction:column;height:100vh;position:relative;z-index:1;}
+
+/* TOP NAV */
+.top-bar{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  border-bottom:1px solid var(--border);
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;position:relative;
+}
+.top-bar::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--saffron),var(--gold),var(--emerald));
+}
+.app-brand{display:flex;align-items:center;gap:10px;}
+.app-icon{font-size:28px;}
+.brand-text h1{font-family:'Cinzel',serif;font-size:14px;color:var(--saffron);letter-spacing:1px;line-height:1.2;}
+.brand-text p{font-size:10px;color:var(--gray);}
+.top-actions{display:flex;gap:8px;align-items:center;}
+.icon-btn{
+  width:38px;height:38px;border-radius:50%;background:var(--glass);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;
+  transition:all 0.2s;
+}
+.icon-btn:hover{background:var(--navy3);transform:scale(1.05);}
+.notif-badge{position:relative;}
+.notif-badge::after{
+  content:attr(data-count);position:absolute;top:-4px;right:-4px;
+  background:var(--saffron);color:var(--navy);font-size:9px;font-weight:700;
+  width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:sans-serif;
+}
+
+/* SCREEN CONTAINER */
+.screen-container{flex:1;overflow-y:auto;overflow-x:hidden;padding:0;}
+.screen-container::-webkit-scrollbar{width:4px;}
+.screen-container::-webkit-scrollbar-track{background:transparent;}
+.screen-container::-webkit-scrollbar-thumb{background:var(--navy3);border-radius:2px;}
+
+/* SCREENS */
+.screen{display:none;padding:16px;animation:fadeUp 0.3s ease;}
+.screen.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  background:linear-gradient(0deg,var(--navy) 0%,var(--navy2) 100%);
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:center;
+  padding:8px 0 12px;flex-shrink:0;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 12px;border-radius:12px;cursor:pointer;transition:all 0.2s;
+  min-width:56px;
+}
+.nav-item .nav-icon{font-size:22px;transition:transform 0.2s;}
+.nav-item .nav-label{font-size:9px;color:var(--gray);font-family:sans-serif;transition:color 0.2s;}
+.nav-item.active{background:rgba(255,153,51,0.1);}
+.nav-item.active .nav-label{color:var(--saffron);}
+.nav-item.active .nav-icon{transform:scale(1.15);}
+.nav-item:hover{background:var(--glass);}
+
+/* CARDS */
+.card{
+  background:var(--card);backdrop-filter:blur(12px);
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;margin-bottom:14px;box-shadow:var(--shadow);
+}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.card-title{font-family:'Cinzel',serif;font-size:14px;color:var(--saffron);letter-spacing:0.5px;}
+.card-badge{
+  background:rgba(255,153,51,0.15);border:1px solid var(--saffron);
+  color:var(--saffron);font-size:10px;padding:3px 8px;border-radius:20px;font-family:sans-serif;
+}
+
+/* SECTION HEADINGS */
+.section-head{
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+  padding-bottom:10px;border-bottom:1px solid var(--border);
+}
+.section-head .ico{font-size:22px;}
+.section-head h2{font-family:'Cinzel',serif;font-size:16px;color:var(--white);}
+.section-head small{font-size:11px;color:var(--gray);display:block;font-family:sans-serif;}
+
+/* STAT GRID */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.stat-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:12px;
+  padding:12px;text-align:center;transition:all 0.2s;
+}
+.stat-card:hover{background:var(--navy3);transform:translateY(-2px);}
+.stat-num{font-family:'Cinzel',serif;font-size:28px;color:var(--saffron);}
+.stat-label{font-size:10px;color:var(--gray);margin-top:4px;font-family:sans-serif;}
+.stat-trend{font-size:11px;color:var(--emerald);font-family:sans-serif;}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 20px;border-radius:12px;border:none;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:0.5px;
+  transition:all 0.2s;width:100%;margin-bottom:8px;
+}
+.btn-primary{background:linear-gradient(135deg,var(--saffron),var(--saffron2));color:var(--navy);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,153,51,0.4);}
+.btn-success{background:linear-gradient(135deg,var(--emerald),var(--emerald2));color:#fff;}
+.btn-outline{background:transparent;border:1px solid var(--saffron);color:var(--saffron);}
+.btn-ghost{background:var(--glass);border:1px solid var(--border);color:var(--white);}
+.btn-danger{background:linear-gradient(135deg,#e53e3e,#c53030);color:#fff;}
+.btn-sm{padding:8px 14px;font-size:11px;border-radius:8px;width:auto;margin-bottom:0;}
+
+/* FORM ELEMENTS */
+.form-group{margin-bottom:14px;}
+.form-label{font-size:11px;color:var(--gray);margin-bottom:6px;display:block;font-family:sans-serif;letter-spacing:0.5px;text-transform:uppercase;}
+.form-input,.form-select,.form-textarea{
+  width:100%;background:var(--glass);border:1px solid var(--border);
+  border-radius:10px;padding:11px 14px;color:var(--white);font-family:sans-serif;font-size:14px;
+  transition:border-color 0.2s;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  outline:none;border-color:var(--saffron);box-shadow:0 0 0 3px rgba(255,153,51,0.1);
+}
+.form-select option{background:var(--navy2);color:var(--white);}
+.form-textarea{min-height:80px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* TAGS */
+.tag-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.tag{
+  padding:4px 10px;border-radius:20px;font-size:11px;font-family:sans-serif;cursor:pointer;
+  border:1px solid;transition:all 0.2s;
+}
+.tag-saffron{background:rgba(255,153,51,0.1);border-color:var(--saffron);color:var(--saffron);}
+.tag-green{background:rgba(19,136,8,0.1);border-color:var(--emerald);color:var(--emerald2);}
+.tag-blue{background:rgba(99,179,237,0.1);border-color:var(--blue-light);color:var(--blue-light);}
+.tag-purple{background:rgba(159,122,234,0.1);border-color:var(--purple);color:var(--purple);}
+.tag.selected{opacity:1;transform:scale(1.05);}
+.tag:not(.selected){opacity:0.6;}
+
+/* PROGRESS BARS */
+.progress-bar{height:8px;background:var(--glass);border-radius:4px;overflow:hidden;margin:6px 0;}
+.progress-fill{height:100%;border-radius:4px;transition:width 0.8s ease;}
+.fill-saffron{background:linear-gradient(90deg,var(--saffron),var(--gold));}
+.fill-green{background:linear-gradient(90deg,var(--emerald),#00ff88);}
+.fill-blue{background:linear-gradient(90deg,#4299e1,var(--blue-light));}
+.fill-purple{background:linear-gradient(90deg,var(--purple),#ed64a6);}
+
+/* STUDENT LIST */
+.student-item{
+  background:var(--glass);border:1px solid var(--border);border-radius:12px;
+  padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:8px;
+  cursor:pointer;transition:all 0.2s;
+}
+.student-item:hover{background:var(--navy3);transform:translateX(4px);}
+.student-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--saffron),var(--emerald));
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  flex-shrink:0;border:2px solid var(--border);
+}
+.student-info{flex:1;}
+.student-name{font-size:14px;font-weight:600;color:var(--white);font-family:sans-serif;}
+.student-meta{font-size:11px;color:var(--gray);font-family:sans-serif;margin-top:2px;}
+.student-score{text-align:right;}
+.score-num{font-family:'Cinzel',serif;font-size:18px;color:var(--saffron);}
+.score-label{font-size:9px;color:var(--gray);font-family:sans-serif;}
+
+/* EVIDENCE CARDS */
+.evidence-item{
+  background:var(--glass);border:1px solid var(--border);border-radius:12px;
+  padding:12px;margin-bottom:10px;border-left:3px solid var(--saffron);
+}
+.evidence-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.evidence-type{font-size:11px;color:var(--saffron);font-family:sans-serif;text-transform:uppercase;letter-spacing:0.5px;}
+.evidence-date{font-size:10px;color:var(--gray);font-family:sans-serif;}
+.evidence-student{font-size:14px;font-weight:600;color:var(--white);font-family:sans-serif;}
+.evidence-comp{font-size:11px;color:var(--blue-light);font-family:sans-serif;margin-top:4px;}
+.evidence-text{font-size:12px;color:var(--gray);font-family:sans-serif;margin-top:6px;line-height:1.5;}
+.evidence-actions{display:flex;gap:6px;margin-top:8px;}
+
+/* COMPETENCY BANDS */
+.band{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;
+  margin-bottom:8px;border:1px solid var(--border);
+}
+.band-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.band-label{font-family:sans-serif;font-size:13px;flex:1;}
+.band-count{font-family:'Cinzel',serif;font-size:18px;}
+.band-below{background:rgba(229,62,62,0.1);border-color:rgba(229,62,62,0.3);}
+.band-basic{background:rgba(237,137,54,0.1);border-color:rgba(237,137,54,0.3);}
+.band-proficient{background:rgba(99,179,237,0.1);border-color:rgba(99,179,237,0.3);}
+.band-advanced{background:rgba(19,136,8,0.1);border-color:rgba(19,136,8,0.3);}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:24px;}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border);}
+.tl-item{position:relative;margin-bottom:16px;}
+.tl-dot{
+  position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;
+  background:var(--saffron);border:2px solid var(--navy);
+}
+.tl-content{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:10px 12px;}
+.tl-date{font-size:10px;color:var(--gray);font-family:sans-serif;}
+.tl-title{font-size:13px;font-weight:600;color:var(--white);font-family:sans-serif;margin:3px 0;}
+.tl-desc{font-size:11px;color:var(--gray);font-family:sans-serif;}
+
+/* ALERT / TOAST */
+.toast{
+  position:fixed;top:80px;left:50%;transform:translateX(-50%);
+  background:var(--navy2);border:1px solid var(--saffron);border-radius:12px;
+  padding:12px 20px;font-family:sans-serif;font-size:13px;color:var(--white);
+  z-index:8888;opacity:0;transition:opacity 0.3s;white-space:nowrap;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+}
+.toast.show{opacity:1;}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:7777;
+  display:none;align-items:flex-end;justify-content:center;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--navy2);border:1px solid var(--border);border-radius:20px 20px 0 0;
+  width:100%;max-height:85vh;overflow-y:auto;padding:20px;
+  animation:slideUp 0.3s ease;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px;}
+.modal-title{font-family:'Cinzel',serif;font-size:16px;color:var(--saffron);margin-bottom:16px;}
+
+/* PROFILE */
+.profile-hero{
+  background:linear-gradient(135deg,var(--navy2),var(--navy3));
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;margin-bottom:14px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.profile-hero::before{
+  content:'🎓';position:absolute;right:-10px;bottom:-10px;font-size:80px;opacity:0.06;
+}
+.profile-img{
+  width:90px;height:90px;border-radius:50%;border:3px solid var(--saffron);
+  object-fit:cover;margin-bottom:12px;
+  box-shadow:0 0 20px rgba(255,153,51,0.3);
+}
+.profile-name{font-family:'Cinzel',serif;font-size:18px;color:var(--saffron);}
+.profile-role{font-size:13px;color:var(--gray);font-family:sans-serif;margin-top:4px;}
+.profile-badges{display:flex;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.badge{
+  padding:4px 12px;border-radius:20px;font-size:10px;font-family:sans-serif;
+  background:rgba(255,153,51,0.1);border:1px solid var(--saffron);color:var(--saffron);
+}
+
+/* RECORDING UI */
+.record-btn{
+  width:70px;height:70px;border-radius:50%;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+  transition:all 0.2s;
+}
+.record-idle{background:linear-gradient(135deg,var(--saffron),var(--saffron2));}
+.record-active{background:linear-gradient(135deg,#e53e3e,#c53030);animation:blink 1s infinite;}
+@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(229,62,62,0.4)}50%{box-shadow:0 0 0 15px rgba(229,62,62,0)}}
+
+/* COMPETENCY WHEEL (CSS only) */
+.comp-wheel{
+  width:160px;height:160px;margin:0 auto 16px;position:relative;
+}
+.wheel-ring{
+  position:absolute;inset:0;border-radius:50%;
+}
+.wheel-bg{background:conic-gradient(var(--saffron) 0% 65%,var(--blue-light) 65% 80%,var(--emerald) 80% 92%,#666 92% 100%);}
+.wheel-center{
+  position:absolute;inset:20px;background:var(--navy2);border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.wheel-num{font-family:'Cinzel',serif;font-size:24px;color:var(--saffron);}
+.wheel-text{font-size:10px;color:var(--gray);font-family:sans-serif;}
+
+/* CHAPTER GRID */
+.chapter-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.chapter-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:12px;
+  padding:14px;cursor:pointer;transition:all 0.2s;text-align:center;
+}
+.chapter-card:hover{background:var(--navy3);transform:translateY(-2px);}
+.chapter-icon{font-size:30px;margin-bottom:8px;}
+.chapter-title{font-size:12px;font-weight:600;color:var(--white);font-family:sans-serif;line-height:1.3;}
+.chapter-num{font-size:10px;color:var(--gray);font-family:sans-serif;margin-bottom:6px;}
+.chapter-status{
+  display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;
+  font-family:sans-serif;margin-top:4px;
+}
+.ch-done{background:rgba(19,136,8,0.2);color:var(--emerald2);}
+.ch-progress{background:rgba(255,153,51,0.2);color:var(--saffron);}
+.ch-todo{background:rgba(138,155,196,0.2);color:var(--gray);}
+
+/* QUIZ ITEM */
+.quiz-option{
+  background:var(--glass);border:1px solid var(--border);border-radius:10px;
+  padding:12px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;gap:10px;font-family:sans-serif;font-size:14px;
+}
+.quiz-option:hover{background:var(--navy3);}
+.quiz-option.correct{background:rgba(19,136,8,0.2);border-color:var(--emerald);}
+.quiz-option.wrong{background:rgba(229,62,62,0.2);border-color:var(--red);}
+.quiz-letter{
+  width:28px;height:28px;border-radius:50%;background:var(--navy3);
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--gray);
+  flex-shrink:0;
+}
+
+/* OFFLINE INDICATOR */
+.offline-bar{
+  background:rgba(229,62,62,0.9);text-align:center;font-size:11px;
+  padding:5px;font-family:sans-serif;display:none;
+}
+.offline-bar.show{display:block;}
+
+/* SEARCH BAR */
+.search-bar{
+  display:flex;gap:8px;align-items:center;background:var(--glass);
+  border:1px solid var(--border);border-radius:12px;padding:10px 14px;
+  margin-bottom:14px;
+}
+.search-bar input{
+  flex:1;background:none;border:none;color:var(--white);font-family:sans-serif;font-size:14px;
+}
+.search-bar input:focus{outline:none;}
+.search-bar input::placeholder{color:var(--gray);}
+
+/* FLOATING ACTION */
+.fab{
+  position:fixed;bottom:80px;right:20px;width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--saffron),var(--saffron2));
+  border:none;cursor:pointer;font-size:24px;box-shadow:0 4px 20px rgba(255,153,51,0.5);
+  transition:all 0.2s;z-index:100;display:flex;align-items:center;justify-content:center;
+}
+.fab:hover{transform:scale(1.1);}
+
+/* PARAKH SCORE CARD */
+.parakh-band{
+  padding:14px;border-radius:12px;text-align:center;margin-bottom:10px;
+  border:1px solid;
+}
+.pb-below{background:rgba(229,62,62,0.1);border-color:rgba(229,62,62,0.4);}
+.pb-basic{background:rgba(237,137,54,0.1);border-color:rgba(237,137,54,0.4);}
+.pb-proficient{background:rgba(99,179,237,0.1);border-color:rgba(99,179,237,0.4);}
+.pb-advanced{background:rgba(19,136,8,0.1);border-color:rgba(19,136,8,0.4);}
+.pb-title{font-family:'Cinzel',serif;font-size:15px;margin-bottom:6px;}
+.pb-desc{font-size:11px;color:var(--gray);font-family:sans-serif;}
+
+/* HORIZONTAL SCROLL */
+.h-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px;}
+.h-scroll::-webkit-scrollbar{height:3px;}
+.h-scroll::-webkit-scrollbar-thumb{background:var(--navy3);}
+.h-card{
+  min-width:140px;background:var(--glass);border:1px solid var(--border);
+  border-radius:12px;padding:14px;flex-shrink:0;
+}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:16px 0;}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:40px 20px;color:var(--gray);}
+.empty-state .emoji{font-size:48px;margin-bottom:12px;}
+.empty-state p{font-family:sans-serif;font-size:14px;}
+
+/* ONLINE SYNC DOT */
+.sync-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--emerald);
+  display:inline-block;margin-right:6px;
+}
+.sync-dot.offline{background:var(--red);}
+
+/* CHART BARS (CSS only) */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin:10px 0;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bar{width:100%;background:linear-gradient(0deg,var(--saffron),var(--gold));border-radius:4px 4px 0 0;transition:height 0.8s ease;}
+.bar-val{font-size:9px;color:var(--gray);font-family:sans-serif;}
+.bar-lbl{font-size:9px;color:var(--gray);font-family:sans-serif;}
+
+/* ==== HOME SCREEN ==== */
+.welcome-banner{
+  background:linear-gradient(135deg,var(--navy2) 0%,#1a2f5a 100%);
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;margin-bottom:14px;position:relative;overflow:hidden;
+}
+.welcome-banner::after{
+  content:'🎓';position:absolute;right:-5px;bottom:-10px;font-size:70px;opacity:0.07;
+}
+.welcome-date{font-size:11px;color:var(--gray);font-family:sans-serif;margin-bottom:4px;}
+.welcome-msg{font-family:'Cinzel',serif;font-size:15px;color:var(--saffron);}
+.welcome-sub{font-size:12px;color:var(--gray);font-family:sans-serif;margin-top:4px;}
+
+/* QUICK ACTIONS */
+.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.qa-item{
+  background:var(--glass);border:1px solid var(--border);border-radius:12px;
+  padding:10px 4px;text-align:center;cursor:pointer;transition:all 0.2s;
+}
+.qa-item:hover{background:var(--navy3);transform:translateY(-2px);}
+.qa-icon{font-size:22px;margin-bottom:4px;}
+.qa-label{font-size:9px;color:var(--gray);font-family:sans-serif;line-height:1.2;}
+
+/* RESPONSIVE tweaks */
+@media(max-width:360px){
+  .stat-num{font-size:22px;}
+  .brand-text h1{font-size:12px;}
+}
+
+/* INSTALL PROMPT */
+.install-banner{
+  background:linear-gradient(135deg,rgba(255,153,51,0.15),rgba(19,136,8,0.1));
+  border:1px solid rgba(255,153,51,0.3);border-radius:12px;
+  padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.install-banner .ico{font-size:28px;}
+.install-text{flex:1;}
+.install-text p{font-size:12px;font-family:sans-serif;color:var(--gray);margin-top:2px;}
+.install-text strong{font-size:13px;color:var(--white);font-family:sans-serif;}
+.btn-install{
+  background:var(--saffron);color:var(--navy);border:none;border-radius:8px;
+  padding:8px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:sans-serif;
+  white-space:nowrap;
+}
+</style>
+</head>
+<body>
+
+<!-- OFFLINE BAR -->
+<div class="offline-bar" id="offlineBar">⚡ You are offline — All data saved locally</div>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-logo">📚</div>
+  <div class="splash-title">PARAKH Learning Evidence</div>
+  <div class="splash-sub">Beyond Attendance · Real Learning · NEP 2020 Aligned</div>
+  <div class="splash-loader"><div class="splash-bar"></div></div>
+  <div class="splash-author">
+    <div>Mateen Yousuf · Teacher, School Education Department J&K</div>
+    <div style="margin-top:4px;color:#4a5568;font-size:10px;">PARAKH · NCF 2023 · NIPUN Bharat · FLN</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Saved successfully</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="app-brand">
+      <div class="app-icon">📚</div>
+      <div class="brand-text">
+        <h1>PARAKH Evidence App</h1>
+        <p><span class="sync-dot" id="syncDot"></span><span id="syncStatus">Online • Synced</span></p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="icon-btn notif-badge" data-count="3" onclick="showScreen('notifications')">🔔</div>
+      <div class="icon-btn" onclick="showScreen('profile')">👤</div>
+    </div>
+  </div>
+
+  <!-- SCREEN CONTAINER -->
+  <div class="screen-container">
+
+    <!-- ===== HOME SCREEN ===== -->
+    <div class="screen active" id="screen-home">
+      <div class="welcome-banner">
+        <div class="welcome-date" id="currentDate"></div>
+        <div class="welcome-msg">Good Morning, Mateen Sir 🙏</div>
+        <div class="welcome-sub">2 students need evidence capture today</div>
+      </div>
+
+      <!-- Install Banner -->
+      <div class="install-banner" id="installBanner" style="display:none">
+        <div class="ico">📲</div>
+        <div class="install-text">
+          <strong>Install App on Phone</strong>
+          <p>Works offline · No internet needed</p>
+        </div>
+        <button class="btn-install" id="installBtn">Install</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-num" id="totalStudents">28</div>
+          <div class="stat-label">Total Students</div>
+          <div class="stat-trend">↑ Active today: 24</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="totalEvidence">147</div>
+          <div class="stat-label">Evidence Captured</div>
+          <div class="stat-trend">↑ +8 this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="avgMastery">72%</div>
+          <div class="stat-label">Avg. Mastery</div>
+          <div class="stat-trend">↑ +5% from last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="pendingSync">3</div>
+          <div class="stat-label">Pending Sync</div>
+          <div class="stat-trend" style="color:var(--saffron)">Auto-syncs when online</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card-title" style="margin-bottom:10px;">Quick Actions</div>
+      <div class="quick-actions">
+        <div class="qa-item" onclick="showScreen('capture')">
+          <div class="qa-icon">📸</div>
+          <div class="qa-label">Capture Evidence</div>
+        </div>
+        <div class="qa-item" onclick="showScreen('students')">
+          <div class="qa-icon">👥</div>
+          <div class="qa-label">Students</div>
+        </div>
+        <div class="qa-item" onclick="showScreen('assessment')">
+          <div class="qa-icon">📝</div>
+          <div class="qa-label">Assessment</div>
+        </div>
+        <div class="qa-item" onclick="showScreen('analytics')">
+          <div class="qa-icon">📊</div>
+          <div class="qa-label">Analytics</div>
+        </div>
+      </div>
+
+      <!-- Today's Activity -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Today's Learning Activity</div>
+          <div class="card-badge">Mar 26</div>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-col">
+            <div class="bar-val">12</div>
+            <div class="bar" style="height:60px"></div>
+            <div class="bar-lbl">Mon</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">8</div>
+            <div class="bar" style="height:40px"></div>
+            <div class="bar-lbl">Tue</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">15</div>
+            <div class="bar" style="height:75px;background:linear-gradient(0deg,var(--emerald),#00ff88)"></div>
+            <div class="bar-lbl">Wed</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">10</div>
+            <div class="bar" style="height:50px"></div>
+            <div class="bar-lbl">Thu</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">6</div>
+            <div class="bar" style="height:30px;opacity:0.5"></div>
+            <div class="bar-lbl">Fri</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">3</div>
+            <div class="bar" style="height:15px;opacity:0.3"></div>
+            <div class="bar-lbl">Sat</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARAKH Bands Summary -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">PARAKH Competency Bands</div>
+          <div class="card-badge">Class IX</div>
+        </div>
+        <div class="band band-advanced">
+          <div class="band-dot" style="background:var(--emerald)"></div>
+          <div class="band-label" style="font-family:sans-serif">Advanced</div>
+          <div class="band-count" style="color:var(--emerald)" id="bandAdvanced">7</div>
+        </div>
+        <div class="band band-proficient">
+          <div class="band-dot" style="background:var(--blue-light)"></div>
+          <div class="band-label" style="font-family:sans-serif">Proficient</div>
+          <div class="band-count" style="color:var(--blue-light)" id="bandProficient">11</div>
+        </div>
+        <div class="band band-basic">
+          <div class="band-dot" style="background:var(--saffron)"></div>
+          <div class="band-label" style="font-family:sans-serif">Basic</div>
+          <div class="band-count" style="color:var(--saffron)" id="bandBasic">7</div>
+        </div>
+        <div class="band band-below">
+          <div class="band-dot" style="background:var(--red)"></div>
+          <div class="band-label" style="font-family:sans-serif">Below Basic</div>
+          <div class="band-count" style="color:var(--red)" id="bandBelow">3</div>
+        </div>
+      </div>
+
+      <!-- Recent Evidence -->
+      <div class="section-head">
+        <div class="ico">🕐</div>
+        <div>
+          <h2>Recent Evidence</h2>
+          <small>Latest learning evidence captured</small>
+        </div>
+      </div>
+      <div id="recentEvidenceList"></div>
+    </div>
+
+    <!-- ===== STUDENTS SCREEN ===== -->
+    <div class="screen" id="screen-students">
+      <div class="section-head">
+        <div class="ico">👥</div>
+        <div>
+          <h2>Student Register</h2>
+          <small>PARAKH-aligned competency tracking</small>
+        </div>
+      </div>
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" id="studentSearch" placeholder="Search students..." oninput="filterStudents()"/>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;">
+        <button class="btn btn-sm btn-primary" style="white-space:nowrap" onclick="filterByBand('all')">All (28)</button>
+        <button class="btn btn-sm btn-ghost" style="white-space:nowrap;color:var(--emerald)" onclick="filterByBand('advanced')">Advanced (7)</button>
+        <button class="btn btn-sm btn-ghost" style="white-space:nowrap;color:var(--blue-light)" onclick="filterByBand('proficient')">Proficient (11)</button>
+        <button class="btn btn-sm btn-ghost" style="white-space:nowrap;color:var(--saffron)" onclick="filterByBand('basic')">Basic (7)</button>
+        <button class="btn btn-sm btn-ghost" style="white-space:nowrap;color:var(--red)" onclick="filterByBand('below')">Below Basic (3)</button>
+      </div>
+      <div id="studentList"></div>
+      <button class="btn btn-outline" onclick="openAddStudentModal()">➕ Add New Student</button>
+    </div>
+
+    <!-- ===== EVIDENCE CAPTURE SCREEN ===== -->
+    <div class="screen" id="screen-capture">
+      <div class="section-head">
+        <div class="ico">📸</div>
+        <div>
+          <h2>Capture Evidence</h2>
+          <small>Tag to PARAKH competency framework</small>
+        </div>
+      </div>
+
+      <!-- Student Select -->
+      <div class="form-group">
+        <label class="form-label">Select Student</label>
+        <select class="form-select" id="captureStudent">
+          <option value="">-- Choose Student --</option>
+        </select>
+      </div>
+
+      <!-- Evidence Type -->
+      <div class="form-group">
+        <label class="form-label">Evidence Type</label>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+          <div class="qa-item active-type" onclick="setEvidenceType('text',this)" id="type-text">
+            <div class="qa-icon">✏️</div>
+            <div class="qa-label">Text Note</div>
+          </div>
+          <div class="qa-item" onclick="setEvidenceType('checklist',this)" id="type-checklist">
+            <div class="qa-icon">✅</div>
+            <div class="qa-label">Checklist</div>
+          </div>
+          <div class="qa-item" onclick="setEvidenceType('audio',this)" id="type-audio">
+            <div class="qa-icon">🎙️</div>
+            <div class="qa-label">Audio</div>
+          </div>
+          <div class="qa-item" onclick="setEvidenceType('activity',this)" id="type-activity">
+            <div class="qa-icon">🔬</div>
+            <div class="qa-label">Activity</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic Evidence Input -->
+      <div id="evidenceInput">
+        <!-- Text type default -->
+        <div class="form-group">
+          <label class="form-label">Observation / Notes</label>
+          <textarea class="form-textarea" id="evidenceText" placeholder="Describe what the student demonstrated..."></textarea>
+        </div>
+      </div>
+
+      <!-- Subject -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <select class="form-select" id="captureSubject" onchange="updateLearningOutcomes()">
+            <option value="">-- Subject --</option>
+            <option value="science">Science</option>
+            <option value="math">Mathematics</option>
+            <option value="english">English</option>
+            <option value="hindi">Hindi</option>
+            <option value="sst">Social Studies</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Chapter</label>
+          <select class="form-select" id="captureChapter">
+            <option value="">-- Chapter --</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Learning Outcome -->
+      <div class="form-group">
+        <label class="form-label">Learning Outcome (NCERT)</label>
+        <select class="form-select" id="captureLO">
+          <option value="">-- Select Learning Outcome --</option>
+        </select>
+      </div>
+
+      <!-- PARAKH Band -->
+      <div class="form-group">
+        <label class="form-label">PARAKH Performance Band</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div class="parakh-band pb-below" onclick="setParakhBand('below',this)" style="cursor:pointer">
+            <div class="pb-title" style="color:#fc8181">Below Basic</div>
+            <div class="pb-desc">Needs significant support</div>
+          </div>
+          <div class="parakh-band pb-basic" onclick="setParakhBand('basic',this)" style="cursor:pointer">
+            <div class="pb-title" style="color:#ed8936">Basic</div>
+            <div class="pb-desc">Partial understanding</div>
+          </div>
+          <div class="parakh-band pb-proficient" onclick="setParakhBand('proficient',this)" style="cursor:pointer">
+            <div class="pb-title" style="color:var(--blue-light)">Proficient</div>
+            <div class="pb-desc">Meets expectations</div>
+          </div>
+          <div class="parakh-band pb-advanced" onclick="setParakhBand('advanced',this)" style="cursor:pointer">
+            <div class="pb-title" style="color:var(--emerald2)">Advanced</div>
+            <div class="pb-desc">Exceeds expectations</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="form-group">
+        <label class="form-label">Competency Tags</label>
+        <div class="tag-list" id="compTags">
+          <div class="tag tag-saffron selected" onclick="toggleTag(this)">Critical Thinking</div>
+          <div class="tag tag-green" onclick="toggleTag(this)">Communication</div>
+          <div class="tag tag-blue" onclick="toggleTag(this)">Problem Solving</div>
+          <div class="tag tag-purple" onclick="toggleTag(this)">Collaboration</div>
+          <div class="tag tag-saffron" onclick="toggleTag(this)">Scientific Inquiry</div>
+          <div class="tag tag-green" onclick="toggleTag(this)">Reading Fluency</div>
+          <div class="tag tag-blue" onclick="toggleTag(this)">Numeracy</div>
+          <div class="tag tag-purple" onclick="toggleTag(this)">Life Skills</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="saveEvidence()">💾 Save Evidence (Offline)</button>
+      <button class="btn btn-ghost" onclick="clearCaptureForm()">🗑️ Clear Form</button>
+    </div>
+
+    <!-- ===== ASSESSMENT SCREEN ===== -->
+    <div class="screen" id="screen-assessment">
+      <div class="section-head">
+        <div class="ico">📝</div>
+        <div>
+          <h2>Micro-Assessment</h2>
+          <small>Activity-based · Auto-tagged competencies</small>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Quick Quiz Builder</div>
+          <div class="card-badge">Class IX Science</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assessment Title</label>
+          <input class="form-input" id="quizTitle" placeholder="e.g., Matter in Our Surroundings - Check"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Subject</label>
+            <select class="form-select" id="quizSubject">
+              <option>Science</option>
+              <option>Mathematics</option>
+              <option>English</option>
+              <option>Hindi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration (min)</label>
+            <input class="form-input" type="number" id="quizDuration" value="15" min="5" max="60"/>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="startSampleQuiz()">▶ Launch Sample Assessment</button>
+      </div>
+
+      <!-- Active Quiz -->
+      <div id="quizContainer" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" id="quizQ">Question 1/5</div>
+            <div class="card-badge" id="quizScore">Score: 0</div>
+          </div>
+          <div id="quizQuestion" style="font-family:sans-serif;font-size:15px;color:var(--white);margin-bottom:16px;line-height:1.5;"></div>
+          <div id="quizOptions"></div>
+          <div id="quizFeedback" style="display:none;margin-top:12px;padding:10px;border-radius:8px;font-family:sans-serif;font-size:13px;"></div>
+          <button class="btn btn-primary" id="nextQBtn" style="display:none;margin-top:12px" onclick="nextQuestion()">Next Question →</button>
+        </div>
+      </div>
+
+      <!-- Past Assessments -->
+      <div class="section-head" style="margin-top:8px">
+        <div class="ico">📋</div>
+        <div>
+          <h2>Assessment Records</h2>
+          <small>Stored locally</small>
+        </div>
+      </div>
+      <div id="assessmentList"></div>
+    </div>
+
+    <!-- ===== ANALYTICS SCREEN ===== -->
+    <div class="screen" id="screen-analytics">
+      <div class="section-head">
+        <div class="ico">📊</div>
+        <div>
+          <h2>Learning Analytics</h2>
+          <small>Diagnostic insights · Gap detection</small>
+        </div>
+      </div>
+
+      <!-- Competency Wheel -->
+      <div class="card" style="text-align:center">
+        <div class="card-header">
+          <div class="card-title">Overall Competency Mastery</div>
+          <div class="card-badge">All Subjects</div>
+        </div>
+        <div class="comp-wheel">
+          <div class="wheel-ring wheel-bg"></div>
+          <div class="wheel-center">
+            <div class="wheel-num">72%</div>
+            <div class="wheel-text">Mastery</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;font-family:sans-serif;font-size:11px;">
+          <span style="color:var(--saffron)">■ Science 65%</span>
+          <span style="color:var(--blue-light)">■ Math 80%</span>
+          <span style="color:var(--emerald2)">■ English 92%</span>
+          <span style="color:#666">■ Pending 8%</span>
+        </div>
+      </div>
+
+      <!-- Subject-wise Progress -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">Subject-wise Learning Progress</div>
+        <div style="font-family:sans-serif;font-size:12px;margin-bottom:6px;display:flex;justify-content:space-between">
+          <span>Science (NCERT Class IX)</span><span style="color:var(--saffron)">65%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill fill-saffron" style="width:65%"></div></div>
+        <div style="font-family:sans-serif;font-size:12px;margin-bottom:6px;margin-top:10px;display:flex;justify-content:space-between">
+          <span>Mathematics</span><span style="color:var(--blue-light)">80%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:80%"></div></div>
+        <div style="font-family:sans-serif;font-size:12px;margin-bottom:6px;margin-top:10px;display:flex;justify-content:space-between">
+          <span>English</span><span style="color:var(--emerald2)">92%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:92%"></div></div>
+        <div style="font-family:sans-serif;font-size:12px;margin-bottom:6px;margin-top:10px;display:flex;justify-content:space-between">
+          <span>Social Studies</span><span style="color:var(--purple)">58%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill fill-purple" style="width:58%"></div></div>
+      </div>
+
+      <!-- Gap Detection -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🔴 Learning Gaps Detected</div>
+          <div class="card-badge">Action Needed</div>
+        </div>
+        <div id="gapList">
+          <div class="evidence-item" style="border-left-color:var(--red)">
+            <div class="evidence-header">
+              <div class="evidence-type" style="color:var(--red)">Critical Gap</div>
+              <div class="evidence-date">3 students</div>
+            </div>
+            <div class="evidence-student">Atomic Structure — Electron Configuration</div>
+            <div class="evidence-comp">Science > Chemistry > Atoms & Molecules</div>
+            <div class="evidence-text">Students unable to write electronic configuration. Recommend hands-on activity with electron shells model.</div>
+          </div>
+          <div class="evidence-item" style="border-left-color:var(--saffron)">
+            <div class="evidence-header">
+              <div class="evidence-type" style="color:var(--saffron)">Moderate Gap</div>
+              <div class="evidence-date">6 students</div>
+            </div>
+            <div class="evidence-student">Algebraic Expressions — Factorization</div>
+            <div class="evidence-comp">Mathematics > Algebra</div>
+            <div class="evidence-text">Partial understanding of factorization methods. Peer tutoring recommended.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Remediation Suggestions -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">💡 Remediation Suggestions</div>
+        </div>
+        <div class="tl-item" style="position:relative;padding-left:20px;">
+          <div style="position:absolute;left:0;top:4px;font-size:16px">🔬</div>
+          <div class="tl-content">
+            <div class="tl-date">Science — Immediate</div>
+            <div class="tl-title">Hands-on Atom Model Activity</div>
+            <div class="tl-desc">Use clay/beads to model Bohr's atomic structure. Group activity for 3 struggling students.</div>
+          </div>
+        </div>
+        <div class="tl-item" style="position:relative;padding-left:20px;margin-top:10px;">
+          <div style="position:absolute;left:0;top:4px;font-size:16px">📖</div>
+          <div class="tl-content">
+            <div class="tl-date">Math — This Week</div>
+            <div class="tl-title">Peer Tutoring Session</div>
+            <div class="tl-desc">Pair advanced students with basic-band peers for factorization practice.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Learning Growth Index -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px">📈 Learning Growth Index</div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-num" style="font-size:20px">+18%</div>
+            <div class="stat-label">Growth This Month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="font-size:20px">4.2</div>
+            <div class="stat-label">Evidence/Student/Week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="font-size:20px">89%</div>
+            <div class="stat-label">Competency Tagging Rate</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="font-size:20px">0</div>
+            <div class="stat-label">Students Left Behind</div>
+            <div class="stat-trend">All tracked 🎯</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CHAPTERS SCREEN ===== -->
+    <div class="screen" id="screen-chapters">
+      <div class="section-head">
+        <div class="ico">📖</div>
+        <div>
+          <h2>JKBOSE Class IX</h2>
+          <small>Science Curriculum — NCF 2023 Aligned</small>
+        </div>
+      </div>
+      <div class="chapter-grid" id="chapterGrid"></div>
+    </div>
+
+    <!-- ===== PROFILE SCREEN ===== -->
+    <div class="screen" id="screen-profile">
+      <div class="section-head">
+        <div class="ico">👤</div>
+        <div>
+          <h2>Teacher Profile</h2>
+          <small>Mateen Yousuf · PARAKH Educator</small>
+        </div>
+      </div>
+      <div class="profile-hero">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%231a3a6b'/%3E%3Ctext y='65' x='50' text-anchor='middle' font-size='52'%3E👨‍🏫%3C/text%3E%3C/svg%3E" alt="Mateen Yousuf" class="profile-img" id="authorImg"/>
+        
+        <div class="profile-name">Mateen Yousuf</div>
+        <div class="profile-role">Teacher · School Education Department, J&K</div>
+        <div class="profile-badges">
+          <span class="badge">PARAKH Aligned</span>
+          <span class="badge">NEP 2020</span>
+          <span class="badge">NCF 2023</span>
+          <span class="badge">FLN/NIPUN</span>
+        </div>
+      </div>
+
+      <!-- App Info -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">App Information</div>
+        <div style="font-family:sans-serif;font-size:13px;color:var(--gray);line-height:2;">
+          <div>📦 <strong style="color:var(--white)">Version:</strong> 1.0.0</div>
+          <div>📱 <strong style="color:var(--white)">Type:</strong> Offline-First PWA</div>
+          <div>🏛️ <strong style="color:var(--white)">Framework:</strong> PARAKH · NEP 2020 · NCF 2023</div>
+          <div>💾 <strong style="color:var(--white)">Storage:</strong> LocalStorage + IndexedDB</div>
+          <div>🔄 <strong style="color:var(--white)">Sync:</strong> Service Worker (Background)</div>
+        </div>
+      </div>
+
+      <!-- Data Management -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">Data Management</div>
+        <button class="btn btn-ghost" onclick="exportData()">📤 Export All Data (JSON)</button>
+        <button class="btn btn-ghost" onclick="importData()">📥 Import Data</button>
+        <button class="btn btn-danger" onclick="clearAllData()" style="margin-top:4px">🗑️ Clear All Local Data</button>
+      </div>
+
+      <!-- About -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:10px">About This App</div>
+        <p style="font-family:sans-serif;font-size:13px;color:var(--gray);line-height:1.7;">
+          This app shifts focus from <strong style="color:var(--saffron)">attendance-based tracking</strong> to 
+          <strong style="color:var(--saffron)">real learning evidence capture</strong>, aligned with PARAKH 
+          assessment reform, NCF 2023, and NIPUN Bharat Mission. Designed for low-resource school environments 
+          across Jammu & Kashmir.
+        </p>
+      </div>
+
+      <!-- How to run -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">🚀 How to Use / Host</div>
+        <div style="font-family:sans-serif;font-size:12px;color:var(--gray);line-height:1.8;">
+          <strong style="color:var(--white)">1. Run Locally:</strong><br/>
+          Open index.html with VS Code Live Server or any local server (e.g., <code style="color:var(--saffron)">npx serve .</code>)<br/><br/>
+          <strong style="color:var(--white)">2. Install as App:</strong><br/>
+          Open in Chrome → Menu → "Add to Home Screen"<br/><br/>
+          <strong style="color:var(--white)">3. Host Free:</strong><br/>
+          Upload folder to <strong style="color:var(--saffron)">GitHub Pages</strong> or <strong style="color:var(--emerald2)">Netlify</strong> for free hosting
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NOTIFICATIONS SCREEN ===== -->
+    <div class="screen" id="screen-notifications">
+      <div class="section-head">
+        <div class="ico">🔔</div>
+        <div>
+          <h2>Notifications</h2>
+          <small>Reminders & alerts</small>
+        </div>
+      </div>
+      <div class="evidence-item" style="border-left-color:var(--red)">
+        <div class="evidence-header">
+          <div class="evidence-type" style="color:var(--red)">Urgent</div>
+          <div class="evidence-date">Today</div>
+        </div>
+        <div class="evidence-student">3 students need evidence capture</div>
+        <div class="evidence-text">Amir Khan, Rahul Sharma, and Priya Devi have no evidence this week.</div>
+      </div>
+      <div class="evidence-item" style="border-left-color:var(--saffron)">
+        <div class="evidence-header">
+          <div class="evidence-type" style="color:var(--saffron)">Reminder</div>
+          <div class="evidence-date">Yesterday</div>
+        </div>
+        <div class="evidence-student">Monthly PARAKH Report Due</div>
+        <div class="evidence-text">Submit competency progress report to HM by March 31st.</div>
+      </div>
+      <div class="evidence-item" style="border-left-color:var(--emerald)">
+        <div class="evidence-header">
+          <div class="evidence-type" style="color:var(--emerald2)">Achievement</div>
+          <div class="evidence-date">2 days ago</div>
+        </div>
+        <div class="evidence-student">Milestone: 100+ Evidence Captured!</div>
+        <div class="evidence-text">You have now captured over 100 learning evidence records. Keep it up! 🎉</div>
+      </div>
+    </div>
+
+  </div><!-- end screen-container -->
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="showScreen('home')" id="nav-home">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('students')" id="nav-students">
+      <div class="nav-icon">👥</div>
+      <div class="nav-label">Students</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('capture')" id="nav-capture">
+      <div class="nav-icon">📸</div>
+      <div class="nav-label">Capture</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('analytics')" id="nav-analytics">
+      <div class="nav-icon">📊</div>
+      <div class="nav-label">Analytics</div>
+    </div>
+    <div class="nav-item" onclick="showScreen('chapters')" id="nav-chapters">
+      <div class="nav-icon">📖</div>
+      <div class="nav-label">Chapters</div>
+    </div>
+  </div>
+</div><!-- end app -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="addStudentModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">➕ Add New Student</div>
+    <div class="form-group">
+      <label class="form-label">Full Name</label>
+      <input class="form-input" id="newStudentName" placeholder="Student full name"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Roll No.</label>
+        <input class="form-input" id="newStudentRoll" placeholder="Roll number"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gender</label>
+        <select class="form-select" id="newStudentGender">
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Initial PARAKH Band</label>
+      <select class="form-select" id="newStudentBand">
+        <option value="below">Below Basic</option>
+        <option value="basic" selected>Basic</option>
+        <option value="proficient">Proficient</option>
+        <option value="advanced">Advanced</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="addStudent()">✅ Add Student</button>
+    <button class="btn btn-ghost" onclick="closeModal('addStudentModal')">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="studentDetailModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div id="studentDetailContent"></div>
+    <button class="btn btn-ghost" onclick="closeModal('studentDetailModal')">Close</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  PARAKH LEARNING EVIDENCE APP — JAVASCRIPT CORE
+//  Author: Mateen Yousuf | Offline-First PWA
+// ============================================================
+
+// ---- DATA MODELS ----
+const SUBJECTS = {
+  science: {
+    name: 'Science',
+    chapters: ['Matter in Our Surroundings','Is Matter Around Us Pure?','Atoms and Molecules','Structure of the Atom','The Fundamental Unit of Life','Tissues','Diversity in Living Organisms','Motion','Force and Laws of Motion','Gravitation','Work and Energy','Sound','Why Do We Fall Ill?','Natural Resources','Improvement in Food Resources'],
+    outcomes: ['Explain states of matter','Distinguish pure/mixture','Write chemical formulas','Draw atomic structure','Identify cell organelles','Describe tissue types','Classify living organisms','Calculate speed/velocity','Apply Newton\'s laws','Explain gravitational force','Calculate work/power','Describe sound waves','Explain disease causes','Describe natural resources','Identify food production methods']
+  },
+  math: {
+    name: 'Mathematics',
+    chapters: ['Number Systems','Polynomials','Coordinate Geometry','Linear Equations','Introduction to Euclid\'s Geometry','Lines and Angles','Triangles','Quadrilaterals','Areas of Parallelograms','Circles','Constructions','Heron\'s Formula','Surface Areas and Volumes','Statistics','Probability'],
+    outcomes: ['Classify number types','Factor polynomials','Plot coordinates','Solve linear equations','Apply Euclid postulates','Identify angle types','Prove triangle theorems','Classify quadrilaterals','Calculate areas','Understand circle theorems','Construct figures','Apply Heron\'s formula','Calculate volumes','Interpret data','Calculate probability']
+  },
+  english: {
+    name: 'English',
+    chapters: ['The Fun They Had','The Sound of Music','The Little Girl','A Truly Beautiful Mind','The Snake and the Mirror','My Childhood','Packing','Reach for the Top','The Bond of Love','Kathmandu','If I Were You'],
+    outcomes: ['Comprehend narrative texts','Identify story themes','Analyze characters','Understand biographies','Interpret figurative language','Connect texts to real life','Summarize passages','Write reflective responses','Read fluently aloud','Use vocabulary in context','Identify grammar structures']
+  },
+  hindi: {
+    name: 'Hindi',
+    chapters: ['दो बैलों की कथा','ल्हासा की ओर','उपभोक्तावाद की संस्कृति','साँवले सपनों की याद','नाना साहब की पुत्री','प्रेमचंद के फटे जूते'],
+    outcomes: ['पाठ का सारांश लिखना','मुख्य विचार पहचानना','पात्रों का विश्लेषण','भाषा शैली समझना','लेखक का उद्देश्य बताना']
+  },
+  sst: {
+    name: 'Social Studies',
+    chapters: ['The French Revolution','Socialism in Europe','Nazism and Rise of Hitler','Forest Society and Colonialism','Pastoralists in the Modern World','India — Size and Location','Physical Features of India','Drainage','Climate','Natural Vegetation','Population','What is Democracy?','Constitutional Design','Electoral Politics','Working of Institutions','Democratic Rights','The Story of Village Palampur','People as Resource','Poverty as a Challenge','Food Security in India'],
+    outcomes: ['Explain causes of revolution','Describe socialist movements','Analyze Nazi ideology','Explain forest colonialism','Describe pastoral societies','Locate India on map','Classify landforms','Explain river systems','Describe climate patterns','Identify vegetation types','Analyze population data','Define democracy','Explain constitutional rights','Describe election process','Identify government institutions','Explain fundamental rights','Describe farming systems','Understand human resources','Analyze poverty causes','Explain food security']
+  }
+};
+
+const PARAKH_BANDS = { below:'Below Basic', basic:'Basic', proficient:'Proficient', advanced:'Advanced' };
+const BAND_COLORS = { below:'var(--red)', basic:'var(--saffron)', proficient:'var(--blue-light)', advanced:'var(--emerald2)' };
+const AVATARS = ['🧒','👦','👧','🧑','👨','👩','🙋','🙆'];
+
+// ---- LOCAL STORAGE KEYS ----
+const LS = {
+  STUDENTS: 'parakh_students',
+  EVIDENCE: 'parakh_evidence',
+  ASSESSMENTS: 'parakh_assessments',
+  SETTINGS: 'parakh_settings',
+  NOTES: 'parakh_notes'
+};
+
+// ---- INITIAL DATA ----
+const DEFAULT_STUDENTS = [
+  {id:'s1',name:'Amir Khan',roll:'01',gender:'M',band:'proficient',subject:'science',evidenceCount:12,mastery:78,avatar:'👦'},
+  {id:'s2',name:'Priya Sharma',roll:'02',gender:'F',band:'advanced',subject:'science',evidenceCount:18,mastery:92,avatar:'👧'},
+  {id:'s3',name:'Rahul Dev',roll:'03',gender:'M',band:'basic',subject:'science',evidenceCount:6,mastery:45,avatar:'🧑'},
+  {id:'s4',name:'Sana Mir',roll:'04',gender:'F',band:'advanced',subject:'science',evidenceCount:20,mastery:95,avatar:'👩'},
+  {id:'s5',name:'Bilal Ahmed',roll:'05',gender:'M',band:'basic',subject:'science',evidenceCount:5,mastery:42,avatar:'👦'},
+  {id:'s6',name:'Fatima Bano',roll:'06',gender:'F',band:'proficient',subject:'science',evidenceCount:15,mastery:72,avatar:'👧'},
+  {id:'s7',name:'Arjun Singh',roll:'07',gender:'M',band:'below',subject:'science',evidenceCount:2,mastery:22,avatar:'🧒'},
+  {id:'s8',name:'Zoya Khan',roll:'08',gender:'F',band:'proficient',subject:'science',evidenceCount:11,mastery:68,avatar:'👩'},
+  {id:'s9',name:'Mohd. Iqbal',roll:'09',gender:'M',band:'advanced',subject:'science',evidenceCount:17,mastery:88,avatar:'🧑'},
+  {id:'s10',name:'Simran Kaur',roll:'10',gender:'F',band:'proficient',subject:'science',evidenceCount:13,mastery:74,avatar:'👧'},
+];
+
+const DEFAULT_EVIDENCE = [
+  {id:'e1',studentId:'s2',studentName:'Priya Sharma',type:'text',subject:'science',chapter:'Atoms and Molecules',outcome:'Write chemical formulas',band:'advanced',tags:['Critical Thinking','Scientific Inquiry'],note:'Correctly balanced chemical equations for 5/5 problems. Explained concept to peers.',date:'2026-03-26',time:'09:30'},
+  {id:'e2',studentId:'s1',studentName:'Amir Khan',type:'checklist',subject:'science',chapter:'Motion',outcome:'Calculate speed/velocity',band:'proficient',tags:['Problem Solving','Numeracy'],note:'Completed distance-time graph activity. Minor errors in unit conversion.',date:'2026-03-25',time:'11:15'},
+  {id:'e3',studentId:'s7',studentName:'Arjun Singh',type:'text',subject:'math',chapter:'Number Systems',outcome:'Classify number types',band:'below',tags:['Numeracy'],note:'Unable to distinguish rational vs irrational numbers. Needs concrete examples.',date:'2026-03-24',time:'10:00'},
+  {id:'e4',studentId:'s4',studentName:'Sana Mir',type:'activity',subject:'science',chapter:'The Fundamental Unit of Life',outcome:'Identify cell organelles',band:'advanced',tags:['Scientific Inquiry','Critical Thinking','Collaboration'],note:'Led group activity on onion cell preparation. Labeled all 8 organelles correctly.',date:'2026-03-24',time:'14:00'},
+];
+
+// ---- QUIZ DATA ----
+const SCIENCE_QUIZ = [
+  {q:'What is the SI unit of force?',opts:['Newton','Joule','Watt','Pascal'],ans:0,comp:'Force and Laws of Motion'},
+  {q:'Which organelle is called the "powerhouse of the cell"?',opts:['Nucleus','Ribosome','Mitochondria','Golgi body'],ans:2,comp:'The Fundamental Unit of Life'},
+  {q:'What is the chemical formula of water?',opts:['H₂O','CO₂','NaCl','O₂'],ans:0,comp:'Atoms and Molecules'},
+  {q:'An object moving at constant speed in a straight line has ___ acceleration.',opts:['Maximum','Negative','Zero','Positive'],ans:2,comp:'Motion'},
+  {q:'Which of the following is a physical change?',opts:['Burning wood','Rusting iron','Melting ice','Cooking food'],ans:2,comp:'Matter in Our Surroundings'},
+];
+
+// ---- STATE ----
+let currentScreen = 'home';
+let selectedEvidenceType = 'text';
+let selectedBand = null;
+let quizCurrentQ = 0;
+let quizScore = 0;
+let quizActive = false;
+let deferredPrompt = null;
+
+// ---- STORAGE HELPERS ----
+function getLS(key, def = []) {
+  try { return JSON.parse(localStorage.getItem(key)) || def; } catch { return def; }
+}
+function setLS(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) { showToast('⚠️ Storage full!'); }
+}
+
+// ---- INIT ----
+function init() {
+  // Seed default data if empty
+  if (!localStorage.getItem(LS.STUDENTS)) setLS(LS.STUDENTS, DEFAULT_STUDENTS);
+  if (!localStorage.getItem(LS.EVIDENCE)) setLS(LS.EVIDENCE, DEFAULT_EVIDENCE);
+  if (!localStorage.getItem(LS.ASSESSMENTS)) setLS(LS.ASSESSMENTS, []);
+
+  // Update date
+  const now = new Date();
+  const dateEl = document.getElementById('currentDate');
+  if (dateEl) dateEl.textContent = now.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  // Load screens
+  renderStudents();
+  renderRecentEvidence();
+  renderChapters();
+  renderCaptureStudents();
+  renderAssessments();
+  updateStats();
+
+  // Offline detection
+  window.addEventListener('online', () => {
+    document.getElementById('offlineBar').classList.remove('show');
+    document.getElementById('syncDot').classList.remove('offline');
+    document.getElementById('syncStatus').textContent = 'Online • Synced';
+  });
+  window.addEventListener('offline', () => {
+    document.getElementById('offlineBar').classList.add('show');
+    document.getElementById('syncDot').classList.add('offline');
+    document.getElementById('syncStatus').textContent = 'Offline • Saved locally';
+  });
+  if (!navigator.onLine) {
+    document.getElementById('offlineBar').classList.add('show');
+    document.getElementById('syncDot').classList.add('offline');
+    document.getElementById('syncStatus').textContent = 'Offline • Saved locally';
+  }
+
+  // PWA install prompt
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installBanner').style.display = 'flex';
+    document.getElementById('installBtn').addEventListener('click', async () => {
+      deferredPrompt.prompt();
+      const result = await deferredPrompt.userChoice;
+      if (result.outcome === 'accepted') {
+        document.getElementById('installBanner').style.display = 'none';
+        showToast('✅ App installed successfully!');
+      }
+      deferredPrompt = null;
+    });
+  });
+}
+
+// ---- SCREEN NAVIGATION ----
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const screen = document.getElementById('screen-' + name);
+  if (screen) screen.classList.add('active');
+  const nav = document.getElementById('nav-' + name);
+  if (nav) nav.classList.add('active');
+  currentScreen = name;
+  document.querySelector('.screen-container').scrollTop = 0;
+}
+
+// ---- TOAST ----
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ---- MODAL ----
+function openAddStudentModal() {
+  document.getElementById('addStudentModal').classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// ---- RENDER STUDENTS ----
+function renderStudents(filter = 'all', search = '') {
+  const students = getLS(LS.STUDENTS, DEFAULT_STUDENTS);
+  const el = document.getElementById('studentList');
+  if (!el) return;
+  let filtered = students.filter(s => {
+    const matchBand = filter === 'all' || s.band === filter;
+    const matchSearch = !search || s.name.toLowerCase().includes(search.toLowerCase()) || s.roll.includes(search);
+    return matchBand && matchSearch;
+  });
+  if (!filtered.length) {
+    el.innerHTML = '<div class="empty-state"><div class="emoji">🔍</div><p>No students found</p></div>';
+    return;
+  }
+  el.innerHTML = filtered.map(s => `
+    <div class="student-item" onclick="showStudentDetail('${s.id}')">
+      <div class="student-avatar">${s.avatar || '🧒'}</div>
+      <div class="student-info">
+        <div class="student-name">${s.name}</div>
+        <div class="student-meta">Roll: ${s.roll} · ${s.gender === 'M' ? '♂' : '♀'} · <span style="color:${BAND_COLORS[s.band]}">${PARAKH_BANDS[s.band]}</span></div>
+        <div class="progress-bar" style="width:120px;margin-top:4px"><div class="progress-fill fill-saffron" style="width:${s.mastery||0}%"></div></div>
+      </div>
+      <div class="student-score">
+        <div class="score-num">${s.mastery||0}%</div>
+        <div class="score-label">Mastery</div>
+        <div class="score-label" style="color:var(--gray)">${s.evidenceCount||0} evidence</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterStudents() {
+  renderStudents('all', document.getElementById('studentSearch').value);
+}
+function filterByBand(band) {
+  renderStudents(band);
+}
+
+// ---- STUDENT DETAIL ----
+function showStudentDetail(id) {
+  const students = getLS(LS.STUDENTS, DEFAULT_STUDENTS);
+  const evidence = getLS(LS.EVIDENCE, DEFAULT_EVIDENCE);
+  const s = students.find(x => x.id === id);
+  if (!s) return;
+  const sEvidence = evidence.filter(e => e.studentId === id);
+  const content = document.getElementById('studentDetailContent');
+  content.innerHTML = `
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:50px">${s.avatar||'🧒'}</div>
+      <div class="modal-title" style="text-align:center">${s.name}</div>
+      <div style="font-family:sans-serif;font-size:12px;color:var(--gray)">Roll: ${s.roll} · <span style="color:${BAND_COLORS[s.band]}">${PARAKH_BANDS[s.band]}</span></div>
+    </div>
+    <div class="stat-grid" style="margin-bottom:12px">
+      <div class="stat-card"><div class="stat-num">${s.mastery||0}%</div><div class="stat-label">Mastery</div></div>
+      <div class="stat-card"><div class="stat-num">${sEvidence.length}</div><div class="stat-label">Evidence</div></div>
+    </div>
+    <div style="margin-bottom:10px"><strong style="font-family:sans-serif;font-size:12px;color:var(--gray)">RECENT EVIDENCE</strong></div>
+    ${sEvidence.length ? sEvidence.slice(-3).reverse().map(e => `
+      <div class="evidence-item">
+        <div class="evidence-header">
+          <div class="evidence-type">${e.type?.toUpperCase()||'TEXT'}</div>
+          <div class="evidence-date">${e.date}</div>
+        </div>
+        <div class="evidence-student" style="font-size:12px">${e.chapter||'—'}</div>
+        <div class="evidence-comp">${e.outcome||'—'} · <span style="color:${BAND_COLORS[e.band]||'var(--gray)'}">${PARAKH_BANDS[e.band]||'—'}</span></div>
+        <div class="evidence-text">${e.note||''}</div>
+      </div>
+    `).join('') : '<div class="empty-state" style="padding:20px"><div class="emoji" style="font-size:30px">📭</div><p>No evidence yet</p></div>'}
+    <button class="btn btn-primary" onclick="closeModal('studentDetailModal');showScreen('capture');document.getElementById('captureStudent').value='${id}'">📸 Capture Evidence</button>
+  `;
+  document.getElementById('studentDetailModal').classList.add('open');
+}
+
+// ---- ADD STUDENT ----
+function addStudent() {
+  const name = document.getElementById('newStudentName').value.trim();
+  const roll = document.getElementById('newStudentRoll').value.trim();
+  const gender = document.getElementById('newStudentGender').value;
+  const band = document.getElementById('newStudentBand').value;
+  if (!name || !roll) { showToast('⚠️ Name and roll number required'); return; }
+  const students = getLS(LS.STUDENTS, DEFAULT_STUDENTS);
+  const newStudent = {
+    id: 's' + Date.now(),
+    name, roll, gender, band,
+    subject: 'science',
+    evidenceCount: 0,
+    mastery: band === 'advanced' ? 85 : band === 'proficient' ? 65 : band === 'basic' ? 40 : 20,
+    avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)]
+  };
+  students.push(newStudent);
+  setLS(LS.STUDENTS, students);
+  updateStats();
+  renderStudents();
+  renderCaptureStudents();
+  closeModal('addStudentModal');
+  document.getElementById('newStudentName').value = '';
+  document.getElementById('newStudentRoll').value = '';
+  showToast('✅ Student added successfully');
+}
+
+// ---- RENDER RECENT EVIDENCE ----
+function renderRecentEvidence() {
+  const evidence = getLS(LS.EVIDENCE, DEFAULT_EVIDENCE);
+  const el = document.getElementById('recentEvidenceList');
+  if (!el) return;
+  const recent = evidence.slice(-4).reverse();
+  if (!recent.length) {
+    el.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><p>No evidence captured yet</p></div>';
+    return;
+  }
+  el.innerHTML = recent.map(e => `
+    <div class="evidence-item">
+      <div class="evidence-header">
+        <div class="evidence-type">${e.type?.toUpperCase()||'TEXT'} · ${e.subject?.toUpperCase()||''}</div>
+        <div class="evidence-date">${e.date}</div>
+      </div>
+      <div class="evidence-student">${e.studentName}</div>
+      <div class="evidence-comp">${e.chapter||''} — ${e.outcome||''}</div>
+      <div class="evidence-comp" style="margin-top:2px">
+        <span style="color:${BAND_COLORS[e.band]||'var(--gray)'}">● ${PARAKH_BANDS[e.band]||'Untagged'}</span>
+      </div>
+      <div class="evidence-text">${e.note||''}</div>
+      <div class="tag-list">${(e.tags||[]).map(t=>`<div class="tag tag-saffron">${t}</div>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+// ---- CAPTURE STUDENTS DROPDOWN ----
+function renderCaptureStudents() {
+  const students = getLS(LS.STUDENTS, DEFAULT_STUDENTS);
+  const sel = document.getElementById('captureStudent');
+  if (!sel) return;
+  const val = sel.value;
+  sel.innerHTML = '<option value="">-- Choose Student --</option>' + students.map(s => `<option value="${s.id}">${s.name} (Roll: ${s.roll})</option>`).join('');
+  if (val) sel.value = val;
+}
+
+// ---- SUBJECT/CHAPTER/OUTCOME LOADING ----
+function updateLearningOutcomes() {
+  const subj = document.getElementById('captureSubject').value;
+  const chapterSel = document.getElementById('captureChapter');
+  const outcomeSel = document.getElementById('captureLO');
+  if (!subj || !SUBJECTS[subj]) {
+    chapterSel.innerHTML = '<option value="">-- Chapter --</option>';
+    outcomeSel.innerHTML = '<option value="">-- Learning Outcome --</option>';
+    return;
+  }
+  const data = SUBJECTS[subj];
+  chapterSel.innerHTML = '<option value="">-- Chapter --</option>' + data.chapters.map(c => `<option value="${c}">${c}</option>`).join('');
+  outcomeSel.innerHTML = '<option value="">-- Learning Outcome --</option>' + data.outcomes.map(o => `<option value="${o}">${o}</option>`).join('');
+}
+
+// ---- EVIDENCE TYPE ----
+function setEvidenceType(type, el) {
+  selectedEvidenceType = type;
+  document.querySelectorAll('.active-type').forEach(e => e.classList.remove('active-type'));
+  el.classList.add('active-type');
+  const input = document.getElementById('evidenceInput');
+  const labels = {
+    text: `<div class="form-group"><label class="form-label">Observation / Notes</label><textarea class="form-textarea" id="evidenceText" placeholder="Describe what the student demonstrated..."></textarea></div>`,
+    checklist: `<div class="form-group"><label class="form-label">Activity Checklist</label>
+      ${['Understood concept','Applied in example','Explained to peer','Completed written work','Participated in discussion'].map((item,i) => `
+        <label style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--glass);border-radius:8px;margin-bottom:6px;font-family:sans-serif;font-size:13px;cursor:pointer">
+          <input type="checkbox" id="chk${i}" style="width:16px;height:16px;accent-color:var(--saffron)"> ${item}
+        </label>
+      `).join('')}
+      <input type="hidden" id="evidenceText" value="checklist"/>
+    </div>`,
+    audio: `<div class="form-group"><label class="form-label">Audio Evidence (Oral Assessment)</label>
+      <div style="text-align:center;padding:20px">
+        <div style="font-size:40px;margin-bottom:10px">🎙️</div>
+        <div style="font-family:sans-serif;font-size:12px;color:var(--gray);margin-bottom:14px">Record student reading aloud or verbal explanation</div>
+        <button type="button" class="record-btn record-idle" id="recordBtn" onclick="toggleRecording(this)">🎙️</button>
+        <div id="recordStatus" style="font-family:sans-serif;font-size:12px;color:var(--gray);margin-top:10px">Tap to start recording</div>
+      </div>
+      <textarea class="form-textarea" id="evidenceText" placeholder="Describe what was recorded / key observations..."></textarea>
+    </div>`,
+    activity: `<div class="form-group"><label class="form-label">Activity Completion Evidence</label>
+      <input class="form-input" style="margin-bottom:8px" placeholder="Activity name / description" id="activityName"/>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <label style="padding:10px;background:var(--glass);border-radius:8px;font-family:sans-serif;font-size:12px;text-align:center;cursor:pointer;border:1px solid var(--border)"><input type="radio" name="actResult" value="completed" style="accent-color:var(--saffron)"> ✅ Completed</label>
+        <label style="padding:10px;background:var(--glass);border-radius:8px;font-family:sans-serif;font-size:12px;text-align:center;cursor:pointer;border:1px solid var(--border)"><input type="radio" name="actResult" value="partial" style="accent-color:var(--saffron)"> ⚠️ Partial</label>
+        <label style="padding:10px;background:var(--glass);border-radius:8px;font-family:sans-serif;font-size:12px;text-align:center;cursor:pointer;border:1px solid var(--border)"><input type="radio" name="actResult" value="attempted" style="accent-color:var(--saffron)"> 🔄 Attempted</label>
+        <label style="padding:10px;background:var(--glass);border-radius:8px;font-family:sans-serif;font-size:12px;text-align:center;cursor:pointer;border:1px solid var(--border)"><input type="radio" name="actResult" value="notdone" style="accent-color:var(--saffron)"> ❌ Not Done</label>
+      </div>
+      <textarea class="form-textarea" id="evidenceText" placeholder="Additional observations..."></textarea>
+    </div>`
+  };
+  input.innerHTML = labels[type] || labels.text;
+}
+
+// ---- PARAKH BAND SELECTION ----
+function setParakhBand(band, el) {
+  document.querySelectorAll('.parakh-band').forEach(e => e.style.transform = 'scale(1)');
+  el.style.transform = 'scale(1.03)';
+  el.style.boxShadow = '0 0 0 2px var(--saffron)';
+  selectedBand = band;
+}
+
+// ---- TAG TOGGLE ----
+function toggleTag(el) {
+  el.classList.toggle('selected');
+}
+
+// ---- SAVE EVIDENCE ----
+function saveEvidence() {
+  const studentId = document.getElementById('captureStudent').value;
+  const subject = document.getElementById('captureSubject').value;
+  const chapter = document.getElementById('captureChapter').value;
+  const outcome = document.getElementById('captureLO').value;
+  const noteEl = document.getElementById('evidenceText');
+  const note = noteEl ? noteEl.value : '';
+
+  if (!studentId) { showToast('⚠️ Please select a student'); return; }
+  if (!subject) { showToast('⚠️ Please select a subject'); return; }
+  if (!selectedBand) { showToast('⚠️ Please select a PARAKH band'); return; }
+
+  const students = getLS(LS.STUDENTS, DEFAULT_STUDENTS);
+  const student = students.find(s => s.id === studentId);
+
+  const tags = Array.from(document.querySelectorAll('#compTags .tag.selected')).map(t => t.textContent);
+  const now = new Date();
+
+  const evidence = {
+    id: 'e' + Date.now(),
+    studentId,
+    studentName: student ? student.name : 'Unknown',
+    type: selectedEvidenceType,
+    subject, chapter, outcome,
+    band: selectedBand,
+    tags,
+    note,
+    date: now.toISOString().split('T')[0],
+    time: now.toTimeString().slice(0,5)
+  };
+
+  const evidenceList = getLS(LS.EVIDENCE, DEFAULT_EVIDENCE);
+  evidenceList.push(evidence);
+  setLS(LS.EVIDENCE, evidenceList);
+
+  // Update student stats
+  if (student) {
+    student.evidenceCount = (student.evidenceCount || 0) + 1;
+    student.band = selectedBand;
+    const masteryMap = { below: 20, basic: 45, proficient: 72, advanced: 90 };
+    student.mastery = Math.min(100, (student.mastery || 0) * 0.7 + masteryMap[selectedBand] * 0.3);
+    student.mastery = Math.round(student.mastery);
+    setLS(LS.STUDENTS, students);
+  }
+
+  updateStats();
+  renderRecentEvidence();
+  renderStudents();
+  clearCaptureForm();
+  showToast('✅ Evidence saved offline!');
+}
+
+function clearCaptureForm() {
+  document.getElementById('captureStudent').value = '';
+  document.getElementById('captureSubject').value = '';
+  document.getElementById('captureChapter').innerHTML = '<option value="">-- Chapter --</option>';
+  document.getElementById('captureLO').innerHTML = '<option value="">-- Learning Outcome --</option>';
+  setEvidenceType('text', document.getElementById('type-text'));
+  document.querySelectorAll('#compTags .tag').forEach(t => t.classList.remove('selected'));
+  selectedBand = null;
+  document.querySelectorAll('.parakh-band').forEach(e => { e.style.transform=''; e.style.boxShadow=''; });
+}
+
+// ---- RECORDING (UI ONLY - no actual mic access needed for offline demo) ----
+let recordingInterval = null;
+let recordSeconds = 0;
+function toggleRecording(btn) {
+  if (recordingInterval) {
+    clearInterval(recordingInterval);
+    recordingInterval = null;
+    btn.className = 'record-btn record-idle';
+    btn.textContent = '🎙️';
+    document.getElementById('recordStatus').textContent = `Recording saved: ${recordSeconds}s`;
+    document.getElementById('evidenceText').value = `[Audio recorded: ${recordSeconds}s — verbal response captured]`;
+    recordSeconds = 0;
+  } else {
+    btn.className = 'record-btn record-active';
+    btn.textContent = '⏹';
+    recordSeconds = 0;
+    recordingInterval = setInterval(() => {
+      recordSeconds++;
+      document.getElementById('recordStatus').textContent = `🔴 Recording... ${recordSeconds}s`;
+    }, 1000);
+  }
+}
+
+// ---- QUIZ ----
+function startSampleQuiz() {
+  quizCurrentQ = 0;
+  quizScore = 0;
+  quizActive = true;
+  document.getElementById('quizContainer').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = SCIENCE_QUIZ[quizCurrentQ];
+  document.getElementById('quizQ').textContent = `Question ${quizCurrentQ+1}/${SCIENCE_QUIZ.length}`;
+  document.getElementById('quizScore').textContent = `Score: ${quizScore}`;
+  document.getElementById('quizQuestion').textContent = q.q;
+  document.getElementById('quizFeedback').style.display = 'none';
+  document.getElementById('nextQBtn').style.display = 'none';
+  document.getElementById('quizOptions').innerHTML = q.opts.map((opt, i) => `
+    <div class="quiz-option" onclick="selectAnswer(${i})">
+      <div class="quiz-letter">${String.fromCharCode(65+i)}</div>
+      ${opt}
+    </div>
+  `).join('');
+}
+
+function selectAnswer(idx) {
+  const q = SCIENCE_QUIZ[quizCurrentQ];
+  document.querySelectorAll('.quiz-option').forEach(o => o.onclick = null);
+  document.querySelectorAll('.quiz-option')[idx].classList.add(idx === q.ans ? 'correct' : 'wrong');
+  document.querySelectorAll('.quiz-option')[q.ans].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  if (idx === q.ans) {
+    quizScore++;
+    fb.style.background = 'rgba(19,136,8,0.2)';
+    fb.style.color = 'var(--emerald2)';
+    fb.textContent = '✅ Correct! Competency: ' + q.comp;
+  } else {
+    fb.style.background = 'rgba(229,62,62,0.2)';
+    fb.style.color = '#fc8181';
+    fb.textContent = '❌ Incorrect. Competency: ' + q.comp + ' — needs review';
+  }
+  fb.style.display = 'block';
+  document.getElementById('quizScore').textContent = `Score: ${quizScore}`;
+  document.getElementById('nextQBtn').style.display = 'block';
+}
+
+function nextQuestion() {
+  quizCurrentQ++;
+  if (quizCurrentQ >= SCIENCE_QUIZ.length) {
+    finishQuiz();
+    return;
+  }
+  renderQuestion();
+}
+
+function finishQuiz() {
+  const pct = Math.round((quizScore / SCIENCE_QUIZ.length) * 100);
+  const band = pct >= 80 ? 'advanced' : pct >= 60 ? 'proficient' : pct >= 40 ? 'basic' : 'below';
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="card" style="text-align:center">
+      <div style="font-size:50px;margin-bottom:12px">${pct >= 80 ? '🏆' : pct >= 60 ? '👍' : pct >= 40 ? '📚' : '💪'}</div>
+      <div class="card-title">Assessment Complete!</div>
+      <div style="font-family:'Cinzel',serif;font-size:36px;color:var(--saffron);margin:12px 0">${pct}%</div>
+      <div style="font-family:sans-serif;font-size:14px;color:var(--gray)">Score: ${quizScore}/${SCIENCE_QUIZ.length}</div>
+      <div style="margin-top:10px;padding:8px;border-radius:8px;background:rgba(255,153,51,0.1);font-family:sans-serif;font-size:13px;color:${BAND_COLORS[band]}">
+        PARAKH Band: <strong>${PARAKH_BANDS[band]}</strong>
+      </div>
+      <button class="btn btn-primary" onclick="location.reload()" style="margin-top:14px">Start New Assessment</button>
+    </div>
+  `;
+  // Save assessment
+  const assessments = getLS(LS.ASSESSMENTS, []);
+  assessments.push({
+    id: 'a' + Date.now(),
+    title: document.getElementById('quizTitle')?.value || 'Science Quick Quiz',
+    subject: 'Science',
+    score: pct,
+    band,
+    date: new Date().toISOString().split('T')[0],
+    questions: SCIENCE_QUIZ.length
+  });
+  setLS(LS.ASSESSMENTS, assessments);
+  renderAssessments();
+}
+
+function renderAssessments() {
+  const assessments = getLS(LS.ASSESSMENTS, []);
+  const el = document.getElementById('assessmentList');
+  if (!el) return;
+  if (!assessments.length) {
+    el.innerHTML = '<div class="empty-state"><div class="emoji">📝</div><p>No assessments yet. Launch one above!</p></div>';
+    return;
+  }
+  el.innerHTML = assessments.slice(-5).reverse().map(a => `
+    <div class="evidence-item">
+      <div class="evidence-header">
+        <div class="evidence-type">${a.subject}</div>
+        <div class="evidence-date">${a.date}</div>
+      </div>
+      <div class="evidence-student">${a.title}</div>
+      <div class="evidence-comp">Score: <strong style="color:var(--saffron)">${a.score}%</strong> · <span style="color:${BAND_COLORS[a.band]}">${PARAKH_BANDS[a.band]}</span></div>
+    </div>
+  `).join('');
+}
+
+// ---- CHAPTERS ----
+function renderChapters() {
+  const el = document.getElementById('chapterGrid');
+  if (!el) return;
+  const CHAPTER_ICONS = ['⚗️','🧪','⚛️','🔬','🌿','🦠','🌍','🏃','⚡','🍎','💡','🔊','🦠','🌱','🌾'];
+  const chapters = SUBJECTS.science.chapters;
+  const done = [0,1,2,3,4];
+  const inprog = [5,6,7];
+  el.innerHTML = chapters.map((ch, i) => {
+    const status = done.includes(i) ? 'ch-done' : inprog.includes(i) ? 'ch-progress' : 'ch-todo';
+    const statusLabel = done.includes(i) ? '✅ Completed' : inprog.includes(i) ? '⏳ In Progress' : '📌 Upcoming';
+    return `
+      <div class="chapter-card" onclick="showToast('Chapter ${i+1}: ${ch}')">
+        <div class="chapter-icon">${CHAPTER_ICONS[i] || '📖'}</div>
+        <div class="chapter-num">Chapter ${i+1}</div>
+        <div class="chapter-title">${ch}</div>
+        <div class="chapter-status ${status}">${statusLabel}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ---- UPDATE STATS ----
+function updateStats() {
+  const students = getLS(LS.STUDENTS, DEFAULT_STUDENTS);
+  const evidence = getLS(LS.EVIDENCE, DEFAULT_EVIDENCE);
+  const el = (id, val) => { const e = document.getElementById(id); if(e) e.textContent = val; };
+  el('totalStudents', students.length);
+  el('totalEvidence', evidence.length);
+  const bands = { below:0, basic:0, proficient:0, advanced:0 };
+  students.forEach(s => { if(bands.hasOwnProperty(s.band)) bands[s.band]++; });
+  el('bandAdvanced', bands.advanced);
+  el('bandProficient', bands.proficient);
+  el('bandBasic', bands.basic);
+  el('bandBelow', bands.below);
+  const avgM = students.length ? Math.round(students.reduce((a,s) => a+(s.mastery||0),0)/students.length) : 0;
+  el('avgMastery', avgM + '%');
+}
+
+// ---- DATA EXPORT ----
+function exportData() {
+  const data = {
+    students: getLS(LS.STUDENTS, []),
+    evidence: getLS(LS.EVIDENCE, []),
+    assessments: getLS(LS.ASSESSMENTS, []),
+    exportDate: new Date().toISOString(),
+    author: 'Mateen Yousuf'
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'parakh-data-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  showToast('📤 Data exported!');
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (data.students) setLS(LS.STUDENTS, data.students);
+        if (data.evidence) setLS(LS.EVIDENCE, data.evidence);
+        if (data.assessments) setLS(LS.ASSESSMENTS, data.assessments);
+        updateStats();
+        renderStudents();
+        renderRecentEvidence();
+        showToast('📥 Data imported successfully!');
+      } catch { showToast('❌ Invalid file format'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function clearAllData() {
+  const modal = document.createElement('div');
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  modal.innerHTML=`<div style="background:#142c57;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;max-width:300px;text-align:center;font-family:sans-serif;">
+    <div style="font-size:40px;margin-bottom:12px">⚠️</div>
+    <div style="color:#f0f4ff;font-size:16px;margin-bottom:8px">Clear All Data?</div>
+    <div style="color:#8a9bc4;font-size:13px;margin-bottom:20px">This cannot be undone.</div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="this.closest('div[style]').remove()" style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:transparent;color:#f0f4ff;cursor:pointer;font-family:sans-serif;">Cancel</button>
+      <button id="confirmClear" style="flex:1;padding:10px;border-radius:8px;border:none;background:#e53e3e;color:#fff;cursor:pointer;font-family:sans-serif;font-weight:700;">Clear</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#confirmClear').onclick = () => {
+    Object.values(LS).forEach(k => localStorage.removeItem(k));
+    modal.remove();
+    showToast('🗑️ All data cleared');
+    setTimeout(() => location.reload(), 1500);
+  };
+}
+
+// ---- SERVICE WORKER (inline blob — works in any origin) ----
+try {
+  if ('serviceWorker' in navigator) {
+    const swCode = `self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)).catch(()=>new Response('')));});`;
+    const blob = new Blob([swCode], {type:'application/javascript'});
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl).catch(()=>{});
+  }
+} catch(e) {}
+
+// ---- SPLASH & INIT ----
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const splash = document.getElementById('splash');
+    const app = document.getElementById('app');
+    splash.style.opacity = '0';
+    setTimeout(() => {
+      splash.style.display = 'none';
+      app.style.display = 'flex';
+      init();
+    }, 800);
+  }, 2200);
+});
+</script>
+</body>
+</html>

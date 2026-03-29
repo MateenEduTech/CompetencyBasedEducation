@@ -1,0 +1,2061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a1628">
+<meta name="description" content="Competency-Based Assessment & Question Paper Builder — NEP 2020 | NCF 2023 | PARAKH">
+<title>Competency-Based Assessment & Question Paper Builder</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0a1628;
+  --navy-mid: #142040;
+  --navy-light: #1e3060;
+  --blue: #1a4f8a;
+  --blue-bright: #2563eb;
+  --saffron: #f59e0b;
+  --saffron-light: #fbbf24;
+  --white: #f8faff;
+  --gray: #8899bb;
+  --gray-light: #c8d4ee;
+  --success: #10b981;
+  --danger: #ef4444;
+  --paper: #fffef9;
+  --paper-dark: #f0ede0;
+  --text: #1a2840;
+  --shadow: 0 8px 32px rgba(10,22,40,0.18);
+  --shadow-sm: 0 2px 8px rgba(10,22,40,0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== SPLASH SCREEN ===== */
+#splash {
+  position: fixed; inset: 0; z-index: 1000;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, #0d1f3c 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 2rem; text-align: center;
+  transition: opacity 0.6s, transform 0.6s;
+}
+#splash.hidden { opacity: 0; pointer-events: none; transform: scale(1.04); }
+
+.splash-pattern {
+  position: absolute; inset: 0; overflow: hidden; opacity: 0.06;
+  background-image: repeating-linear-gradient(45deg, var(--saffron) 0, var(--saffron) 1px, transparent 0, transparent 50%);
+  background-size: 40px 40px;
+}
+
+.splash-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4);
+  color: var(--saffron); padding: 0.4rem 1rem; border-radius: 100px;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.8s ease both 0.2s;
+}
+
+.splash-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 900; line-height: 1.15;
+  color: var(--white); margin-bottom: 0.75rem;
+  animation: fadeUp 0.8s ease both 0.4s;
+}
+.splash-logo span { color: var(--saffron); }
+
+.splash-sub {
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem); color: var(--gray-light);
+  font-weight: 300; margin-bottom: 2.5rem; letter-spacing: 0.03em;
+  animation: fadeUp 0.8s ease both 0.55s;
+}
+
+.splash-author-card {
+  display: flex; align-items: center; gap: 1rem;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2.5rem;
+  animation: fadeUp 0.8s ease both 0.65s;
+}
+.splash-author-img {
+  width: 52px; height: 52px; border-radius: 50%;
+  object-fit: cover; border: 2px solid var(--saffron);
+}
+.splash-author-info { text-align: left; }
+.splash-author-name { font-weight: 600; font-size: 1rem; }
+.splash-author-role { font-size: 0.78rem; color: var(--gray); }
+
+.splash-policy-badges {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 0.8s ease both 0.75s;
+}
+.policy-badge {
+  background: rgba(37,99,235,0.2); border: 1px solid rgba(37,99,235,0.4);
+  color: #93c5fd; padding: 0.3rem 0.75rem; border-radius: 6px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+}
+
+.splash-btns {
+  display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
+  animation: fadeUp 0.8s ease both 0.85s;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--saffron), #e68a00);
+  color: var(--navy); font-weight: 700; font-size: 1rem;
+  padding: 0.875rem 2rem; border: none; border-radius: 10px; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 16px rgba(245,158,11,0.4);
+  font-family: inherit;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,158,11,0.5); }
+.btn-secondary {
+  background: transparent; color: var(--white); font-weight: 600;
+  padding: 0.875rem 1.75rem; border: 1.5px solid rgba(255,255,255,0.3); border-radius: 10px;
+  cursor: pointer; transition: all 0.2s; font-size: 1rem; font-family: inherit;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.08); border-color: var(--white); }
+
+/* ===== MAIN APP ===== */
+#app { display: none; min-height: 100vh; }
+#app.active { display: flex; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 260px; min-height: 100vh; flex-shrink: 0;
+  background: linear-gradient(180deg, var(--navy) 0%, #0d1a30 100%);
+  border-right: 1px solid rgba(255,255,255,0.07);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  transition: transform 0.3s;
+}
+.sidebar-logo {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.sidebar-logo-title {
+  font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700;
+  line-height: 1.3; color: var(--white);
+}
+.sidebar-logo-title span { color: var(--saffron); }
+.sidebar-nav { padding: 1rem 0; flex: 1; }
+.nav-section-label {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gray); padding: 0.75rem 1.25rem 0.4rem;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.65rem 1.25rem; cursor: pointer; transition: all 0.2s;
+  color: var(--gray-light); font-size: 0.88rem; font-weight: 500;
+  border-left: 3px solid transparent;
+}
+.nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+.nav-item.active { background: rgba(245,158,11,0.1); color: var(--saffron); border-left-color: var(--saffron); }
+.nav-icon { font-size: 1rem; width: 1.2rem; text-align: center; }
+
+.sidebar-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.sidebar-footer-author {
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.sidebar-author-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--saffron); }
+.sidebar-author-name { font-size: 0.8rem; font-weight: 600; }
+.sidebar-author-role { font-size: 0.68rem; color: var(--gray); }
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  flex: 1; min-width: 0;
+  background: #f4f6fb;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.top-bar {
+  background: white; border-bottom: 1px solid #e2e8f0;
+  padding: 0.875rem 2rem; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.top-bar-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--navy); }
+.hamburger {
+  display: none; background: none; border: none; cursor: pointer;
+  font-size: 1.4rem; color: var(--navy);
+}
+
+.page { display: none; padding: 2rem; }
+.page.active { display: block; }
+
+/* ===== SECTION HEADERS ===== */
+.section-header {
+  margin-bottom: 2rem;
+}
+.section-header h1 {
+  font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700;
+  color: var(--navy); margin-bottom: 0.4rem; line-height: 1.2;
+}
+.section-header p { color: #64748b; font-size: 1rem; }
+.section-divider {
+  height: 3px; width: 60px; background: linear-gradient(90deg, var(--saffron), var(--blue-bright));
+  border-radius: 2px; margin: 0.75rem 0 1rem;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: white; border-radius: 12px; padding: 1.5rem;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07); margin-bottom: 1.25rem;
+  border: 1px solid #e8edf5;
+}
+.card-title {
+  font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700;
+  color: var(--navy); margin-bottom: 0.75rem;
+}
+
+/* ===== DASHBOARD ===== */
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card {
+  background: white; border-radius: 12px; padding: 1.25rem;
+  box-shadow: var(--shadow-sm); border: 1px solid #e8edf5;
+  display: flex; align-items: flex-start; gap: 1rem;
+}
+.stat-icon {
+  width: 48px; height: 48px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;
+}
+.stat-value { font-size: 1.8rem; font-weight: 700; color: var(--navy); line-height: 1; }
+.stat-label { font-size: 0.78rem; color: #64748b; margin-top: 0.25rem; }
+
+.tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+.tool-card {
+  background: white; border-radius: 12px; padding: 1.5rem;
+  box-shadow: var(--shadow-sm); border: 1px solid #e8edf5;
+  cursor: pointer; transition: all 0.2s; text-decoration: none; color: inherit;
+}
+.tool-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); border-color: var(--blue-bright); }
+.tool-card-icon { font-size: 2rem; margin-bottom: 1rem; }
+.tool-card-title { font-weight: 700; font-size: 1rem; color: var(--navy); margin-bottom: 0.4rem; }
+.tool-card-desc { font-size: 0.82rem; color: #64748b; line-height: 1.5; }
+.tool-card-tag {
+  display: inline-block; margin-top: 0.75rem;
+  background: #eff6ff; color: var(--blue); padding: 0.2rem 0.6rem;
+  border-radius: 4px; font-size: 0.72rem; font-weight: 600;
+}
+
+/* ===== POLICY PAGES ===== */
+.policy-tabs {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;
+}
+.policy-tab {
+  padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;
+  font-size: 0.82rem; font-weight: 600; border: 1.5px solid #d1d9e6;
+  background: white; color: #475569; transition: all 0.2s;
+}
+.policy-tab.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+.policy-content { display: none; }
+.policy-content.active { display: block; }
+
+.policy-article {
+  background: white; border-radius: 14px; padding: 2rem 2.5rem;
+  box-shadow: var(--shadow-sm); max-width: 860px; line-height: 1.8;
+}
+.policy-article h2 {
+  font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700;
+  color: var(--navy); margin-bottom: 0.5rem;
+}
+.policy-article h3 {
+  font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700;
+  color: var(--blue); margin: 1.5rem 0 0.5rem;
+}
+.policy-article p { margin-bottom: 1rem; color: #374151; font-size: 0.95rem; }
+.policy-article ul { padding-left: 1.5rem; margin-bottom: 1rem; }
+.policy-article li { color: #374151; font-size: 0.93rem; margin-bottom: 0.4rem; }
+
+.reflection-box {
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border-left: 4px solid var(--saffron); border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem; margin: 1.5rem 0;
+}
+.reflection-box strong { color: #92400e; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.reflection-box p { margin: 0.4rem 0 0; color: #78350f; font-size: 0.92rem; }
+
+.highlight-box {
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px;
+  padding: 1rem 1.25rem; margin: 1rem 0;
+}
+.highlight-box p { margin: 0; color: #1e40af; font-size: 0.92rem; }
+
+/* ===== BLUEPRINT GENERATOR ===== */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.form-group { margin-bottom: 1rem; }
+.form-label {
+  display: block; font-size: 0.82rem; font-weight: 600; color: #475569; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.form-control {
+  width: 100%; padding: 0.625rem 0.875rem; border: 1.5px solid #d1d9e6; border-radius: 8px;
+  font-size: 0.92rem; font-family: inherit; color: var(--text); background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus { outline: none; border-color: var(--blue-bright); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+
+.weightage-sliders { }
+.slider-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+.slider-label { width: 130px; font-size: 0.85rem; font-weight: 600; color: var(--text); flex-shrink: 0; }
+.slider-input { flex: 1; accent-color: var(--blue-bright); }
+.slider-value {
+  width: 45px; text-align: center; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem; font-weight: 600; color: var(--blue);
+  background: #eff6ff; padding: 0.2rem 0.3rem; border-radius: 4px;
+}
+.slider-total-row {
+  display: flex; justify-content: flex-end; align-items: center; gap: 0.75rem;
+  padding-top: 0.5rem; border-top: 1px dashed #d1d9e6;
+}
+
+.blueprint-table {
+  width: 100%; border-collapse: collapse; font-size: 0.88rem;
+}
+.blueprint-table th {
+  background: var(--navy); color: white; padding: 0.65rem 0.875rem;
+  text-align: left; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em;
+}
+.blueprint-table td { padding: 0.6rem 0.875rem; border-bottom: 1px solid #e8edf5; }
+.blueprint-table tr:hover td { background: #f8faff; }
+.blueprint-table .total-row td { background: #f0f4ff; font-weight: 700; border-top: 2px solid var(--blue); }
+
+.level-badge {
+  display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 700;
+}
+.l1 { background: #dcfce7; color: #166534; }
+.l2 { background: #dbeafe; color: #1e40af; }
+.l3 { background: #fef9c3; color: #854d0e; }
+.l4 { background: #fce7f3; color: #9d174d; }
+
+/* ===== QUESTION PAPER ===== */
+.paper-preview {
+  background: var(--paper); color: #1a1a2e;
+  border-radius: 12px; padding: 2.5rem; box-shadow: var(--shadow);
+  font-family: 'Source Sans 3', sans-serif; max-width: 860px;
+  border: 1px solid #d4c8a8;
+}
+.paper-header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+.paper-school { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.paper-title { font-size: 1rem; font-weight: 600; margin-top: 0.3rem; }
+.paper-meta { display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: 0.75rem; }
+.paper-section-title {
+  background: #e8e4d6; padding: 0.4rem 0.875rem;
+  font-weight: 700; font-size: 0.88rem; margin: 1.25rem 0 0.75rem;
+  border-left: 3px solid #444;
+}
+.paper-question { margin-bottom: 0.875rem; font-size: 0.92rem; line-height: 1.6; }
+.paper-question .q-num { font-weight: 700; }
+.paper-question .q-marks { float: right; font-weight: 700; color: #444; }
+.paper-question .q-options { padding-left: 1.5rem; margin-top: 0.3rem; }
+.paper-question .q-options li { margin-bottom: 0.15rem; list-style: lower-alpha; }
+
+.paper-answerkey { background: #e8ffe8; border: 1px solid #a7d7a7; padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem; }
+.paper-answerkey h3 { font-weight: 700; margin-bottom: 0.75rem; }
+.answer-item { font-size: 0.88rem; margin-bottom: 0.3rem; }
+
+/* ===== HOTS BUILDER ===== */
+.hots-template-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+.hots-template {
+  border: 1.5px solid #d1d9e6; border-radius: 10px; padding: 1rem;
+  cursor: pointer; transition: all 0.2s; background: white;
+}
+.hots-template:hover, .hots-template.selected { border-color: var(--blue-bright); background: #eff6ff; }
+.hots-template-title { font-weight: 700; font-size: 0.9rem; color: var(--navy); margin-bottom: 0.3rem; }
+.hots-template-type {
+  display: inline-block; font-size: 0.7rem; font-weight: 600;
+  background: #fef9c3; color: #854d0e; padding: 0.15rem 0.4rem; border-radius: 3px;
+}
+.hots-output {
+  background: #fffbf0; border: 1.5px solid var(--saffron); border-radius: 12px;
+  padding: 1.5rem; margin-top: 1.5rem; line-height: 1.8;
+}
+.hots-output h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); margin-bottom: 0.75rem; }
+.hots-question-text { font-size: 0.95rem; color: var(--text); margin-bottom: 1rem; }
+.hots-sub-question { padding-left: 1.25rem; font-size: 0.9rem; color: #374151; margin-bottom: 0.3rem; }
+
+/* ===== ANALYSIS ===== */
+.analysis-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.chart-container { height: 280px; position: relative; }
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 200px; padding: 0 0 1rem; border-bottom: 2px solid #d1d9e6; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+.bar { border-radius: 4px 4px 0 0; width: 100%; min-height: 4px; transition: height 0.7s cubic-bezier(.4,0,.2,1); }
+.bar-val { font-size: 0.72rem; font-weight: 700; color: var(--navy); }
+.bar-lbl { font-size: 0.7rem; color: #64748b; text-align: center; margin-top: 4px; }
+
+.difficulty-meter {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;
+}
+.difficulty-bar-bg { flex: 1; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+.difficulty-bar-fill { height: 100%; border-radius: 5px; transition: width 0.7s; }
+
+/* ===== AUDIT ===== */
+.checklist-item {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 1rem; background: white; border-radius: 10px;
+  border: 1.5px solid #e8edf5; margin-bottom: 0.75rem; cursor: pointer;
+  transition: all 0.2s;
+}
+.checklist-item.checked { border-color: var(--success); background: #f0fdf4; }
+.checklist-check {
+  width: 24px; height: 24px; border-radius: 50%; border: 2px solid #d1d9e6;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.1rem;
+  transition: all 0.2s;
+}
+.checklist-item.checked .checklist-check { background: var(--success); border-color: var(--success); color: white; }
+.checklist-title { font-weight: 600; font-size: 0.92rem; color: var(--text); }
+.checklist-desc { font-size: 0.82rem; color: #64748b; margin-top: 0.2rem; }
+
+.audit-score-circle {
+  width: 120px; height: 120px; border-radius: 50%;
+  border: 8px solid #e2e8f0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; margin: 0 auto 1.5rem;
+}
+.audit-score-num { font-size: 2rem; font-weight: 700; color: var(--navy); line-height: 1; }
+.audit-score-label { font-size: 0.7rem; color: #64748b; }
+
+/* ===== UTILS ===== */
+.btn {
+  padding: 0.6rem 1.25rem; border-radius: 8px; border: none; cursor: pointer;
+  font-size: 0.9rem; font-weight: 600; font-family: inherit; transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.btn-blue { background: var(--blue-bright); color: white; }
+.btn-blue:hover { background: #1d4ed8; }
+.btn-green { background: var(--success); color: white; }
+.btn-green:hover { background: #059669; }
+.btn-outline { background: white; border: 1.5px solid #d1d9e6; color: var(--text); }
+.btn-outline:hover { border-color: var(--navy); }
+.btn-saffron { background: var(--saffron); color: var(--navy); }
+.btn-saffron:hover { background: var(--saffron-light); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; }
+
+.tag { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600; }
+.tag-blue { background: #dbeafe; color: #1e40af; }
+.tag-green { background: #dcfce7; color: #166534; }
+.tag-amber { background: #fef9c3; color: #854d0e; }
+.tag-red { background: #fee2e2; color: #991b1b; }
+.tag-purple { background: #f3e8ff; color: #6b21a8; }
+
+.progress-bar { background: #e2e8f0; border-radius: 100px; height: 8px; overflow: hidden; margin: 0.3rem 0; }
+.progress-fill { height: 100%; border-radius: 100px; transition: width 0.7s cubic-bezier(.4,0,.2,1); }
+
+.alert {
+  padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.88rem; margin-bottom: 1rem;
+}
+.alert-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+.alert-warning { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.alert-success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed; z-index: 200; transform: translateX(-100%);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .hamburger { display: block; }
+  .main-content { width: 100%; }
+  .analysis-input-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr 1fr; }
+  .policy-article { padding: 1.25rem; }
+  .paper-preview { padding: 1.25rem; }
+  .page { padding: 1rem; }
+}
+
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 199;
+}
+.sidebar-overlay.active { display: block; }
+
+/* Print */
+@media print {
+  .sidebar, .top-bar, .btn-row, #splash { display: none !important; }
+  .main-content { background: white; }
+  .page.active { display: block !important; }
+  .paper-preview { box-shadow: none; border: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-pattern"></div>
+  <div class="splash-badge">🎓 Educational Technology Tool</div>
+  <div class="splash-logo">
+    Competency-Based<br><span>Assessment</span> &<br>Question Paper Builder
+  </div>
+  <div class="splash-sub">Empowering Teachers · Transforming Assessment · Elevating Learning</div>
+  
+  <div class="splash-author-card">
+    <img src="author.jpg" alt="Mateen Yousuf" class="splash-author-img">
+    <div class="splash-author-info">
+      <div class="splash-author-name">Mateen Yousuf</div>
+      <div class="splash-author-role">Teacher · School Education Department, Kashmir</div>
+    </div>
+  </div>
+  
+  <div class="splash-policy-badges">
+    <div class="policy-badge">NEP 2020 Aligned</div>
+    <div class="policy-badge">NCF 2023 Framework</div>
+    <div class="policy-badge">PARAKH Principles</div>
+    <div class="policy-badge">Bloom's Taxonomy</div>
+    <div class="policy-badge">Offline Ready · PWA</div>
+  </div>
+  
+  <div class="splash-btns">
+    <button class="btn-primary" onclick="enterApp()">📄 Create Question Paper</button>
+    <button class="btn-secondary" onclick="enterAppPolicy()">📚 Learn About CBA</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+  
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-title">CBA &amp; Question Paper <span>Builder</span></div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <div class="nav-item active" onclick="showPage('dashboard', this)">
+        <span class="nav-icon">🏠</span> Dashboard
+      </div>
+      
+      <div class="nav-section-label">Policy Foundation</div>
+      <div class="nav-item" onclick="showPage('policy', this)">
+        <span class="nav-icon">📖</span> Policy Pages (10)
+      </div>
+      
+      <div class="nav-section-label">Core Tools</div>
+      <div class="nav-item" onclick="showPage('blueprint', this)">
+        <span class="nav-icon">📐</span> Blueprint Generator
+      </div>
+      <div class="nav-item" onclick="showPage('generate', this)">
+        <span class="nav-icon">📄</span> Question Paper
+      </div>
+      <div class="nav-item" onclick="showPage('hots', this)">
+        <span class="nav-icon">🧠</span> HOTS Builder
+      </div>
+      <div class="nav-item" onclick="showPage('analysis', this)">
+        <span class="nav-icon">📊</span> Post-Exam Analysis
+      </div>
+      <div class="nav-item" onclick="showPage('audit', this)">
+        <span class="nav-icon">✅</span> Self-Evaluation Audit
+      </div>
+      
+      <div class="nav-section-label">Reference</div>
+      <div class="nav-item" onclick="showPage('about', this)">
+        <span class="nav-icon">ℹ️</span> About / Guide
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-author">
+        <img src="author.jpg" alt="Author" class="sidebar-author-img">
+        <div>
+          <div class="sidebar-author-name">Mateen Yousuf</div>
+          <div class="sidebar-author-role">SED Kashmir · v1.0</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <div class="top-bar">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <div class="top-bar-title" id="topBarTitle">Dashboard</div>
+      <div style="font-size:0.8rem;color:#64748b;display:flex;align-items:center;gap:0.4rem;">
+        <span style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;"></span> Offline Ready
+      </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div class="page active" id="page-dashboard">
+      <div class="section-header">
+        <h1>Welcome, Teacher! 👋</h1>
+        <div class="section-divider"></div>
+        <p>Your complete offline tool for competency-based assessment aligned with NEP 2020, NCF 2023, and PARAKH.</p>
+      </div>
+      
+      <div class="dashboard-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#eff6ff;">📄</div>
+          <div>
+            <div class="stat-value" id="stat-papers">0</div>
+            <div class="stat-label">Papers Created</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#f0fdf4;">📐</div>
+          <div>
+            <div class="stat-value" id="stat-blueprints">0</div>
+            <div class="stat-label">Blueprints Saved</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fffbeb;">🧠</div>
+          <div>
+            <div class="stat-value" id="stat-hots">0</div>
+            <div class="stat-label">HOTS Generated</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fdf4ff;">✅</div>
+          <div>
+            <div class="stat-value" id="stat-audits">0</div>
+            <div class="stat-label">Audits Completed</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">🔥 Quick Start</div>
+        <div class="tools-grid">
+          <div class="tool-card" onclick="showPage('blueprint', document.querySelector('[onclick*=blueprint]'))">
+            <div class="tool-card-icon">📐</div>
+            <div class="tool-card-title">Blueprint Generator</div>
+            <div class="tool-card-desc">Create balanced assessment blueprints with cognitive level distribution and chapter weightage.</div>
+            <div class="tool-card-tag">Core Tool</div>
+          </div>
+          <div class="tool-card" onclick="showPage('generate', document.querySelector('[onclick*=generate]'))">
+            <div class="tool-card-icon">📄</div>
+            <div class="tool-card-title">Question Paper Builder</div>
+            <div class="tool-card-desc">Auto-generate question papers from local question bank with competency mapping.</div>
+            <div class="tool-card-tag">Core Tool</div>
+          </div>
+          <div class="tool-card" onclick="showPage('hots', document.querySelector('[onclick*=hots]'))">
+            <div class="tool-card-icon">🧠</div>
+            <div class="tool-card-title">HOTS Question Builder</div>
+            <div class="tool-card-desc">Generate higher-order thinking questions using rule-based templates — no AI needed.</div>
+            <div class="tool-card-tag">Design Tool</div>
+          </div>
+          <div class="tool-card" onclick="showPage('analysis', document.querySelector('[onclick*=analysis]'))">
+            <div class="tool-card-icon">📊</div>
+            <div class="tool-card-title">Post-Exam Analysis</div>
+            <div class="tool-card-desc">Analyze student performance, identify skill gaps, and generate remedial focus areas.</div>
+            <div class="tool-card-tag">Analysis</div>
+          </div>
+          <div class="tool-card" onclick="showPage('audit', document.querySelector('[onclick*=audit]'))">
+            <div class="tool-card-icon">✅</div>
+            <div class="tool-card-title">Self-Evaluation Audit</div>
+            <div class="tool-card-desc">Audit your question paper for HOTS balance, competency mapping, and NEP compliance.</div>
+            <div class="tool-card-tag">Quality Check</div>
+          </div>
+          <div class="tool-card" onclick="showPage('policy', document.querySelector('[onclick*=policy]'))">
+            <div class="tool-card-icon">📚</div>
+            <div class="tool-card-title">Policy Foundation</div>
+            <div class="tool-card-desc">10 detailed pages on NEP 2020, NCF 2023, PARAKH, Bloom's Taxonomy, and more.</div>
+            <div class="tool-card-tag">Learning</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POLICY PAGE -->
+    <div class="page" id="page-policy">
+      <div class="section-header">
+        <h1>📚 Policy Foundation</h1>
+        <div class="section-divider"></div>
+        <p>10 comprehensive pages on competency-based assessment aligned with national policy frameworks.</p>
+      </div>
+      
+      <div class="policy-tabs" id="policyTabs">
+        <div class="policy-tab active" onclick="showPolicyTab(0, this)">1. NEP 2020</div>
+        <div class="policy-tab" onclick="showPolicyTab(1, this)">2. NCF 2023</div>
+        <div class="policy-tab" onclick="showPolicyTab(2, this)">3. PARAKH</div>
+        <div class="policy-tab" onclick="showPolicyTab(3, this)">4. Blueprint</div>
+        <div class="policy-tab" onclick="showPolicyTab(4, this)">5. Bloom's</div>
+        <div class="policy-tab" onclick="showPolicyTab(5, this)">6. HOTS</div>
+        <div class="policy-tab" onclick="showPolicyTab(6, this)">7. Constructivism</div>
+        <div class="policy-tab" onclick="showPolicyTab(7, this)">8. Formative</div>
+        <div class="policy-tab" onclick="showPolicyTab(8, this)">9. Diagnostic</div>
+        <div class="policy-tab" onclick="showPolicyTab(9, this)">10. Balanced Paper</div>
+      </div>
+      
+      <div id="policyContents"></div>
+    </div>
+
+    <!-- BLUEPRINT PAGE -->
+    <div class="page" id="page-blueprint">
+      <div class="section-header">
+        <h1>📐 Blueprint Generator</h1>
+        <div class="section-divider"></div>
+        <p>Design a balanced assessment blueprint with cognitive level distribution and chapter weightage.</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Step 1: Paper Configuration</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Class / Grade</label>
+            <select class="form-control" id="bp-class">
+              <option>Class 6</option><option>Class 7</option><option>Class 8</option>
+              <option>Class 9</option><option>Class 10</option><option selected>Class 11</option><option>Class 12</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject</label>
+            <select class="form-control" id="bp-subject">
+              <option>Science</option><option>Social Science</option><option>Mathematics</option>
+              <option>English</option><option>Business Studies</option><option>Entrepreneurship</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Marks</label>
+            <select class="form-control" id="bp-marks">
+              <option>40</option><option>50</option><option selected>70</option><option>80</option><option>100</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration</label>
+            <select class="form-control" id="bp-duration">
+              <option>1.5 Hours</option><option>2 Hours</option><option selected>3 Hours</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Exam Type</label>
+            <select class="form-control" id="bp-type">
+              <option>Unit Test</option><option>Half-Yearly</option><option selected>Annual</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Term</label>
+            <select class="form-control" id="bp-term">
+              <option selected>Term 1</option><option>Term 2</option><option>Full Year</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Step 2: Cognitive Level Weightage</div>
+        <div class="alert alert-info">Adjust the sliders. Total must equal 100%. PARAKH recommends: 30% Knowledge, 30% Understanding, 20% Application, 20% Analysis.</div>
+        <div id="cognitiveSliders">
+          <div class="slider-row">
+            <span class="slider-label">L1 · Knowledge</span>
+            <input type="range" min="10" max="60" value="30" class="slider-input" id="sl-L1" oninput="updateSliders()">
+            <span class="slider-value" id="sv-L1">30%</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">L2 · Understanding</span>
+            <input type="range" min="10" max="60" value="30" class="slider-input" id="sl-L2" oninput="updateSliders()">
+            <span class="slider-value" id="sv-L2">30%</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">L3 · Application</span>
+            <input type="range" min="5" max="50" value="20" class="slider-input" id="sl-L3" oninput="updateSliders()">
+            <span class="slider-value" id="sv-L3">20%</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-label">L4 · Analysis/HOTS</span>
+            <input type="range" min="5" max="50" value="20" class="slider-input" id="sl-L4" oninput="updateSliders()">
+            <span class="slider-value" id="sv-L4">20%</span>
+          </div>
+          <div class="slider-total-row">
+            <span style="font-size:0.85rem;color:#64748b;">Total:</span>
+            <span id="sliderTotal" style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1rem;color:var(--blue);">100%</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Step 3: Question Type Weightage</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">MCQ (1 mark each)</label>
+            <input type="number" class="form-control" id="qt-mcq" value="20" min="0" max="40">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Short Answer (2–3 marks)</label>
+            <input type="number" class="form-control" id="qt-sa" value="20" min="0" max="40">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Long Answer (5–6 marks)</label>
+            <input type="number" class="form-control" id="qt-la" value="20" min="0" max="40">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Case Study / Source (4–5 marks)</label>
+            <input type="number" class="form-control" id="qt-case" value="10" min="0" max="30">
+          </div>
+        </div>
+      </div>
+      
+      <div class="btn-row">
+        <button class="btn btn-blue" onclick="generateBlueprint()">📐 Generate Blueprint</button>
+        <button class="btn btn-outline" onclick="clearBlueprint()">🔄 Reset</button>
+      </div>
+      
+      <div id="blueprintResult" style="display:none; margin-top:1.5rem;">
+        <div class="card">
+          <div class="card-title">📋 Generated Blueprint</div>
+          <div id="blueprintTable"></div>
+          <div id="blueprintSummary" style="margin-top:1.25rem;"></div>
+          <div class="btn-row">
+            <button class="btn btn-green" onclick="saveBlueprintToLocal()">💾 Save Blueprint</button>
+            <button class="btn btn-saffron" onclick="printBlueprint()">🖨️ Print</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUESTION PAPER PAGE -->
+    <div class="page" id="page-generate">
+      <div class="section-header">
+        <h1>📄 Question Paper Generator</h1>
+        <div class="section-divider"></div>
+        <p>Auto-generate competency-mapped question papers from the local question bank.</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Paper Settings</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Class</label>
+            <select class="form-control" id="gp-class">
+              <option>Class 9</option><option>Class 10</option><option selected>Class 11</option><option>Class 12</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject</label>
+            <select class="form-control" id="gp-subject" onchange="updateChapterList()">
+              <option>Science</option><option>Social Science</option><option>Mathematics</option>
+              <option>English</option><option selected>Business Studies</option><option>Entrepreneurship</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Marks</label>
+            <select class="form-control" id="gp-marks">
+              <option>40</option><option>50</option><option selected>70</option><option>80</option><option>100</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration</label>
+            <select class="form-control" id="gp-duration">
+              <option>2 Hours</option><option selected>3 Hours</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">School Name</label>
+            <input type="text" class="form-control" id="gp-school" value="Govt. Higher Secondary School">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Session / Year</label>
+            <input type="text" class="form-control" id="gp-session" value="2025–2026">
+          </div>
+        </div>
+      </div>
+      
+      <div class="btn-row">
+        <button class="btn btn-blue" onclick="generatePaper()">⚡ Generate Question Paper</button>
+        <button class="btn btn-outline" onclick="document.getElementById('paperResult').style.display='none'">🔄 Reset</button>
+      </div>
+      
+      <div id="paperResult" style="display:none; margin-top:1.5rem;">
+        <div class="card">
+          <div class="card-title">Generated Paper</div>
+          <div id="paperPreview"></div>
+          <div class="btn-row">
+            <button class="btn btn-green" onclick="printPaper()">🖨️ Print / Save as PDF</button>
+            <button class="btn btn-saffron" onclick="showAnswerKey()">🗝️ Show Answer Key</button>
+            <button class="btn btn-outline" onclick="saveCurrentPaper()">💾 Save Paper</button>
+          </div>
+        </div>
+        <div id="answerKeySection" style="display:none;margin-top:1rem;"></div>
+        <div id="competencyMapSection" style="display:none;margin-top:1rem;"></div>
+      </div>
+    </div>
+
+    <!-- HOTS BUILDER PAGE -->
+    <div class="page" id="page-hots">
+      <div class="section-header">
+        <h1>🧠 HOTS Question Builder</h1>
+        <div class="section-divider"></div>
+        <p>Generate higher-order thinking questions using rule-based templates. No AI required — fully offline.</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Step 1: Select Question Template</div>
+        <div class="hots-template-grid" id="hotsTemplateGrid"></div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Step 2: Enter Topic Details</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Topic / Concept</label>
+            <input type="text" class="form-control" id="hots-topic" placeholder="e.g. Photosynthesis, Law of Demand, Globe Theatre">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject</label>
+            <select class="form-control" id="hots-subject">
+              <option>Science</option><option>Social Science</option><option>Mathematics</option>
+              <option>English</option><option selected>Business Studies</option><option>Entrepreneurship</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Marks Allotted</label>
+            <select class="form-control" id="hots-marks">
+              <option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cognitive Level</label>
+            <select class="form-control" id="hots-level">
+              <option>L3 – Application</option><option selected>L4 – Analysis</option>
+              <option>L4 – Evaluation</option><option>L4 – Creation</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">Context / Scenario (optional)</label>
+            <input type="text" class="form-control" id="hots-context" placeholder="e.g. A student observes that plants near a window grow faster...">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-blue" onclick="generateHOTS()">🧠 Generate HOTS Question</button>
+        </div>
+      </div>
+      
+      <div id="hotsOutput" style="display:none;"></div>
+    </div>
+
+    <!-- ANALYSIS PAGE -->
+    <div class="page" id="page-analysis">
+      <div class="section-header">
+        <h1>📊 Post-Exam Analysis</h1>
+        <div class="section-divider"></div>
+        <p>Analyze student performance data to identify skill gaps and generate remedial recommendations.</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Input: Student Score Distribution</div>
+        <div class="alert alert-info">Enter the number of students scoring in each range (out of total marks).</div>
+        <div class="three-col">
+          <div class="form-group">
+            <label class="form-label">Total Students</label>
+            <input type="number" class="form-control" id="an-total" value="40" min="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Marks</label>
+            <input type="number" class="form-control" id="an-max" value="70" min="10">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Paper / Subject</label>
+            <input type="text" class="form-control" id="an-subject" value="Business Studies — Class 11">
+          </div>
+        </div>
+        <div class="three-col" style="margin-top:0.5rem;">
+          <div class="form-group">
+            <label class="form-label">90%+ (Excellent)</label>
+            <input type="number" class="form-control" id="an-e" value="5" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">75–89% (Good)</label>
+            <input type="number" class="form-control" id="an-g" value="12" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">60–74% (Average)</label>
+            <input type="number" class="form-control" id="an-a" value="14" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">40–59% (Below Avg)</label>
+            <input type="number" class="form-control" id="an-b" value="7" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Below 40% (At Risk)</label>
+            <input type="number" class="form-control" id="an-r" value="2" min="0">
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Question-wise Performance (%age students who answered correctly)</div>
+        <div id="questionWiseInputs">
+          <div class="three-col" id="qwInputGrid"></div>
+        </div>
+        <button class="btn btn-outline" onclick="addMoreQuestions()" style="margin-top:0.5rem;">+ Add Question</button>
+      </div>
+      
+      <div class="btn-row">
+        <button class="btn btn-blue" onclick="runAnalysis()">📊 Run Analysis</button>
+      </div>
+      
+      <div id="analysisResult" style="display:none; margin-top:1.5rem;"></div>
+    </div>
+
+    <!-- AUDIT PAGE -->
+    <div class="page" id="page-audit">
+      <div class="section-header">
+        <h1>✅ Teacher Self-Evaluation Audit</h1>
+        <div class="section-divider"></div>
+        <p>Audit your question paper against NEP 2020 and PARAKH competency-based assessment standards.</p>
+      </div>
+      
+      <div class="two-col">
+        <div>
+          <div class="card">
+            <div class="card-title">Audit Checklist</div>
+            <div id="auditChecklist"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="text-align:center;">
+            <div class="card-title">Compliance Score</div>
+            <div class="audit-score-circle" id="auditScoreCircle">
+              <div class="audit-score-num" id="auditScoreNum">0%</div>
+              <div class="audit-score-label">Compliance</div>
+            </div>
+            <div id="auditFeedback" style="text-align:left;"></div>
+          </div>
+          <div class="card" style="margin-top:0;">
+            <div class="card-title">Domain Scores</div>
+            <div id="domainScores"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="btn-row">
+        <button class="btn btn-blue" onclick="printAudit()">🖨️ Print Audit Report</button>
+        <button class="btn btn-outline" onclick="resetAudit()">🔄 Reset</button>
+      </div>
+    </div>
+
+    <!-- ABOUT PAGE -->
+    <div class="page" id="page-about">
+      <div class="section-header">
+        <h1>ℹ️ About This App</h1>
+        <div class="section-divider"></div>
+      </div>
+      
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">About the Developer</div>
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+            <img src="author.jpg" alt="Mateen Yousuf" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--saffron);">
+            <div>
+              <div style="font-weight:700;font-size:1.1rem;color:var(--navy);">Mateen Yousuf</div>
+              <div style="color:#64748b;font-size:0.88rem;">Teacher, School Education Department Kashmir</div>
+              <div style="margin-top:0.5rem;display:flex;gap:0.4rem;flex-wrap:wrap;">
+                <span class="tag tag-blue">NEP 2020</span>
+                <span class="tag tag-amber">PARAKH</span>
+                <span class="tag tag-green">EdTech</span>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:0.9rem;color:#374151;line-height:1.7;">This application was designed to help teachers across Jammu &amp; Kashmir and India to move from rote-learning-based assessment to competency-based evaluation, fully aligned with NEP 2020 and NCF 2023 frameworks.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">App Features</div>
+          <ul style="padding-left:1.2rem;font-size:0.9rem;color:#374151;line-height:2;">
+            <li>📖 10 comprehensive policy foundation pages</li>
+            <li>📐 Blueprint generator with cognitive mapping</li>
+            <li>📄 Auto question paper from local bank</li>
+            <li>🧠 Rule-based HOTS question generator</li>
+            <li>📊 Post-exam analysis & item analysis</li>
+            <li>✅ Self-evaluation audit tool</li>
+            <li>🔒 100% offline — no internet needed</li>
+            <li>💾 Local storage for saving drafts</li>
+            <li>📱 PWA — installable like an app</li>
+            <li>🖨️ Print-ready outputs</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">📱 How to Install as App (PWA)</div>
+        <div class="three-col">
+          <div style="background:#f8faff;border-radius:8px;padding:1rem;border:1px solid #e2e8f0;">
+            <div style="font-weight:700;margin-bottom:0.5rem;">📱 On Android (Chrome)</div>
+            <ol style="padding-left:1.2rem;font-size:0.85rem;color:#374151;line-height:1.9;">
+              <li>Open the app in Chrome</li>
+              <li>Tap the ⋮ menu (top right)</li>
+              <li>Select "Add to Home Screen"</li>
+              <li>Confirm — icon appears on home screen</li>
+            </ol>
+          </div>
+          <div style="background:#f8faff;border-radius:8px;padding:1rem;border:1px solid #e2e8f0;">
+            <div style="font-weight:700;margin-bottom:0.5rem;">💻 On Desktop (Chrome/Edge)</div>
+            <ol style="padding-left:1.2rem;font-size:0.85rem;color:#374151;line-height:1.9;">
+              <li>Open the app in Chrome or Edge</li>
+              <li>Click the install icon (📥) in address bar</li>
+              <li>Click "Install" in the dialog</li>
+              <li>App launches in its own window</li>
+            </ol>
+          </div>
+          <div style="background:#f8faff;border-radius:8px;padding:1rem;border:1px solid #e2e8f0;">
+            <div style="font-weight:700;margin-bottom:0.5rem;">🌐 To Host Free</div>
+            <ol style="padding-left:1.2rem;font-size:0.85rem;color:#374151;line-height:1.9;">
+              <li>Create GitHub account (free)</li>
+              <li>Upload the 4 files to a repo</li>
+              <li>Enable GitHub Pages in Settings</li>
+              <li>Share the URL with teachers!</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- end main-content -->
+</div><!-- end app -->
+
+<script>
+// ===== DATA: QUESTION BANK =====
+const questionBank = {
+  "Business Studies": {
+    units: [
+      {
+        name: "Nature and Purpose of Business",
+        chapters: ["Business Activities", "Classification of Business", "Business vs Profession"],
+        questions: [
+          { type: "MCQ", level: "L1", marks: 1, text: "Which of the following is NOT a business activity?", options: ["Manufacturing goods", "Trading goods", "Sleeping at home", "Providing services"], answer: "C", lo: "Understand basic concepts of business", competency: "Knowledge" },
+          { type: "MCQ", level: "L1", marks: 1, text: "Business is primarily concerned with:", options: ["Social welfare", "Production and exchange of goods/services", "Government work", "Agriculture only"], answer: "B", lo: "Define business", competency: "Knowledge" },
+          { type: "MCQ", level: "L2", marks: 1, text: "Profession differs from business primarily in:", options: ["Motive", "Risk", "Scale", "Capital"], answer: "A", lo: "Distinguish business from profession", competency: "Understanding" },
+          { type: "ShortAnswer", level: "L2", marks: 3, text: "Explain any three features that distinguish business activities from employment.", answer: "Business has risk, profit motive, and independence. Employment provides fixed income, follows orders, and has no personal risk.", lo: "Compare business and employment", competency: "Understanding" },
+          { type: "ShortAnswer", level: "L3", marks: 3, text: "Riya runs a tailoring shop. Is she a businessperson or professional? Justify with reasons.", answer: "She is a businessperson as she invests capital, earns profit, and bears risk — not a certified professional.", lo: "Apply classification criteria", competency: "Application" },
+          { type: "LongAnswer", level: "L3", marks: 5, text: "Describe the characteristics of business. How do these characteristics make business different from other economic activities?", answer: "Characteristics: economic activity, production/exchange, regularity, profit motive, risk, customer satisfaction. Compared to employment and profession: business has higher risk and unlimited profit potential.", lo: "Analyze characteristics", competency: "Application" },
+          { type: "CaseStudy", level: "L4", marks: 5, text: "Read the case: Arjun started a medical store after completing his B.Pharma. He buys medicines from companies and sells them at MRP. His friend Suresh is a qualified doctor running his own clinic. (i) Identify the type of economic activity each is engaged in. (ii) Justify the difference using two points. (iii) Which one bears higher risk and why?", answer: "(i) Arjun: Business; Suresh: Profession. (ii) Business: profit motive, risk. Profession: fee-based, specialized skill. (iii) Arjun bears higher risk due to market uncertainty.", lo: "Evaluate and distinguish economic activities", competency: "Analysis" },
+          { type: "AssertionReason", level: "L4", marks: 1, text: "Assertion (A): Profit is the reward for risk-taking in business.\nReason (R): Every business activity involves some element of uncertainty.\nChoose the correct option:\n(A) Both A and R are true, and R is the correct explanation of A\n(B) Both A and R are true, but R is not the correct explanation of A\n(C) A is true, but R is false\n(D) A is false, but R is true", answer: "A", lo: "Evaluate profit-risk relationship", competency: "Analysis" }
+        ]
+      },
+      {
+        name: "Forms of Business Organisation",
+        chapters: ["Sole Proprietorship", "Partnership", "Joint Stock Company", "Co-operative Societies"],
+        questions: [
+          { type: "MCQ", level: "L1", marks: 1, text: "A sole proprietorship is owned and managed by:", options: ["A group of people", "A single individual", "Government", "A company"], answer: "B", lo: "Identify features of sole proprietorship", competency: "Knowledge" },
+          { type: "MCQ", level: "L1", marks: 1, text: "Minimum number of members to form a private limited company:", options: ["2", "5", "7", "10"], answer: "A", lo: "Recall legal requirements", competency: "Knowledge" },
+          { type: "MCQ", level: "L2", marks: 1, text: "Which form of business has 'unlimited liability'?", options: ["Public Ltd Company", "Private Ltd Company", "Sole Proprietorship", "Cooperative"], answer: "C", lo: "Compare liability across forms", competency: "Understanding" },
+          { type: "ShortAnswer", level: "L2", marks: 3, text: "State any three advantages of a partnership firm over a sole proprietorship.", answer: "More capital, shared risk, combined skills, better decision making.", lo: "Compare business forms", competency: "Understanding" },
+          { type: "ShortAnswer", level: "L3", marks: 3, text: "A small grocery shop owner wants to expand his business. Suggest the most suitable form of business organisation and give reasons.", answer: "Partnership is suitable: more capital, shared management, limited formalities.", lo: "Apply knowledge to real situation", competency: "Application" },
+          { type: "LongAnswer", level: "L3", marks: 6, text: "Explain the merits and limitations of a Joint Stock Company. Why is it suitable for large-scale business?", answer: "Merits: limited liability, perpetual succession, large capital. Limitations: complex formation, lack of secrecy, slow decisions. Large capital needs make it suitable.", lo: "Evaluate joint stock company", competency: "Application" },
+          { type: "CaseStudy", level: "L4", marks: 5, text: "Priya and her two friends want to start a bakery. They have limited capital and want flexibility but also want legal protection for personal assets. Which form of organisation do you recommend? Justify using at least three specific reasons.", answer: "Private Limited Company: limited liability protects personal assets, can raise capital, flexibility with few legal formalities for small companies.", lo: "Analyse and recommend business form", competency: "Analysis" }
+        ]
+      },
+      {
+        name: "Private, Public and Global Enterprises",
+        chapters: ["Public Sector", "Private Sector", "Global Enterprises"],
+        questions: [
+          { type: "MCQ", level: "L1", marks: 1, text: "Which of the following is a public sector enterprise?", options: ["Reliance Industries", "Tata Motors", "BHEL", "Infosys"], answer: "C", lo: "Identify public sector companies", competency: "Knowledge" },
+          { type: "MCQ", level: "L2", marks: 1, text: "A multinational corporation is primarily driven by:", options: ["Social welfare", "Political goals", "Profit and global market share", "Charity"], answer: "C", lo: "Understand MNC objectives", competency: "Understanding" },
+          { type: "ShortAnswer", level: "L2", marks: 3, text: "Distinguish between public sector and private sector enterprises on any three bases.", answer: "Ownership: govt vs private. Objective: welfare vs profit. Funding: govt vs shareholders.", lo: "Compare sectors", competency: "Understanding" },
+          { type: "CaseStudy", level: "L4", marks: 5, text: "XYZ Corp is an American company operating in 50 countries, including India, China, and Brazil. It earns 70% of revenue outside its home country. (i) What type of enterprise is XYZ Corp? (ii) List two advantages India gets by hosting this enterprise. (iii) What concerns might arise for domestic businesses?", answer: "(i) MNC/Global Enterprise. (ii) Employment, technology transfer, FDI. (iii) Unfair competition, profit repatriation.", lo: "Evaluate global enterprises", competency: "Analysis" }
+        ]
+      }
+    ]
+  },
+  "Science": {
+    units: [
+      {
+        name: "Matter in Our Surroundings",
+        chapters: ["States of Matter", "Changes of State"],
+        questions: [
+          { type: "MCQ", level: "L1", marks: 1, text: "Which state of matter has a definite shape and volume?", options: ["Gas", "Liquid", "Solid", "Plasma"], answer: "C", lo: "Recall states of matter", competency: "Knowledge" },
+          { type: "MCQ", level: "L2", marks: 1, text: "Ice melting to water is an example of:", options: ["Sublimation", "Condensation", "Fusion", "Evaporation"], answer: "C", lo: "Identify phase changes", competency: "Understanding" },
+          { type: "ShortAnswer", level: "L2", marks: 3, text: "Why does the smell of a perfume spread quickly in a room? Explain using the concept of diffusion.", answer: "Particles of perfume have kinetic energy and diffuse into air, spreading in all directions.", lo: "Explain diffusion", competency: "Understanding" },
+          { type: "CaseStudy", level: "L4", marks: 5, text: "On a rainy day, Aisha notices that her glasses fog up when she comes inside from the cold. (i) What phenomenon is occurring? (ii) Explain it using particle theory. (iii) What factor is changing and how?", answer: "(i) Condensation. (ii) Warm water vapour hits cold glass surface and loses energy, condensing to liquid. (iii) Temperature decreasing leads to phase change from gas to liquid.", lo: "Apply phase change concepts", competency: "Analysis" }
+        ]
+      }
+    ]
+  },
+  "Mathematics": {
+    units: [
+      {
+        name: "Number Systems",
+        chapters: ["Real Numbers", "Rational and Irrational"],
+        questions: [
+          { type: "MCQ", level: "L1", marks: 1, text: "√2 is:", options: ["Rational", "Integer", "Irrational", "Natural number"], answer: "C", lo: "Classify numbers", competency: "Knowledge" },
+          { type: "ShortAnswer", level: "L3", marks: 3, text: "Prove that √3 is an irrational number.", answer: "Assume √3 = p/q in lowest terms. Then 3 = p²/q², so p² = 3q², meaning 3|p. Write p=3m, then q² = 3m², so 3|q. Contradiction.", lo: "Apply proof techniques", competency: "Application" },
+          { type: "CaseStudy", level: "L4", marks: 4, text: "A student claims that the sum of two irrational numbers is always irrational. (i) Is this claim correct? (ii) Give an example to support or refute it. (iii) What type of reasoning did you use?", answer: "(i) False. (ii) √2 + (–√2) = 0, a rational number. (iii) Counterexample / disproof by example.", lo: "Evaluate mathematical claims", competency: "Analysis" }
+        ]
+      }
+    ]
+  },
+  "Social Science": {
+    units: [
+      {
+        name: "India and the Contemporary World",
+        chapters: ["The Rise of Nationalism", "Nationalism in India"],
+        questions: [
+          { type: "MCQ", level: "L1", marks: 1, text: "The Non-Cooperation Movement was launched in:", options: ["1919", "1920", "1922", "1930"], answer: "B", lo: "Recall historical dates", competency: "Knowledge" },
+          { type: "ShortAnswer", level: "L2", marks: 3, text: "Explain how the Rowlatt Act (1919) provoked Indian opposition.", answer: "Allowed detention without trial, gave no right of appeal, seen as oppressive; sparked nationwide protests.", lo: "Explain cause and effect", competency: "Understanding" },
+          { type: "CaseStudy", level: "L4", marks: 5, text: "Source: 'We shall demand complete independence... Mahatma Gandhi said that non-violence is the weapon of the strong.' (i) Identify the movement referred to. (ii) What does non-violence mean in political terms? (iii) Why was this approach effective against British rule?", answer: "(i) Non-Cooperation/Civil Disobedience. (ii) Peaceful resistance, civil disobedience. (iii) Moral pressure, international sympathy, mass participation.", lo: "Source-based historical analysis", competency: "Analysis" }
+        ]
+      }
+    ]
+  }
+};
+
+// ===== POLICY CONTENT =====
+const policyPages = [
+  {
+    title: "NEP 2020: Assessment Reform Vision",
+    content: `
+      <h2>NEP 2020: Assessment Reform Vision</h2>
+      <p>The National Education Policy 2020 marks a watershed moment in Indian educational history — a bold, visionary document that reimagines how learning is measured, valued, and used to support student growth. For decades, Indian assessment was dominated by rote memorisation and high-stakes annual examinations that tested only surface-level recall. NEP 2020 fundamentally challenges this paradigm.</p>
+      <div class="highlight-box"><p><strong>Core Vision:</strong> "Assessment should be used primarily for the purpose of improving learning and development of the child, and not for ranking." — NEP 2020, Section 4.38</p></div>
+      <h3>Key Reform Pillars</h3>
+      <p>NEP 2020 introduces three fundamental shifts in assessment philosophy. First, it calls for a shift from summative to formative assessment — emphasising continuous, process-oriented evaluation that informs teaching in real time. Second, it advocates for competency-based progression, meaning students should advance based on demonstrated mastery of skills and competencies, not age or seat-time. Third, it demands a reduction in the weight of final board examinations, replacing them with a holistic portfolio approach.</p>
+      <h3>The 360-Degree Learner Profile</h3>
+      <p>One of the most transformative proposals is the development of a Holistic Progress Card (HPC) that captures not just academic scores but social-emotional development, cognitive skills, physical wellness, and creativity. This moves assessment from a single number to a rich, multidimensional description of a learner.</p>
+      <h3>Reducing High-Stakes Exam Pressure</h3>
+      <p>NEP 2020 explicitly identifies examination stress as a public health concern. It proposes that board examinations in Classes 10 and 12 be restructured to be taken twice per year — allowing students to choose their best score — and that they focus on testing higher-order thinking skills, application, and conceptual understanding rather than memorised facts.</p>
+      <h3>The Role of Technology</h3>
+      <p>The policy envisions digital platforms for assessment data collection, analysis, and teacher professional development. It calls for the creation of the PARAKH (Performance Assessment, Review, and Analysis of Knowledge for Holistic Development) body as a national standard-setting authority for assessments.</p>
+      <div class="reflection-box">
+        <strong>🪞 Teacher Reflection</strong>
+        <p>Think about your last three question papers. What percentage of questions required only memorisation? What percentage required students to think, apply, or create? What would change if you shifted just 20% of marks to higher-order tasks?</p>
+      </div>
+      <h3>Implications for Teachers</h3>
+      <p>NEP 2020's vision cannot be realised without teachers who understand and believe in competency-based assessment. This means designing question papers that deliberately include a range of cognitive demands — from basic recall (Bloom's Level 1) to complex evaluation and creation (Bloom's Levels 5–6). It means using pre-tests to diagnose gaps before teaching, formative quizzes during teaching, and summative assessments that genuinely test mastery.</p>
+      <p>The shift also calls for changing how marks are distributed. Rather than giving 80 marks for recall and 20 for application, the NEP vision suggests a near-equal distribution across cognitive levels — ensuring every student has opportunities to demonstrate both foundational knowledge and deeper thinking.</p>
+    `
+  },
+  {
+    title: "NCF 2023: Competency Framework",
+    content: `
+      <h2>NCF 2023: Competency Framework</h2>
+      <p>The National Curriculum Framework 2023 — the first comprehensive revision since NCF 2005 — provides the operational blueprint for how NEP 2020's assessment vision should be implemented in classrooms. Where NEP provides the philosophy, NCF provides the structure.</p>
+      <div class="highlight-box"><p><strong>Core Idea:</strong> Learning outcomes must be clearly articulated, and all teaching, learning, and assessment activities must be aligned to these outcomes. This is the principle of Constructive Alignment.</p></div>
+      <h3>Competency vs Content</h3>
+      <p>The most significant conceptual shift in NCF 2023 is the move from content-based curricula to competency-based curricula. In a content-based system, the syllabus lists topics to be "covered." In a competency-based system, the curriculum lists what students should be able to <em>do</em> with knowledge — understand, apply, analyse, evaluate, and create.</p>
+      <h3>Four Stages of Learning</h3>
+      <p>NCF 2023 organises schooling into four stages: Foundational (3–8 years), Preparatory (8–11 years), Middle (11–14 years), and Secondary (14–18 years). Assessment strategies are designed differently for each stage, recognising the developmental needs of learners.</p>
+      <h3>Curricular Goals and Competencies</h3>
+      <p>For each stage and subject, NCF 2023 defines Curricular Goals (broad, long-term learning aspirations), Competencies (specific, observable skills and understandings), and Learning Outcomes (granular, assessable evidence of achievement). This three-tier structure provides teachers with the scaffolding to design assessments that are both purposeful and measurable.</p>
+      <h3>Assessment as Part of the Learning Cycle</h3>
+      <p>NCF 2023 emphasises that assessment is not a separate activity that happens "after" learning — it is integral to the learning cycle itself. Teachers are expected to embed formative assessment opportunities throughout their lessons, using techniques like exit tickets, think-pair-share, portfolio entries, and classroom observation.</p>
+      <div class="reflection-box">
+        <strong>🪞 Teacher Reflection</strong>
+        <p>Can you name three specific learning outcomes for your current chapter? If you were a student, would you know what you're expected to be able to do at the end of the lesson?</p>
+      </div>
+      <h3>Subject-Specific Frameworks</h3>
+      <p>NCF 2023 includes subject-specific frameworks for Languages, Mathematics, Science, Social Science, and Arts. Each framework identifies unique competencies — for Science, these include observation, hypothesis formation, and experimental design; for Mathematics, logical reasoning and problem-solving; for Social Science, source analysis and perspective-taking.</p>
+    `
+  },
+  {
+    title: "PARAKH: National Assessment Reform",
+    content: `
+      <h2>PARAKH and National Assessment Reform</h2>
+      <p>PARAKH — Performance Assessment, Review, and Analysis of Knowledge for Holistic Development — is a national assessment centre established under NEP 2020. It operates under NCERT and functions as the apex body for setting assessment norms, standards, and guidelines for all school boards in India.</p>
+      <div class="highlight-box"><p><strong>PARAKH Mission:</strong> To ensure equivalence and quality of assessment across all state and central boards, enabling fair national comparisons and reducing inter-board variability.</p></div>
+      <h3>Why PARAKH Was Needed</h3>
+      <p>India has 60+ school boards. Until recently, there was no common standard for how examinations were designed, what cognitive levels they tested, or how marking was standardised. A student scoring 95% in one board might be equivalent to 75% in another. PARAKH was created to solve this equity and comparability problem.</p>
+      <h3>PARAKH's Assessment Principles</h3>
+      <p>PARAKH advocates for assessments that are valid (testing what they claim to test), reliable (consistent results), fair (accessible to all students), and educationally beneficial (driving positive learning behaviour). These four principles form the cornerstone of competency-based assessment design.</p>
+      <h3>Blueprint Norms</h3>
+      <p>PARAKH publishes blueprint norms for question papers, recommending specific distributions of marks across: Bloom's Taxonomy levels (typically 30:30:20:20 for Remember:Understand:Apply:Analyse), question types (MCQ, short answer, long answer, case study), and chapters/units. Following these norms is what this Blueprint Generator automates for you.</p>
+      <h3>National Achievement Survey (NAS)</h3>
+      <p>PARAKH oversees the National Achievement Survey — a large-scale, sample-based assessment of students in Classes 3, 5, 8, and 10 across India. NAS data reveals systemic learning gaps at state and district level, informing policy interventions and remedial programmes.</p>
+      <div class="reflection-box">
+        <strong>🪞 Teacher Reflection</strong>
+        <p>Does your question paper blueprint reflect the PARAKH-recommended 30:30:20:20 cognitive distribution? Use the Blueprint Generator in this app to check and adjust your paper.</p>
+      </div>
+      <h3>PARAKH and Board Examinations</h3>
+      <p>PARAKH is working with all major boards to introduce standardised item types including scenario-based questions, assertion-reason questions, and passage-based MCQs — all of which test higher-order thinking. These question types are now appearing in CBSE, JKBOSE, and state board papers and are included in this app's question bank.</p>
+    `
+  },
+  {
+    title: "Blueprint vs Traditional Paper",
+    content: `
+      <h2>Blueprint vs Traditional Paper Design</h2>
+      <p>The difference between a traditionally designed question paper and a blueprint-based competency paper is not merely technical — it reflects a fundamentally different understanding of what assessment is for and what learning means.</p>
+      <h3>What is a Traditional Paper?</h3>
+      <p>A traditional paper is designed informally: the teacher selects questions that "cover the syllabus," often from previous years' papers or textbook exercises. There is no explicit plan for cognitive balance, no mapping to learning outcomes, and no deliberate distribution of marks across difficulty levels. The result is almost always a paper heavily weighted toward recall and reproduction.</p>
+      <div class="highlight-box"><p>Research shows that 70–80% of questions in traditional Indian school papers test only Level 1 (Knowledge) and Level 2 (Comprehension) on Bloom's Taxonomy — leaving almost no space for application, analysis, or evaluation.</p></div>
+      <h3>What is a Blueprint?</h3>
+      <p>A blueprint is a strategic plan for a question paper. It specifies in advance: total marks, time duration, chapter/unit weightage (how many marks from each chapter), question type distribution (how many MCQs, short answers, long answers, case studies), cognitive level distribution (what percentage at each Bloom's level), and learning outcome mapping (which specific competencies are being assessed).</p>
+      <h3>Advantages of Blueprint-Based Design</h3>
+      <p>Blueprint-based papers offer multiple advantages. For students: predictability and fairness — they know what types of questions to expect and from which chapters. For teachers: systematic coverage and elimination of biases toward personally preferred topics. For administrators: comparability across sections and years. For policymakers: alignment with national standards.</p>
+      <h3>The Blueprint Generator in This App</h3>
+      <p>The Blueprint Generator automates the complex calculations required to create a balanced paper. You enter your class, subject, total marks, and preferred cognitive weightage — the app computes the exact number of questions, marks, and types needed, saving you significant planning time while ensuring PARAKH compliance.</p>
+      <div class="reflection-box">
+        <strong>🪞 Teacher Reflection</strong>
+        <p>Before your next examination, create a blueprint using this app. Compare it to your last paper. Where were the cognitive gaps? What types of questions were missing?</p>
+      </div>
+    `
+  },
+  {
+    title: "Bloom's Taxonomy Simplified",
+    content: `
+      <h2>Bloom's Taxonomy: A Teacher's Practical Guide</h2>
+      <p>Benjamin Bloom's taxonomy of educational objectives (1956, revised 2001) remains the most widely used framework for categorising educational goals and assessment questions by cognitive complexity. Understanding it is essential for designing competency-based assessments.</p>
+      <h3>The Six Levels</h3>
+      <p><strong>Level 1 — Remember (Knowledge):</strong> Recall facts, definitions, formulas, and sequences. Keywords: define, list, state, recall, name, identify. Example: "What is the definition of a sole proprietorship?"</p>
+      <p><strong>Level 2 — Understand (Comprehension):</strong> Explain ideas, summarise, classify, compare, interpret. Keywords: explain, describe, distinguish, summarise, compare. Example: "Explain how a sole proprietorship differs from a partnership."</p>
+      <p><strong>Level 3 — Apply (Application):</strong> Use knowledge in new situations, solve problems, demonstrate. Keywords: apply, use, calculate, demonstrate, solve. Example: "If a person has ₹5 lakh capital, suggest a suitable business form and justify."</p>
+      <p><strong>Level 4 — Analyse (Analysis):</strong> Break down into components, find patterns, draw inferences. Keywords: analyse, classify, examine, compare, distinguish, investigate. Example: "Analyse the factors that contributed to the failure of the Non-Cooperation Movement."</p>
+      <p><strong>Level 5 — Evaluate (Evaluation):</strong> Make judgements, defend positions, critique, assess. Keywords: evaluate, justify, defend, recommend, critique, assess. Example: "Evaluate whether a Joint Stock Company is the most suitable form for a startup."</p>
+      <p><strong>Level 6 — Create (Synthesis):</strong> Produce original work, design, construct, hypothesise. Keywords: design, create, construct, formulate, plan, develop. Example: "Design a business plan for a cooperative society serving farmers in your district."</p>
+      <div class="highlight-box"><p><strong>PARAKH Mapping:</strong> L1 = Remember, L2 = Understand, L3 = Apply, L4 = Analyse + Evaluate + Create (HOTS)</p></div>
+      <div class="reflection-box">
+        <strong>🪞 Teacher Reflection</strong>
+        <p>Review your last 10 questions. Which Bloom's levels do they represent? How many reach Levels 4, 5, or 6? Try rewriting two of your recall questions at Level 4.</p>
+      </div>
+    `
+  },
+  {
+    title: "Designing HOTS Questions",
+    content: `
+      <h2>Designing Higher-Order Thinking Questions (HOTS)</h2>
+      <p>Higher-Order Thinking Skills (HOTS) questions are those that require students to go beyond memorisation — to think critically, reason logically, make connections, evaluate evidence, and construct new understanding. Designing effective HOTS questions is both an art and a science.</p>
+      <h3>Why HOTS Questions Matter</h3>
+      <p>In the knowledge economy of the 21st century, the ability to recall information is less valuable than ever before — information is instantly accessible. What employers, universities, and society need are people who can analyse complex problems, evaluate contradictory evidence, and create novel solutions. HOTS questions develop and assess these capacities.</p>
+      <h3>Characteristics of Good HOTS Questions</h3>
+      <p>Effective HOTS questions share several characteristics: they present novel contexts not directly taught in class, they require multi-step reasoning, they accept more than one valid response (or require justification for a specific response), they integrate knowledge from multiple topics, and they often include real-world or scenario-based stimuli.</p>
+      <h3>HOTS Question Types in Indian Assessments</h3>
+      <p><strong>Case Study Questions:</strong> A short passage, data table, or scenario followed by 3–5 sub-questions of increasing cognitive complexity. Now mandatory in CBSE and JKBOSE papers.</p>
+      <p><strong>Assertion-Reason Questions:</strong> Two statements (Assertion and Reason) where students must evaluate the truth of each and whether the Reason correctly explains the Assertion. Tests logical reasoning and causal thinking.</p>
+      <p><strong>Source-Based Questions:</strong> A primary or secondary source (historical document, newspaper extract, scientific data, map) followed by analytical questions. Develops source evaluation skills.</p>
+      <p><strong>Application-Based Questions:</strong> A novel scenario that requires applying classroom knowledge. Tests whether learning has been generalised beyond the textbook.</p>
+      <h3>Common Mistakes in HOTS Design</h3>
+      <p>Many teachers believe they are writing HOTS questions when they are actually writing complex recall questions. Simply adding long scenarios or multiple parts does not make a question higher-order. True HOTS requires students to make a cognitive leap — to use knowledge in a genuinely new way.</p>
+      <div class="reflection-box">
+        <strong>🪞 Teacher Reflection</strong>
+        <p>Use the HOTS Builder in this app to generate your first set of HOTS questions. Try the Case Study and Assertion-Reason templates for your current chapter.</p>
+      </div>
+    `
+  },
+  {
+    title: "Constructivist Assessment",
+    content: `
+      <h2>Constructivist Assessment: Learning Through Understanding</h2>
+      <p>Constructivism — the educational theory that learners actively construct knowledge through experience rather than passively receiving it — has profound implications for how we design assessments. A constructivist assessment reveals not just what students know, but how they think.</p>
+      <h3>Key Principles</h3>
+      <p>Constructivist assessment is performance-based (students demonstrate skills in real or realistic tasks), process-oriented (how students solve problems matters, not just the answer), contextual (assessment tasks are situated in meaningful real-world contexts), and collaborative (group projects and peer assessment have legitimate roles).</p>
+      <h3>From Passive to Active Assessment</h3>
+      <p>Traditional assessments ask students to <em>recognise</em> or <em>reproduce</em> knowledge. Constructivist assessments ask students to <em>construct</em> meaning — to interpret a source, solve an unseen problem, design something new, or argue a position. This is the essence of competency-based assessment.</p>
+      <div class="highlight-box"><p>Constructivist principle in practice: Instead of asking "What are the causes of World War I?" (recall), ask "You are a diplomat in 1914. Write a telegram advising your government on whether to go to war and why" (construction).</p></div>
+      <div class="reflection-box">
+        <strong>🪞 Teacher Reflection</strong>
+        <p>Can you redesign one of your standard long-answer questions into a constructivist task? What context, role, or scenario could you add to make it more meaningful?</p>
+      </div>
+    `
+  },
+  {
+    title: "Formative vs Summative Balance",
+    content: `
+      <h2>Formative vs Summative Assessment: Striking the Balance</h2>
+      <p>Assessment for learning (formative) and assessment of learning (summative) serve different but complementary purposes. Understanding the distinction — and knowing how to balance the two — is one of the most important competencies a teacher can develop.</p>
+      <h3>Formative Assessment</h3>
+      <p>Formative assessment happens during the learning process. Its purpose is to provide feedback that guides further learning. It includes classroom questioning, exit tickets, quizzes, think-alouds, peer assessment, and teacher observation. Crucially, formative assessment results should not be high-stakes — they are diagnostic tools, not judgements.</p>
+      <h3>Summative Assessment</h3>
+      <p>Summative assessment happens after a period of learning to measure what has been achieved. It includes unit tests, term examinations, and board papers. It is comparative and evaluative in nature. However, even summative assessments should be designed to provide meaningful information about specific competencies, not just a total score.</p>
+      <h3>The 80/20 Principle</h3>
+      <p>Research in educational psychology suggests that learning improves most dramatically with frequent, low-stakes formative assessment rather than infrequent, high-stakes summative assessment. NEP 2020 endorses this view, recommending that internal formative assessment be given significant weight in final grades.</p>
+      <div class="reflection-box">
+        <strong>🪞 Teacher Reflection</strong>
+        <p>How many times per week do you conduct formative assessment? Do you use the results to adjust your next lesson? What one formative technique could you introduce this week?</p>
+      </div>
+    `
+  },
+  {
+    title: "Diagnostic Assessment Logic",
+    content: `
+      <h2>Diagnostic Assessment: Knowing Before Teaching</h2>
+      <p>Diagnostic assessment is conducted before instruction begins to identify students' existing knowledge, misconceptions, and skill gaps. It answers the fundamental question: "Where are my students starting from?" Without this information, teachers inevitably pitch instruction too high for some students and too low for others.</p>
+      <h3>Types of Diagnostic Tools</h3>
+      <p>Pre-tests, concept maps, K-W-L charts (Know, Want to Know, Learned), entrance tickets, and structured oral questioning are all effective diagnostic tools. The key is not the instrument but the teacher's commitment to using the data to differentiate instruction.</p>
+      <h3>Common Misconceptions and Their Diagnosis</h3>
+      <p>Every subject has well-documented student misconceptions. In Science: students believe heavier objects fall faster than lighter ones. In Mathematics: students believe multiplication always makes numbers bigger. In Social Science: students confuse correlation with causation. Diagnostic assessment specifically probes for these misconceptions.</p>
+      <h3>Diagnostic Data and Differentiation</h3>
+      <p>Once diagnostic data is collected, teachers should group students by readiness level and provide differentiated tasks. High-readiness students can move to application tasks while others consolidate foundational concepts. This is the individualised, student-centred approach that NCF 2023 envisions.</p>
+      <div class="reflection-box">
+        <strong>🪞 Teacher Reflection</strong>
+        <p>Think about your next new chapter. What are three things students commonly misunderstand about this topic? How could you design a 5-minute diagnostic activity to check for these before you begin teaching?</p>
+      </div>
+    `
+  },
+  {
+    title: "Balanced Paper Structure Model",
+    content: `
+      <h2>Balanced Paper Structure: The PARAKH Model</h2>
+      <p>A balanced question paper is one that fairly and comprehensively assesses the full range of learning outcomes — from foundational knowledge to complex analysis — while covering all major content areas and using a variety of question types. The PARAKH model provides a clear structure for achieving this balance.</p>
+      <h3>The 30-30-20-20 Distribution</h3>
+      <p>PARAKH's recommended cognitive distribution for senior secondary examinations is: 30% Knowledge (L1 — Remember), 30% Understanding (L2 — Comprehend/Explain), 20% Application (L3 — Apply to new situations), 20% Analysis/HOTS (L4 — Analyse, Evaluate, Create). This ensures students are rewarded for both foundational learning and higher-order thinking.</p>
+      <h3>Question Type Balance</h3>
+      <p>A balanced paper typically includes: Objective questions (MCQ, Assertion-Reason, Fill-in-blank) testing quick recall and concept recognition; Short answer questions testing explanation and comparison; Long answer questions testing comprehensive understanding; and Case study/source-based questions testing application and analysis.</p>
+      <h3>Chapter Coverage Matrix</h3>
+      <p>The blueprint specifies minimum marks from each chapter/unit. No chapter should be completely absent from the paper, and no chapter should dominate disproportionately unless it is the largest and most important unit of the course.</p>
+      <div class="highlight-box"><p><strong>Golden Rule:</strong> Every question paper tells a story about what you value in learning. Make sure your paper tells the right story — one that values thinking, not just memorising.</p></div>
+      <div class="reflection-box">
+        <strong>🪞 Teacher Reflection</strong>
+        <p>Use the Blueprint Generator now. Set your class, subject, and marks. Adjust the cognitive sliders to PARAKH's 30-30-20-20 recommendation. See how the blueprint changes. Does this reflect your assessment goals?</p>
+      </div>
+      <h3>Implementation Checklist</h3>
+      <p>Before finalising any question paper, check: ✓ All major units/chapters represented. ✓ Cognitive distribution matches blueprint. ✓ At least one Case Study question included. ✓ At least one Assertion-Reason question included. ✓ MCQs include conceptual and application-type items. ✓ Long answers require analysis, not just reproduction. ✓ Total marks add up correctly. ✓ Instructions are clear and unambiguous.</p>
+    `
+  }
+];
+
+// ===== HOTS TEMPLATES =====
+const hotsTemplates = [
+  { id: "caseStudy", title: "📋 Case Study", type: "Case Study (4–5 marks)", level: "L4", description: "Scenario + 3 analytical sub-questions" },
+  { id: "assertionReason", title: "⚖️ Assertion-Reason", type: "Objective (1 mark)", level: "L4", description: "Two linked statements to evaluate" },
+  { id: "sourceAnalysis", title: "📜 Source Analysis", type: "Source-Based (4 marks)", level: "L4", description: "Primary/secondary source with questions" },
+  { id: "application", title: "🌍 Application", type: "Application (3 marks)", level: "L3", description: "Real-life scenario application" },
+  { id: "evaluation", title: "🏆 Evaluation", type: "Long Answer (5–6 marks)", level: "L4", description: "Justify, recommend, or critique" },
+  { id: "dataInterpretation", title: "📈 Data Interpretation", type: "Data-Based (3 marks)", level: "L3-L4", description: "Table/graph based reasoning" }
+];
+
+// ===== AUDIT CHECKLIST DATA =====
+const auditItems = [
+  { domain: "HOTS Balance", title: "HOTS Questions Included (≥20% marks)", desc: "Paper includes analytical, evaluative, or creative questions at Bloom's Level 4+", weight: 10 },
+  { domain: "HOTS Balance", title: "No question requires only rote recall", desc: "Even recall questions are framed in novel contexts", weight: 5 },
+  { domain: "Question Types", title: "Case Study / Scenario question included", desc: "At least one case study or real-life application question present", weight: 10 },
+  { domain: "Question Types", title: "Assertion-Reason question included", desc: "At least one assertion-reason type question included", weight: 8 },
+  { domain: "Question Types", title: "Variety of question types", desc: "Paper includes at least 3 different question formats", weight: 7 },
+  { domain: "Coverage", title: "All major units/chapters represented", desc: "No significant unit is completely absent from the paper", weight: 10 },
+  { domain: "Coverage", title: "Chapter weightage proportional", desc: "Marks from each chapter are roughly proportional to chapter length", weight: 8 },
+  { domain: "Cognitive Balance", title: "PARAKH 30-30-20-20 distribution followed", desc: "Cognitive levels are distributed as per PARAKH blueprint norms", weight: 12 },
+  { domain: "Cognitive Balance", title: "Application questions present (L3)", desc: "Questions require students to apply knowledge to new situations", weight: 8 },
+  { domain: "Learning Outcomes", title: "Questions mapped to specific learning outcomes", desc: "Each question can be linked to a stated curriculum competency", weight: 7 },
+  { domain: "Learning Outcomes", title: "Paper avoids textbook-exact questions", desc: "Questions are not copied verbatim from textbook exercises", weight: 8 },
+  { domain: "Clarity & Fairness", title: "Instructions are clear and unambiguous", desc: "All section instructions, word limits, and choice options are clearly stated", weight: 5 },
+  { domain: "Clarity & Fairness", title: "Marks add up correctly", desc: "Total marks of all sections sum to the declared total", weight: 5 },
+  { domain: "NEP/PARAKH Compliance", title: "Blueprint was prepared before paper", desc: "A formal blueprint guided the paper design", weight: 7 }
+];
+
+// ===== APP STATE =====
+let currentPage = 'dashboard';
+let auditState = {};
+let questionCounter = 0;
+let blueprintData = null;
+let selectedHotsTemplate = null;
+
+// ===== INIT =====
+function init() {
+  // Load stats
+  const stats = JSON.parse(localStorage.getItem('appStats') || '{"papers":0,"blueprints":0,"hots":0,"audits":0}');
+  document.getElementById('stat-papers').textContent = stats.papers;
+  document.getElementById('stat-blueprints').textContent = stats.blueprints;
+  document.getElementById('stat-hots').textContent = stats.hots;
+  document.getElementById('stat-audits').textContent = stats.audits;
+  
+  // Build policy pages
+  buildPolicyPages();
+  // Build HOTS templates
+  buildHOTSTemplates();
+  // Build audit checklist
+  buildAuditChecklist();
+  // Build question-wise inputs
+  buildQWInputs();
+}
+
+function updateStat(key) {
+  const stats = JSON.parse(localStorage.getItem('appStats') || '{"papers":0,"blueprints":0,"hots":0,"audits":0}');
+  stats[key] = (stats[key] || 0) + 1;
+  localStorage.setItem('appStats', JSON.stringify(stats));
+  document.getElementById('stat-'+key).textContent = stats[key];
+}
+
+// ===== NAV =====
+function showPage(pageId, clickedEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+pageId).classList.add('active');
+  if (clickedEl) clickedEl.classList.add('active');
+  currentPage = pageId;
+  const titles = {dashboard:'Dashboard',policy:'Policy Foundation',blueprint:'Blueprint Generator',generate:'Question Paper Generator',hots:'HOTS Builder',analysis:'Post-Exam Analysis',audit:'Self-Evaluation Audit',about:'About'};
+  document.getElementById('topBarTitle').textContent = titles[pageId] || pageId;
+  closeSidebar();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('active');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('active');
+}
+
+function enterApp() {
+  document.getElementById('splash').classList.add('hidden');
+  document.getElementById('app').classList.add('active');
+  setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 700);
+  init();
+  showPage('generate', document.querySelectorAll('.nav-item')[3]);
+}
+
+function enterAppPolicy() {
+  document.getElementById('splash').classList.add('hidden');
+  document.getElementById('app').classList.add('active');
+  setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 700);
+  init();
+  showPage('policy', document.querySelectorAll('.nav-item')[1]);
+}
+
+// ===== POLICY PAGES =====
+function buildPolicyPages() {
+  const container = document.getElementById('policyContents');
+  container.innerHTML = '';
+  policyPages.forEach((page, i) => {
+    const div = document.createElement('div');
+    div.className = 'policy-content' + (i===0?' active':'');
+    div.id = 'policy-'+i;
+    div.innerHTML = `<div class="policy-article">${page.content}</div>`;
+    container.appendChild(div);
+  });
+}
+
+function showPolicyTab(idx, el) {
+  document.querySelectorAll('.policy-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.policy-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('policy-'+idx).classList.add('active');
+}
+
+// ===== SLIDERS =====
+function updateSliders() {
+  const ids = ['L1','L2','L3','L4'];
+  let total = 0;
+  ids.forEach(id => {
+    const val = parseInt(document.getElementById('sl-'+id).value);
+    document.getElementById('sv-'+id).textContent = val+'%';
+    total += val;
+  });
+  const totalEl = document.getElementById('sliderTotal');
+  totalEl.textContent = total+'%';
+  totalEl.style.color = total === 100 ? 'var(--success)' : 'var(--danger)';
+}
+
+// ===== BLUEPRINT GENERATOR =====
+function generateBlueprint() {
+  const cls = document.getElementById('bp-class').value;
+  const subj = document.getElementById('bp-subject').value;
+  const marks = parseInt(document.getElementById('bp-marks').value);
+  const dur = document.getElementById('bp-duration').value;
+  const type = document.getElementById('bp-type').value;
+  
+  const l1 = parseInt(document.getElementById('sl-L1').value)/100;
+  const l2 = parseInt(document.getElementById('sl-L2').value)/100;
+  const l3 = parseInt(document.getElementById('sl-L3').value)/100;
+  const l4 = parseInt(document.getElementById('sl-L4').value)/100;
+  const total = l1+l2+l3+l4;
+  if (Math.round(total*100) !== 100) {
+    alert('Please ensure cognitive level weightages total 100%');
+    return;
+  }
+  
+  const mcqM = parseInt(document.getElementById('qt-mcq').value);
+  const saM = parseInt(document.getElementById('qt-sa').value);
+  const laM = parseInt(document.getElementById('qt-la').value);
+  const caseM = parseInt(document.getElementById('qt-case').value);
+  
+  const m1 = Math.round(marks*l1);
+  const m2 = Math.round(marks*l2);
+  const m3 = Math.round(marks*l3);
+  const m4 = marks - m1 - m2 - m3;
+  
+  const unitData = (questionBank[subj] || questionBank['Business Studies']).units;
+  const numUnits = unitData.length;
+  const perUnit = Math.round(marks/numUnits);
+  
+  blueprintData = { cls, subj, marks, dur, type, l1:m1, l2:m2, l3:m3, l4:m4, units: unitData.map((u,i)=>({name:u.name, marks: i<numUnits-1?perUnit:marks-perUnit*(numUnits-1)})) };
+  
+  const rows = unitData.map((u,i) => {
+    const um = i<numUnits-1?perUnit:marks-perUnit*(numUnits-1);
+    const ul1=Math.round(um*l1), ul2=Math.round(um*l2), ul3=Math.round(um*l3), ul4=um-ul1-ul2-ul3;
+    return `<tr>
+      <td>${u.name}</td>
+      <td><span class="level-badge l1">${ul1}</span></td>
+      <td><span class="level-badge l2">${ul2}</span></td>
+      <td><span class="level-badge l3">${ul3}</span></td>
+      <td><span class="level-badge l4">${ul4}</span></td>
+      <td><strong>${um}</strong></td>
+    </tr>`;
+  }).join('');
+  
+  document.getElementById('blueprintTable').innerHTML = `
+    <table class="blueprint-table">
+      <thead><tr>
+        <th>Unit / Chapter</th>
+        <th>L1 Knowledge</th>
+        <th>L2 Understanding</th>
+        <th>L3 Application</th>
+        <th>L4 HOTS</th>
+        <th>Total Marks</th>
+      </tr></thead>
+      <tbody>${rows}
+      <tr class="total-row">
+        <td>TOTAL</td>
+        <td>${m1}</td><td>${m2}</td><td>${m3}</td><td>${m4}</td>
+        <td>${marks}</td>
+      </tr></tbody>
+    </table>`;
+  
+  document.getElementById('blueprintSummary').innerHTML = `
+    <div class="three-col">
+      <div class="alert alert-info"><strong>Class:</strong> ${cls} &nbsp;|&nbsp; <strong>Subject:</strong> ${subj}<br><strong>Marks:</strong> ${marks} &nbsp;|&nbsp; <strong>Duration:</strong> ${dur}</div>
+      <div class="alert alert-success">
+        <strong>Cognitive Distribution:</strong><br>
+        L1: ${Math.round(l1*100)}% · L2: ${Math.round(l2*100)}% · L3: ${Math.round(l3*100)}% · L4: ${Math.round(l4*100)}%
+      </div>
+      <div class="alert alert-warning">
+        <strong>Question Types (approx marks):</strong><br>
+        MCQ: ${mcqM} · SA: ${saM} · LA: ${laM} · Case: ${caseM}
+      </div>
+    </div>`;
+  
+  document.getElementById('blueprintResult').style.display = 'block';
+  document.getElementById('blueprintResult').scrollIntoView({behavior:'smooth'});
+}
+
+function clearBlueprint() {
+  document.getElementById('blueprintResult').style.display = 'none';
+  blueprintData = null;
+}
+
+function saveBlueprintToLocal() {
+  if (!blueprintData) return;
+  const saved = JSON.parse(localStorage.getItem('savedBlueprints') || '[]');
+  saved.push({...blueprintData, savedAt: new Date().toLocaleDateString()});
+  localStorage.setItem('savedBlueprints', JSON.stringify(saved));
+  updateStat('blueprints');
+  alert('Blueprint saved successfully!');
+}
+
+function printBlueprint() { window.print(); }
+
+// ===== QUESTION PAPER GENERATOR =====
+function shuffle(arr) { return [...arr].sort(() => Math.random()-0.5); }
+
+function generatePaper() {
+  const cls = document.getElementById('gp-class').value;
+  const subj = document.getElementById('gp-subject').value;
+  const totalMarks = parseInt(document.getElementById('gp-marks').value);
+  const dur = document.getElementById('gp-duration').value;
+  const school = document.getElementById('gp-school').value;
+  const session = document.getElementById('gp-session').value;
+  
+  const bank = questionBank[subj] || questionBank['Business Studies'];
+  let allQs = [];
+  bank.units.forEach(u => allQs = allQs.concat(u.questions));
+  
+  const shuffled = shuffle(allQs);
+  
+  // Select questions to fill marks
+  const mcqs = shuffle(shuffled.filter(q=>q.type==='MCQ'||q.type==='AssertionReason'));
+  const sas = shuffle(shuffled.filter(q=>q.type==='ShortAnswer'));
+  const las = shuffle(shuffled.filter(q=>q.type==='LongAnswer'));
+  const cases = shuffle(shuffled.filter(q=>q.type==='CaseStudy'));
+  
+  let sections = [];
+  let used = 0;
+  
+  // Section A: MCQ (target ~20 marks = 20 questions at 1 mark)
+  const secATarget = Math.round(totalMarks * 0.28);
+  const secAQs = mcqs.slice(0, Math.min(mcqs.length, secATarget));
+  if (secAQs.length) { sections.push({title:`SECTION A — Objective Questions`, note:`All questions carry 1 mark each.`, questions: secAQs}); used += secAQs.length; }
+  
+  // Section B: Short Answer
+  const secBQs = sas.slice(0, Math.min(sas.length, 4));
+  if (secBQs.length) { sections.push({title:`SECTION B — Short Answer Questions`, note:`Each question carries 3 marks.`, questions: secBQs}); }
+  
+  // Section C: Long Answer
+  const secCQs = las.slice(0, Math.min(las.length, 2));
+  if (secCQs.length) { sections.push({title:`SECTION C — Long Answer Questions`, note:`Each question carries 5–6 marks.`, questions: secCQs}); }
+  
+  // Section D: Case Study
+  const secDQs = cases.slice(0, Math.min(cases.length, 2));
+  if (secDQs.length) { sections.push({title:`SECTION D — Case Study / Source-Based Questions`, note:`Read the case carefully and answer all sub-questions.`, questions: secDQs}); }
+  
+  let qNum = 1;
+  let paperHTML = `<div class="paper-preview" id="printable-paper">
+    <div class="paper-header">
+      <div class="paper-school">${school}</div>
+      <div class="paper-title">ANNUAL EXAMINATION — ${session}</div>
+      <div class="paper-title">${cls} &nbsp;|&nbsp; ${subj}</div>
+      <div class="paper-meta">
+        <span>Time: ${dur}</span>
+        <span>General Instructions: Read all questions carefully.</span>
+        <span>Max. Marks: ${totalMarks}</span>
+      </div>
+    </div>`;
+  
+  window._generatedQuestions = [];
+  sections.forEach(sec => {
+    paperHTML += `<div class="paper-section-title">${sec.title}</div>`;
+    paperHTML += `<p style="font-size:0.82rem;color:#555;margin-bottom:0.75rem;font-style:italic;">${sec.note}</p>`;
+    sec.questions.forEach(q => {
+      window._generatedQuestions.push({num: qNum, ...q});
+      paperHTML += `<div class="paper-question"><span class="q-num">Q${qNum}.</span> <span class="q-marks">[${q.marks} Mark${q.marks>1?'s':''}]</span>${q.text}`;
+      if (q.options) {
+        paperHTML += `<ul class="q-options">${q.options.map(o=>`<li>${o}</li>`).join('')}</ul>`;
+      }
+      paperHTML += `</div>`;
+      qNum++;
+    });
+  });
+  paperHTML += `</div>`;
+  
+  document.getElementById('paperPreview').innerHTML = paperHTML;
+  document.getElementById('paperResult').style.display = 'block';
+  document.getElementById('answerKeySection').style.display = 'none';
+  document.getElementById('paperResult').scrollIntoView({behavior:'smooth'});
+  saveCurrentPaper();
+}
+
+function showAnswerKey() {
+  const qs = window._generatedQuestions || [];
+  let html = `<div class="card"><div class="card-title">🗝️ Answer Key & Competency Map</div><div class="paper-answerkey"><h3>Answer Key</h3>`;
+  qs.forEach(q => {
+    html += `<div class="answer-item"><strong>Q${q.num}:</strong> ${q.answer} <span class="tag tag-blue">${q.competency}</span> <span class="tag tag-amber">${q.level}</span></div>`;
+  });
+  html += `</div></div>`;
+  document.getElementById('answerKeySection').innerHTML = html;
+  document.getElementById('answerKeySection').style.display = 'block';
+  document.getElementById('answerKeySection').scrollIntoView({behavior:'smooth'});
+}
+
+function saveCurrentPaper() { updateStat('papers'); }
+function printPaper() { window.print(); }
+
+// ===== HOTS BUILDER =====
+function buildHOTSTemplates() {
+  const grid = document.getElementById('hotsTemplateGrid');
+  grid.innerHTML = '';
+  hotsTemplates.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'hots-template';
+    el.innerHTML = `<div class="hots-template-title">${t.title}</div><div style="font-size:0.8rem;color:#64748b;margin:0.3rem 0;">${t.description}</div><span class="hots-template-type">${t.type}</span>`;
+    el.onclick = () => {
+      document.querySelectorAll('.hots-template').forEach(x=>x.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedHotsTemplate = t.id;
+    };
+    grid.appendChild(el);
+  });
+}
+
+const hotsTemplateGenerators = {
+  caseStudy: (topic, ctx, subj, marks, level) => `
+    <h3>📋 Case Study — ${topic}</h3>
+    <div class="hots-question-text"><strong>Read the following case carefully and answer the questions that follow:</strong></div>
+    <div style="background:#f0f4ff;border-left:3px solid var(--blue);padding:1rem;border-radius:0 8px 8px 0;margin:0.75rem 0;font-size:0.92rem;">
+      ${ctx || `In a rapidly changing market environment, ${topic} plays a crucial role. Businesses must understand its principles and apply them strategically to remain competitive and serve society effectively.`}
+    </div>
+    <div class="hots-sub-question">(i) Identify and explain the core concept demonstrated in the case above. <span class="tag tag-blue">2 marks</span></div>
+    <div class="hots-sub-question">(ii) Analyse two implications of this situation for stakeholders involved. <span class="tag tag-amber">2 marks</span></div>
+    <div class="hots-sub-question">(iii) If you were a decision-maker in this scenario, what action would you recommend and why? <span class="tag tag-green">2 marks</span></div>
+    <div style="margin-top:0.75rem;font-size:0.82rem;color:#64748b;">Total: ${marks} marks | Cognitive Level: ${level} | Subject: ${subj}</div>`,
+  
+  assertionReason: (topic, ctx, subj, marks, level) => `
+    <h3>⚖️ Assertion-Reason — ${topic}</h3>
+    <div class="hots-question-text">
+      <strong>Directions:</strong> In the question below, an Assertion (A) and a Reason (R) are given. Select the correct answer from the options below:
+    </div>
+    <div style="background:#f0f4ff;padding:1rem;border-radius:8px;margin:0.75rem 0;font-size:0.92rem;">
+      <strong>Assertion (A):</strong> ${topic} is a fundamental concept that directly influences outcomes in ${subj}.<br><br>
+      <strong>Reason (R):</strong> ${ctx || `The principles underlying ${topic} are derived from theoretical frameworks that have been validated through practice and evidence.`}
+    </div>
+    <div style="margin:0.5rem 0 0.75rem;font-size:0.92rem;">
+      <strong>(A)</strong> Both A and R are true, and R is the correct explanation of A<br>
+      <strong>(B)</strong> Both A and R are true, but R is not the correct explanation of A<br>
+      <strong>(C)</strong> A is true, but R is false<br>
+      <strong>(D)</strong> A is false, but R is true
+    </div>
+    <div style="font-size:0.82rem;color:#64748b;">Total: ${marks} marks | Cognitive Level: ${level} | Subject: ${subj}</div>`,
+  
+  application: (topic, ctx, subj, marks, level) => `
+    <h3>🌍 Application Question — ${topic}</h3>
+    <div class="hots-question-text">
+      ${ctx || `Consider the following situation: A student in Class 11 is studying ${topic} and is asked to apply the concept to a real-world scenario.`}
+    </div>
+    <div class="hots-sub-question">(i) Using your understanding of <strong>${topic}</strong>, explain how this concept applies in the given situation. <span class="tag tag-blue">2 marks</span></div>
+    <div class="hots-sub-question">(ii) What would be the likely outcome if this concept were not applied correctly? Give one example. <span class="tag tag-amber">1 mark</span></div>
+    <div style="margin-top:0.75rem;font-size:0.82rem;color:#64748b;">Total: ${marks} marks | Cognitive Level: ${level} | Subject: ${subj}</div>`,
+  
+  evaluation: (topic, ctx, subj, marks, level) => `
+    <h3>🏆 Evaluation Question — ${topic}</h3>
+    <div class="hots-question-text">
+      "${ctx || `In the context of ${subj}, ${topic} has been the subject of considerable debate among theorists and practitioners.`}"
+    </div>
+    <div class="hots-sub-question">Critically evaluate the statement above. In your answer: (i) State your position clearly (agree/disagree/partially agree). (ii) Provide at least three reasons to support your position. (iii) Acknowledge one counter-argument and respond to it.</div>
+    <div style="margin-top:0.75rem;font-size:0.82rem;color:#64748b;">Total: ${marks} marks | Cognitive Level: ${level} | Subject: ${subj}</div>`,
+  
+  sourceAnalysis: (topic, ctx, subj, marks, level) => `
+    <h3>📜 Source Analysis — ${topic}</h3>
+    <div class="hots-question-text"><strong>Study the following source and answer the questions below:</strong></div>
+    <div style="background:#fffbeb;border:1px solid #fde68a;padding:1rem;border-radius:8px;margin:0.75rem 0;font-size:0.9rem;font-style:italic;">
+      [Source: Excerpt related to ${topic}] "${ctx || `The concept of ${topic} has evolved significantly over time. Early theorists focused on its basic definition, while modern scholars emphasise its applications and societal impact. The relationship between ${topic} and broader socioeconomic factors remains a critical area of study.`}"
+    </div>
+    <div class="hots-sub-question">(i) What is the main idea expressed in the source? <span class="tag tag-blue">1 mark</span></div>
+    <div class="hots-sub-question">(ii) Identify one piece of evidence from the source that relates to ${topic} in ${subj}. <span class="tag tag-amber">1 mark</span></div>
+    <div class="hots-sub-question">(iii) Evaluate the perspective presented in the source. Do you agree? Justify using your own knowledge. <span class="tag tag-green">2 marks</span></div>
+    <div style="margin-top:0.75rem;font-size:0.82rem;color:#64748b;">Total: ${marks} marks | Cognitive Level: ${level} | Subject: ${subj}</div>`,
+  
+  dataInterpretation: (topic, ctx, subj, marks, level) => `
+    <h3>📈 Data Interpretation — ${topic}</h3>
+    <div class="hots-question-text"><strong>Study the following data table and answer the questions:</strong></div>
+    <div style="overflow-x:auto;margin:0.75rem 0;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+        <tr style="background:var(--navy);color:white;"><th style="padding:0.5rem;">Year</th><th style="padding:0.5rem;">Value A</th><th style="padding:0.5rem;">Value B</th><th style="padding:0.5rem;">Change (%)</th></tr>
+        <tr style="background:#f8faff;"><td style="padding:0.5rem;text-align:center;">2019</td><td style="padding:0.5rem;text-align:center;">100</td><td style="padding:0.5rem;text-align:center;">85</td><td style="padding:0.5rem;text-align:center;">—</td></tr>
+        <tr><td style="padding:0.5rem;text-align:center;">2020</td><td style="padding:0.5rem;text-align:center;">92</td><td style="padding:0.5rem;text-align:center;">78</td><td style="padding:0.5rem;text-align:center;">–8%</td></tr>
+        <tr style="background:#f8faff;"><td style="padding:0.5rem;text-align:center;">2021</td><td style="padding:0.5rem;text-align:center;">115</td><td style="padding:0.5rem;text-align:center;">102</td><td style="padding:0.5rem;text-align:center;">+25%</td></tr>
+        <tr><td style="padding:0.5rem;text-align:center;">2022</td><td style="padding:0.5rem;text-align:center;">128</td><td style="padding:0.5rem;text-align:center;">119</td><td style="padding:0.5rem;text-align:center;">+11.3%</td></tr>
+      </table>
+      <div style="font-size:0.78rem;color:#64748b;margin-top:0.3rem;">Data related to ${topic} trends (illustrative)</div>
+    </div>
+    <div class="hots-sub-question">(i) What trend do you observe from the data? Describe in 2–3 sentences. <span class="tag tag-blue">1 mark</span></div>
+    <div class="hots-sub-question">(ii) Identify the year with the highest growth and suggest one reason for this increase based on your knowledge of ${topic}. <span class="tag tag-amber">1 mark</span></div>
+    <div class="hots-sub-question">(iii) What conclusion can you draw about the overall pattern? How does this relate to ${topic} in ${subj}? <span class="tag tag-green">1 mark</span></div>
+    <div style="margin-top:0.75rem;font-size:0.82rem;color:#64748b;">Total: ${marks} marks | Cognitive Level: ${level} | Subject: ${subj}</div>`
+};
+
+function generateHOTS() {
+  if (!selectedHotsTemplate) { alert('Please select a question template first.'); return; }
+  const topic = document.getElementById('hots-topic').value.trim();
+  if (!topic) { alert('Please enter a topic or concept.'); return; }
+  const subj = document.getElementById('hots-subject').value;
+  const marks = document.getElementById('hots-marks').value;
+  const level = document.getElementById('hots-level').value;
+  const ctx = document.getElementById('hots-context').value.trim();
+  
+  const generator = hotsTemplateGenerators[selectedHotsTemplate];
+  const content = generator(topic, ctx, subj, marks, level);
+  
+  document.getElementById('hotsOutput').innerHTML = `
+    <div class="card">
+      <div class="hots-output">${content}</div>
+      <div class="btn-row">
+        <button class="btn btn-blue" onclick="regenerateHOTS()">🔄 Regenerate Variation</button>
+        <button class="btn btn-outline" onclick="printHOTS()">🖨️ Print Question</button>
+      </div>
+    </div>`;
+  document.getElementById('hotsOutput').style.display = 'block';
+  document.getElementById('hotsOutput').scrollIntoView({behavior:'smooth'});
+  updateStat('hots');
+}
+
+function regenerateHOTS() { generateHOTS(); }
+function printHOTS() { window.print(); }
+
+// ===== ANALYSIS TOOL =====
+function buildQWInputs() {
+  const grid = document.getElementById('qwInputGrid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= 9; i++) {
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    div.innerHTML = `<label class="form-label">Q${i} Correct %</label><input type="number" class="form-control qw-input" id="qw-${i}" value="${Math.floor(50+Math.random()*40)}" min="0" max="100">`;
+    grid.appendChild(div);
+  }
+  questionCounter = 9;
+}
+
+function addMoreQuestions() {
+  questionCounter++;
+  const grid = document.getElementById('qwInputGrid');
+  const div = document.createElement('div');
+  div.className = 'form-group';
+  div.innerHTML = `<label class="form-label">Q${questionCounter} Correct %</label><input type="number" class="form-control qw-input" id="qw-${questionCounter}" value="60" min="0" max="100">`;
+  grid.appendChild(div);
+}
+
+function runAnalysis() {
+  const total = parseInt(document.getElementById('an-total').value);
+  const max = parseInt(document.getElementById('an-max').value);
+  const subject = document.getElementById('an-subject').value;
+  
+  const e = parseInt(document.getElementById('an-e').value);
+  const g = parseInt(document.getElementById('an-g').value);
+  const a = parseInt(document.getElementById('an-a').value);
+  const b = parseInt(document.getElementById('an-b').value);
+  const r = parseInt(document.getElementById('an-r').value);
+  
+  const qwInputs = document.querySelectorAll('.qw-input');
+  const qwData = Array.from(qwInputs).map((inp, i) => ({q: i+1, pct: parseInt(inp.value)||0}));
+  
+  const avgScore = ((e*0.95+g*0.82+a*0.67+b*0.49+r*0.3)/total)*max;
+  const passRate = Math.round(((e+g+a)/total)*100);
+  const atRiskPct = Math.round((r/total)*100);
+  
+  const easy = qwData.filter(q=>q.pct>=70);
+  const medium = qwData.filter(q=>q.pct>=40&&q.pct<70);
+  const hard = qwData.filter(q=>q.pct<40);
+  
+  const barColors = ['#10b981','#2563eb','#f59e0b','#ef4444','#7c3aed'];
+  const barData = [
+    {label:'90%+',val:e,pct:Math.round(e/total*100),color:barColors[0]},
+    {label:'75–89%',val:g,pct:Math.round(g/total*100),color:barColors[1]},
+    {label:'60–74%',val:a,pct:Math.round(a/total*100),color:barColors[2]},
+    {label:'40–59%',val:b,pct:Math.round(b/total*100),color:barColors[3]},
+    {label:'<40%',val:r,pct:Math.round(r/total*100),color:barColors[4]}
+  ];
+  const maxVal = Math.max(...barData.map(b=>b.val));
+  
+  const barsHTML = barData.map(bar=>`
+    <div class="bar-wrap">
+      <div class="bar-val">${bar.val}</div>
+      <div class="bar" style="background:${bar.color};height:${Math.round((bar.val/maxVal)*160)+4}px;"></div>
+      <div class="bar-lbl">${bar.label}<br><small>${bar.pct}%</small></div>
+    </div>`).join('');
+  
+  const diffHTML = qwData.map(q => {
+    const color = q.pct>=70?'#10b981':q.pct>=40?'#f59e0b':'#ef4444';
+    return `<div class="difficulty-meter">
+      <span style="width:35px;font-size:0.78rem;font-weight:700;color:var(--navy);">Q${q.q}</span>
+      <div class="difficulty-bar-bg"><div class="difficulty-bar-fill" style="width:${q.pct}%;background:${color};"></div></div>
+      <span style="width:40px;font-size:0.78rem;font-weight:700;color:${color};">${q.pct}%</span>
+      <span class="tag ${q.pct>=70?'tag-green':q.pct>=40?'tag-amber':'tag-red'}" style="font-size:0.68rem;">${q.pct>=70?'Easy':q.pct>=40?'Medium':'Hard'}</span>
+    </div>`;
+  }).join('');
+  
+  const remedialFocus = hard.length>0 ? `<div class="alert alert-warning">⚠️ <strong>Immediate Remediation Needed:</strong> Questions ${hard.map(q=>'Q'+q.q).join(', ')} had below 40% success rate. These indicate core conceptual gaps. Plan targeted reteaching sessions for these topics.</div>` : `<div class="alert alert-success">✅ No questions had below-40% success rate. Good paper difficulty balance!</div>`;
+  
+  document.getElementById('analysisResult').innerHTML = `
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Score Distribution</div>
+        <div class="bar-chart">${barsHTML}</div>
+        <div style="margin-top:1rem;display:flex;gap:1rem;flex-wrap:wrap;">
+          <div style="text-align:center;flex:1;"><div style="font-size:1.5rem;font-weight:700;color:var(--navy);">${avgScore.toFixed(1)}</div><div style="font-size:0.75rem;color:#64748b;">Avg Score / ${max}</div></div>
+          <div style="text-align:center;flex:1;"><div style="font-size:1.5rem;font-weight:700;color:var(--success);">${passRate}%</div><div style="font-size:0.75rem;color:#64748b;">Pass Rate (≥60%)</div></div>
+          <div style="text-align:center;flex:1;"><div style="font-size:1.5rem;font-weight:700;color:var(--danger);">${atRiskPct}%</div><div style="font-size:0.75rem;color:#64748b;">At Risk (<40%)</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Question Difficulty Index</div>
+        <div>${diffHTML}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Recommendations & Remedial Focus</div>
+      ${remedialFocus}
+      <div class="three-col" style="margin-top:0.75rem;">
+        <div class="alert alert-success"><strong>Easy Questions (≥70%):</strong> ${easy.length} question${easy.length!==1?'s':''} — Students mastered these concepts. Consider increasing difficulty next time.</div>
+        <div class="alert alert-warning"><strong>Medium (40–70%):</strong> ${medium.length} question${medium.length!==1?'s':''} — Good differentiation zone. Review teaching strategies for these topics.</div>
+        <div class="alert alert-info"><strong>Summary:</strong> ${total} students assessed in ${subject}. ${Math.round(e/total*100)}% achieved excellence. Paper difficulty: ${hard.length>easy.length?'Challenging':easy.length>hard.length?'Accessible':'Balanced'}.</div>
+      </div>
+    </div>`;
+  
+  document.getElementById('analysisResult').style.display = 'block';
+  document.getElementById('analysisResult').scrollIntoView({behavior:'smooth'});
+}
+
+// ===== AUDIT TOOL =====
+function buildAuditChecklist() {
+  auditState = {};
+  const container = document.getElementById('auditChecklist');
+  const domains = {};
+  auditItems.forEach((item,i) => {
+    if (!domains[item.domain]) domains[item.domain] = [];
+    domains[item.domain].push({...item, idx:i});
+    auditState[i] = false;
+  });
+  
+  let html = '';
+  Object.entries(domains).forEach(([domain, items]) => {
+    html += `<div style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#64748b;margin:1rem 0 0.5rem;">${domain}</div>`;
+    items.forEach(item => {
+      html += `<div class="checklist-item" id="ci-${item.idx}" onclick="toggleAudit(${item.idx})">
+        <div class="checklist-check" id="cc-${item.idx}">✓</div>
+        <div>
+          <div class="checklist-title">${item.title}</div>
+          <div class="checklist-desc">${item.desc}</div>
+        </div>
+        <div style="margin-left:auto;font-size:0.78rem;color:#64748b;white-space:nowrap;padding-left:0.5rem;">${item.weight}%</div>
+      </div>`;
+    });
+  });
+  container.innerHTML = html;
+  updateAuditScore();
+}
+
+function toggleAudit(idx) {
+  auditState[idx] = !auditState[idx];
+  const el = document.getElementById('ci-'+idx);
+  const cc = document.getElementById('cc-'+idx);
+  el.classList.toggle('checked', auditState[idx]);
+  cc.style.background = auditState[idx] ? 'var(--success)' : '';
+  cc.style.borderColor = auditState[idx] ? 'var(--success)' : '#d1d9e6';
+  cc.style.color = auditState[idx] ? 'white' : '';
+  updateAuditScore();
+}
+
+function updateAuditScore() {
+  let score = 0;
+  auditItems.forEach((item, i) => { if (auditState[i]) score += item.weight; });
+  
+  const circle = document.getElementById('auditScoreCircle');
+  const numEl = document.getElementById('auditScoreNum');
+  numEl.textContent = score+'%';
+  
+  const color = score >= 80 ? '#10b981' : score >= 60 ? '#f59e0b' : '#ef4444';
+  circle.style.borderColor = color;
+  numEl.style.color = color;
+  
+  const feedback = score >= 90 ? `<div class="alert alert-success">🏆 <strong>Excellent!</strong> Your paper is fully compliant with NEP 2020 and PARAKH standards. This is a model competency-based paper.</div>`
+    : score >= 75 ? `<div class="alert alert-success">✅ <strong>Good.</strong> Your paper is well-designed. Address the unchecked items to achieve full compliance.</div>`
+    : score >= 55 ? `<div class="alert alert-warning">⚡ <strong>Developing.</strong> Several important elements are missing. Review the unchecked items and revise your paper.</div>`
+    : `<div class="alert" style="background:#fee2e2;color:#991b1b;border:1px solid #fecaca;">⚠️ <strong>Needs Improvement.</strong> This paper relies heavily on rote recall. Significant redesign is needed for NEP compliance.</div>`;
+  
+  document.getElementById('auditFeedback').innerHTML = feedback;
+  
+  // Domain scores
+  const domains = {};
+  auditItems.forEach((item,i) => {
+    if (!domains[item.domain]) domains[item.domain] = {earned:0,total:0};
+    domains[item.domain].total += item.weight;
+    if (auditState[i]) domains[item.domain].earned += item.weight;
+  });
+  
+  let domainHTML = '';
+  Object.entries(domains).forEach(([d,v]) => {
+    const pct = Math.round((v.earned/v.total)*100);
+    const color = pct>=80?'#10b981':pct>=50?'#f59e0b':'#ef4444';
+    domainHTML += `<div style="margin-bottom:0.75rem;">
+      <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.25rem;">
+        <span style="font-weight:600;">${d}</span>
+        <span style="font-weight:700;color:${color};">${v.earned}/${v.total}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color};"></div></div>
+    </div>`;
+  });
+  document.getElementById('domainScores').innerHTML = domainHTML;
+}
+
+function printAudit() {
+  updateStat('audits');
+  window.print();
+}
+function resetAudit() { buildAuditChecklist(); }
+
+// ===== SERVICE WORKER =====
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js').catch(() => {});
+}
+
+// ===== START =====
+document.addEventListener('DOMContentLoaded', () => {
+  // Auto-init if returning to app
+});
+</script>
+</body>
+</html>

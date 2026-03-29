@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#0d1f3c"/>
+<title>Student Competency Portfolio System</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink:      #0d1f3c;
+  --ink-mid:  #1a3a6e;
+  --sapphire: #1d4ed8;
+  --sky:      #3b82f6;
+  --jade:     #059669;
+  --jade-lt:  #10b981;
+  --gold:     #d97706;
+  --blush:    #fef3c7;
+  --cream:    #f8fafc;
+  --linen:    #f1f5f9;
+  --slate:    #64748b;
+  --line:     #e2e8f0;
+  --white:    #ffffff;
+  --red:      #dc2626;
+  --amber:    #f59e0b;
+
+  --shadow-sm: 0 1px 3px rgba(13,31,60,.08);
+  --shadow:    0 4px 16px rgba(13,31,60,.10);
+  --shadow-lg: 0 12px 40px rgba(13,31,60,.16);
+  --radius:    14px;
+  --radius-sm: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════
+   SCREENS
+═══════════════════════════ */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ═══════════════════════════
+   HOME / TITLE SCREEN
+═══════════════════════════ */
+#home { min-height: 100vh; background: var(--ink); color: white; }
+#home.active { display: flex; flex-direction: column; }
+
+.home-hero {
+  flex: 1;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(29,78,216,.4) 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 80%, rgba(5,150,105,.25) 0%, transparent 45%),
+    var(--ink);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 48px 24px 32px;
+  text-align: center; position: relative; overflow: hidden;
+}
+
+.home-grid-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.home-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(16,185,129,.15); border: 1px solid rgba(16,185,129,.3);
+  color: var(--jade-lt); padding: 6px 16px; border-radius: 100px;
+  font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 24px; position: relative; z-index: 2;
+}
+
+.home-monogram {
+  width: 88px; height: 88px;
+  background: linear-gradient(135deg, var(--sapphire), var(--jade));
+  border-radius: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 42px; margin: 0 auto 28px;
+  box-shadow: 0 0 0 12px rgba(29,78,216,.15);
+  position: relative; z-index: 2;
+}
+
+.home-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(26px, 5vw, 48px);
+  font-weight: 700; line-height: 1.15;
+  color: white; margin-bottom: 10px;
+  position: relative; z-index: 2;
+}
+.home-title em { color: var(--jade-lt); font-style: normal; }
+
+.home-sub { font-size: 14px; color: rgba(255,255,255,.55); margin-bottom: 28px; position: relative; z-index: 2; }
+
+.author-card {
+  display: inline-flex; align-items: center; gap: 14px;
+  background: rgba(255,255,255,.06); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.1); border-radius: 16px;
+  padding: 14px 22px; margin-bottom: 36px; position: relative; z-index: 2;
+}
+.author-card img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--jade-lt); }
+.author-card .av { text-align: left; }
+.author-card .av-name { font-weight: 600; font-size: 14px; }
+.author-card .av-role { font-size: 11px; color: rgba(255,255,255,.5); margin-top: 2px; }
+
+.home-nav {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; width: 100%; max-width: 680px;
+  position: relative; z-index: 2;
+}
+
+.hn-btn {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius); padding: 20px 18px;
+  cursor: pointer; transition: all 0.2s; text-align: left;
+  color: white; display: flex; flex-direction: column; gap: 7px;
+}
+.hn-btn:hover {
+  background: rgba(255,255,255,.1);
+  border-color: var(--jade-lt);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(16,185,129,.12);
+}
+.hn-btn .hni { font-size: 26px; }
+.hn-btn .hnt { font-weight: 600; font-size: 14px; }
+.hn-btn .hnd { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.4; }
+
+/* ═══════════════════════════
+   APP LAYOUT
+═══════════════════════════ */
+#app { min-height: 100vh; }
+#app.active { display: flex; }
+
+.sidebar {
+  width: 248px; background: var(--ink);
+  color: white; flex-shrink: 0;
+  position: fixed; top: 0; left: -248px;
+  height: 100vh; z-index: 100;
+  transition: left .28s cubic-bezier(.4,0,.2,1);
+  overflow-y: auto; display: flex; flex-direction: column;
+}
+.sidebar.open { left: 0; }
+@media(min-width: 880px) { .sidebar { position: relative; left: 0; } }
+
+.sb-head {
+  padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,.07);
+  display: flex; align-items: center; gap: 10px;
+}
+.sb-head .logo { font-size: 22px; }
+.sb-head .lt { font-size: 12px; font-weight: 600; line-height: 1.3; opacity: .85; }
+
+.sb-section { padding: 10px 14px 3px; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,.3); }
+
+.sb-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; cursor: pointer; font-size: 13px;
+  color: rgba(255,255,255,.65); border-left: 3px solid transparent;
+  transition: all .18s;
+}
+.sb-item:hover { background: rgba(255,255,255,.06); color: white; }
+.sb-item.active { background: rgba(29,78,216,.2); border-left-color: var(--jade-lt); color: white; }
+.sb-item .si { font-size: 16px; width: 22px; text-align: center; }
+
+.sb-foot { margin-top: auto; padding: 12px 14px; border-top: 1px solid rgba(255,255,255,.07); font-size: 11px; color: rgba(255,255,255,.3); }
+
+.main {
+  flex: 1; display: flex; flex-direction: column;
+  min-height: 100vh; overflow: hidden;
+}
+
+.topbar {
+  background: white; border-bottom: 1px solid var(--line);
+  padding: 13px 22px; display: flex; align-items: center;
+  gap: 14px; position: sticky; top: 0; z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+.hbg { display: flex; flex-direction: column; gap: 4px; cursor: pointer; padding: 3px; }
+.hbg span { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; }
+@media(min-width: 880px) { .hbg { display: none; } }
+.tb-title { font-weight: 600; font-size: 15px; color: var(--ink); flex: 1; }
+.tb-home { background: var(--ink); color: white; border: none; padding: 7px 14px; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; font-family: inherit; }
+
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 99; }
+.overlay.on { display: block; }
+
+.body { padding: 24px; max-width: 920px; width: 100%; margin: 0 auto; }
+
+/* ═══════════════════════════
+   COMPONENTS
+═══════════════════════════ */
+.pg-head {
+  background: linear-gradient(130deg, var(--ink-mid), var(--ink));
+  color: white; border-radius: var(--radius);
+  padding: 24px; margin-bottom: 22px;
+}
+.pg-head h2 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 700; }
+.pg-head p { font-size: 13px; opacity: .65; margin-top: 5px; }
+
+.card {
+  background: white; border-radius: var(--radius);
+  border: 1px solid var(--line); padding: 22px;
+  margin-bottom: 18px; box-shadow: var(--shadow-sm);
+}
+.card-title { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.card-sub { font-size: 13px; color: var(--slate); margin-bottom: 14px; }
+
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+@media(max-width:640px) { .g2,.g3 { grid-template-columns: 1fr; } }
+
+.fl { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+label.lbl { display: block; font-size: 12px; font-weight: 600; color: var(--slate); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .4px; }
+input[type=text], input[type=date], input[type=number], select, textarea {
+  width: 100%; padding: 9px 12px;
+  border: 1.5px solid var(--line); border-radius: var(--radius-sm);
+  font-size: 14px; font-family: inherit; background: var(--linen);
+  color: var(--ink); transition: border-color .18s;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--sky); }
+textarea { resize: vertical; min-height: 80px; }
+.fg { margin-bottom: 14px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  border: none; font-family: inherit; transition: all .18s;
+}
+.btn-ink { background: var(--ink); color: white; }
+.btn-ink:hover { background: var(--ink-mid); }
+.btn-jade { background: var(--jade); color: white; }
+.btn-jade:hover { background: var(--jade-lt); }
+.btn-sky { background: var(--sky); color: white; }
+.btn-red { background: var(--red); color: white; }
+.btn-out { background: transparent; border: 1.5px solid var(--ink); color: var(--ink); }
+.btn-out:hover { background: var(--ink); color: white; }
+.btn-sm { padding: 5px 11px; font-size: 12px; }
+.btn-amber { background: var(--amber); color: white; }
+
+.tag { display: inline-block; padding: 3px 9px; border-radius: 100px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+.t-jade { background: #d1fae5; color: var(--jade); }
+.t-sky  { background: #dbeafe; color: var(--sapphire); }
+.t-gold { background: var(--blush); color: var(--gold); }
+.t-red  { background: #fee2e2; color: var(--red); }
+.t-slate{ background: var(--linen); color: var(--slate); }
+
+.alert { padding: 11px 15px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 9px; }
+.a-info  { background: #dbeafe; color: var(--sapphire); }
+.a-ok    { background: #d1fae5; color: var(--jade); }
+.a-warn  { background: var(--blush); color: var(--gold); }
+.a-err   { background: #fee2e2; color: var(--red); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: var(--ink); color: white; padding: 9px 13px; text-align: left; font-weight: 600; }
+td { padding: 9px 13px; border-bottom: 1px solid var(--line); }
+tr:hover td { background: var(--linen); }
+
+.tabs { display: flex; gap: 3px; border-bottom: 2px solid var(--line); margin-bottom: 18px; flex-wrap: wrap; }
+.tab { padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--slate); border-radius: 8px 8px 0 0; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .18s; }
+.tab.on { color: var(--ink); border-bottom-color: var(--ink); background: var(--linen); }
+.tp { display: none; }
+.tp.on { display: block; }
+
+.progress-bar { height: 8px; background: var(--line); border-radius: 6px; overflow: hidden; margin-top: 5px; }
+.pb-fill { height: 100%; border-radius: 6px; }
+.pb-jade { background: var(--jade-lt); }
+.pb-sky  { background: var(--sky); }
+.pb-gold { background: var(--gold); }
+.pb-red  { background: var(--red); }
+
+.stat { background: white; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; text-align: center; }
+.stat .sn { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 700; }
+.stat .sl { font-size: 11px; color: var(--slate); text-transform: uppercase; letter-spacing: .5px; margin-top: 3px; }
+
+/* Competency levels */
+.lvl { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; }
+.lvl-1 { background: #fee2e2; color: var(--red); }
+.lvl-2 { background: var(--blush); color: var(--gold); }
+.lvl-3 { background: #dbeafe; color: var(--sapphire); }
+.lvl-4 { background: #d1fae5; color: var(--jade); }
+
+/* Policy */
+.policy-body h3 { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 700; color: var(--ink); margin: 18px 0 8px; }
+.policy-body p { font-size: 14px; line-height: 1.75; margin-bottom: 12px; color: #334155; }
+.policy-body ul, .policy-body ol { padding-left: 20px; margin-bottom: 12px; }
+.policy-body li { font-size: 14px; line-height: 1.75; color: #334155; margin-bottom: 3px; }
+.ref-box { background: #eff6ff; border-left: 4px solid var(--sky); padding: 13px 15px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 14px 0; }
+.ref-box strong { color: var(--sapphire); font-size: 12px; display: block; margin-bottom: 5px; }
+.ref-box p { margin: 0; color: #1e3a8a; font-size: 13px; }
+.ex-box { background: #ecfdf5; border-left: 4px solid var(--jade); padding: 13px 15px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 14px 0; }
+.ex-box strong { color: var(--jade); font-size: 12px; display: block; margin-bottom: 5px; }
+.ex-box p { margin: 0; color: #064e3b; font-size: 13px; }
+
+/* Radar chart */
+.radar-wrap { display: flex; justify-content: center; margin: 8px 0; }
+
+/* Portfolio student list */
+.student-card {
+  background: white; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px 18px; margin-bottom: 12px; cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  transition: all .18s;
+}
+.student-card:hover { border-color: var(--sapphire); box-shadow: var(--shadow); }
+.student-avatar {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--ink-mid), var(--sapphire));
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 18px; flex-shrink: 0;
+}
+.student-info .si-name { font-weight: 600; font-size: 15px; }
+.student-info .si-meta { font-size: 12px; color: var(--slate); margin-top: 2px; }
+
+/* Project card */
+.proj-card { background: var(--linen); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+.proj-card .pc-title { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+.proj-card .pc-desc { font-size: 13px; color: var(--slate); margin-bottom: 8px; }
+
+/* Competency select */
+.comp-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.comp-row:last-child { border-bottom: none; }
+.comp-row .cr-label { flex: 1; font-size: 14px; font-weight: 500; }
+.comp-row select { width: 180px; flex-shrink: 0; }
+
+/* Skill rating */
+.skill-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.skill-row:last-child { border-bottom: none; }
+.skill-row .sr-label { flex: 1; font-size: 14px; }
+.skill-stars { display: flex; gap: 4px; }
+.star { width: 26px; height: 26px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; background: var(--linen); transition: background .15s; }
+.star.on { background: var(--blush); }
+
+/* Report */
+.report-section { border-bottom: 1px solid var(--line); padding-bottom: 18px; margin-bottom: 18px; }
+.report-section:last-child { border-bottom: none; }
+
+@media print {
+  .sidebar, .topbar, .no-print { display: none !important; }
+  .body { padding: 0; max-width: 100%; }
+  .card { box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════
+     HOME SCREEN
+════════════════════════════ -->
+<div id="home" class="screen active">
+  <div class="home-hero">
+    <div class="home-grid-bg"></div>
+    <div class="home-badge">✦ Aligned with NEP 2020 | NCF 2023 | PARAKH</div>
+    <div class="home-monogram">🎓</div>
+    <h1 class="home-title">Comprehensive Student<br><em>Competency Portfolio</em> System</h1>
+    <p class="home-sub">Holistic · Competency-Based · Offline-First · Printable</p>
+    <div class="author-card">
+      <img src="author.jpg" alt="Mateen Yousuf" onerror="this.style.display='none'"/>
+      <div class="av">
+        <div class="av-name">Mateen Yousuf</div>
+        <div class="av-role">Teacher · School Education Department Kashmir</div>
+      </div>
+    </div>
+    <div class="home-nav">
+      <div class="hn-btn" onclick="go('portfolio')">
+        <span class="hni">📁</span>
+        <span class="hnt">Create Student Portfolio</span>
+        <span class="hnd">Add students, track profiles and all competencies</span>
+      </div>
+      <div class="hn-btn" onclick="go('dashboard')">
+        <span class="hni">📊</span>
+        <span class="hnt">View Competency Dashboard</span>
+        <span class="hnd">Charts, radar graphs, skill growth overview</span>
+      </div>
+      <div class="hn-btn" onclick="go('report')">
+        <span class="hni">📄</span>
+        <span class="hnt">Generate Holistic Report</span>
+        <span class="hnd">Printable NEP 2020 compliant progress cards</span>
+      </div>
+      <div class="hn-btn" onclick="go('policy')">
+        <span class="hni">📖</span>
+        <span class="hnt">Policy &amp; Framework</span>
+        <span class="hnd">NEP 2020, NCF 2023, PARAKH reference guide</span>
+      </div>
+      <div class="hn-btn" onclick="go('projects')">
+        <span class="hni">🔬</span>
+        <span class="hnt">Project Portfolio</span>
+        <span class="hnd">Document PBL activities and evidence</span>
+      </div>
+      <div class="hn-btn" onclick="go('skills')">
+        <span class="hni">🌟</span>
+        <span class="hnt">Co-Scholastic Skills</span>
+        <span class="hnd">Communication, creativity, leadership tracker</span>
+      </div>
+      <div class="hn-btn" onclick="go('reflection')">
+        <span class="hni">🪞</span>
+        <span class="hnt">Student Reflection</span>
+        <span class="hnd">Self-assessment and growth journaling</span>
+      </div>
+      <div class="hn-btn" onclick="go('school')">
+        <span class="hni">🏫</span>
+        <span class="hnt">School Overview</span>
+        <span class="hnd">Class-level holistic index &amp; trends</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     APP SCREEN
+════════════════════════════ -->
+<div id="app" class="screen">
+  <div class="overlay" id="overlay" onclick="closeSb()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <span class="logo">🎓</span>
+      <div class="lt">Competency Portfolio System</div>
+    </div>
+    <nav>
+      <div class="sb-section">Portfolio</div>
+      <div class="sb-item" data-page="portfolio"><span class="si">📁</span> Student Portfolios</div>
+      <div class="sb-item" data-page="competency"><span class="si">🎯</span> Academic Competencies</div>
+      <div class="sb-item" data-page="projects"><span class="si">🔬</span> Project Portfolio</div>
+      <div class="sb-section">Development</div>
+      <div class="sb-item" data-page="skills"><span class="si">🌟</span> Co-Scholastic Skills</div>
+      <div class="sb-item" data-page="reflection"><span class="si">🪞</span> Student Reflection</div>
+      <div class="sb-item" data-page="teacher"><span class="si">✏️</span> Teacher Comments</div>
+      <div class="sb-section">Analytics</div>
+      <div class="sb-item" data-page="dashboard"><span class="si">📊</span> Competency Dashboard</div>
+      <div class="sb-item" data-page="school"><span class="si">🏫</span> School Overview</div>
+      <div class="sb-section">Reports</div>
+      <div class="sb-item" data-page="report"><span class="si">📄</span> Holistic Report</div>
+      <div class="sb-item" data-page="backup"><span class="si">💾</span> Backup &amp; Restore</div>
+      <div class="sb-section">Reference</div>
+      <div class="sb-item" data-page="policy"><span class="si">📖</span> Policy &amp; Framework</div>
+    </nav>
+    <div class="sb-foot">Mateen Yousuf · SED Kashmir · v1.0</div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="hbg" onclick="toggleSb()"><span></span><span></span><span></span></div>
+      <div class="tb-title" id="tbTitle">Student Competency Portfolio System</div>
+      <button class="tb-home" onclick="goHome()">🏠 Home</button>
+    </div>
+
+    <div class="body">
+
+      <!-- ── PORTFOLIO ── -->
+      <div id="pg-portfolio" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>📁 Student Portfolio Management</h2>
+          <p>Create and manage individual student profiles with competency records</p>
+        </div>
+        <div class="tabs">
+          <div class="tab on" onclick="tab(this,'port','list')">👤 All Students</div>
+          <div class="tab" onclick="tab(this,'port','add')">➕ Add Student</div>
+        </div>
+        <div id="port-list" class="tp on">
+          <div class="card">
+            <div class="card-title">Registered Students</div>
+            <div id="studentList"></div>
+          </div>
+        </div>
+        <div id="port-add" class="tp">
+          <div class="card">
+            <div class="card-title">Create New Student Portfolio</div>
+            <div class="g2">
+              <div class="fg"><label class="lbl">Full Name</label><input type="text" id="s_name" placeholder="Student's full name"/></div>
+              <div class="fg"><label class="lbl">Class</label><select id="s_class"><option>Class 1</option><option>Class 2</option><option>Class 3</option><option>Class 4</option><option>Class 5</option><option>Class 6</option><option>Class 7</option><option>Class 8</option><option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option></select></div>
+              <div class="fg"><label class="lbl">Section</label><input type="text" id="s_section" placeholder="e.g. A, B"/></div>
+              <div class="fg"><label class="lbl">Academic Year</label><input type="text" id="s_year" value="2025-26"/></div>
+              <div class="fg"><label class="lbl">Key Interests</label><input type="text" id="s_interests" placeholder="e.g. Art, Science, Sports"/></div>
+              <div class="fg"><label class="lbl">Strength Areas</label><input type="text" id="s_strengths" placeholder="e.g. Creative thinking, Math"/></div>
+            </div>
+            <div class="fg"><label class="lbl">Additional Notes</label><textarea id="s_notes" placeholder="Any special needs, background, or observations..."></textarea></div>
+            <button class="btn btn-jade" onclick="addStudent()">✅ Create Portfolio</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── COMPETENCY ── -->
+      <div id="pg-competency" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>🎯 Academic Competency Tracker</h2>
+          <p>Record subject-wise competency levels with evidence notes</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Select Student</div>
+          <div class="fl">
+            <div class="fg" style="flex:1;min-width:180px"><label class="lbl">Student</label><select id="comp_student" onchange="loadCompetencies()"></select></div>
+            <div class="fg" style="flex:1;min-width:180px"><label class="lbl">Assessment Date</label><input type="date" id="comp_date"/></div>
+          </div>
+        </div>
+        <div id="compSubjects"></div>
+        <div id="compSaveBtn" style="display:none"><button class="btn btn-jade" onclick="saveCompetencies()">💾 Save Competency Record</button></div>
+      </div>
+
+      <!-- ── PROJECTS ── -->
+      <div id="pg-projects" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>🔬 Project &amp; Activity Portfolio</h2>
+          <p>Document project-based learning, activities, and creative work</p>
+        </div>
+        <div class="tabs">
+          <div class="tab on" onclick="tab(this,'proj','list')">📋 All Projects</div>
+          <div class="tab" onclick="tab(this,'proj','add')">➕ Add Project</div>
+        </div>
+        <div id="proj-list" class="tp on"><div id="projectList"></div></div>
+        <div id="proj-add" class="tp">
+          <div class="card">
+            <div class="card-title">Document a Project / Activity</div>
+            <div class="g2">
+              <div class="fg"><label class="lbl">Student</label><select id="proj_student"></select></div>
+              <div class="fg"><label class="lbl">Project Title</label><input type="text" id="proj_title" placeholder="e.g. Water Conservation Model"/></div>
+              <div class="fg"><label class="lbl">Subject / Domain</label><input type="text" id="proj_subject" placeholder="e.g. Science, EVS, Art"/></div>
+              <div class="fg"><label class="lbl">Date</label><input type="date" id="proj_date"/></div>
+            </div>
+            <div class="fg"><label class="lbl">Description</label><textarea id="proj_desc" placeholder="What was the project about? What did the student do?"></textarea></div>
+            <div class="fg"><label class="lbl">Skills Demonstrated</label><input type="text" id="proj_skills" placeholder="e.g. Research, Collaboration, Critical Thinking"/></div>
+            <div class="fg"><label class="lbl">Student Reflection</label><textarea id="proj_ref" placeholder="What did the student say about this project?"></textarea></div>
+            <div class="fg"><label class="lbl">Teacher Comment</label><textarea id="proj_tc" placeholder="Teacher's observation and feedback..."></textarea></div>
+            <button class="btn btn-jade" onclick="addProject()">➕ Save Project</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SKILLS ── -->
+      <div id="pg-skills" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>🌟 Co-Scholastic Skill Tracker</h2>
+          <p>Evaluate 21st-century skills: communication, creativity, leadership and more</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Select Student &amp; Period</div>
+          <div class="g2">
+            <div class="fg"><label class="lbl">Student</label><select id="skill_student" onchange="loadSkills()"></select></div>
+            <div class="fg"><label class="lbl">Period / Term</label><select id="skill_term"><option>Term 1</option><option>Term 2</option><option>Term 3</option><option>Annual</option></select></div>
+          </div>
+        </div>
+        <div class="card" id="skillsForm">
+          <div class="card-title">Rate Skills (1–4 Stars)</div>
+          <div class="card-sub">1 = Beginning &nbsp;·&nbsp; 2 = Developing &nbsp;·&nbsp; 3 = Proficient &nbsp;·&nbsp; 4 = Exemplary</div>
+          <div id="skillRows"></div>
+          <button class="btn btn-jade" style="margin-top:14px" onclick="saveSkills()">💾 Save Skills</button>
+        </div>
+        <div id="skillHistory"></div>
+      </div>
+
+      <!-- ── REFLECTION ── -->
+      <div id="pg-reflection" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>🪞 Student Self-Reflection Module</h2>
+          <p>Guided reflection prompts to build student metacognition and agency</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Select Student</div>
+          <div class="g2">
+            <div class="fg"><label class="lbl">Student</label><select id="refl_student"></select></div>
+            <div class="fg"><label class="lbl">Date</label><input type="date" id="refl_date"/></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Reflection Prompts</div>
+          <div class="fg"><label class="lbl">💡 What did I learn this week / term?</label><textarea id="refl_q1" placeholder="Student writes in their own words..."></textarea></div>
+          <div class="fg"><label class="lbl">🧱 What challenges did I face?</label><textarea id="refl_q2" placeholder="Describe the difficulties..."></textarea></div>
+          <div class="fg"><label class="lbl">📈 What skills improved?</label><textarea id="refl_q3" placeholder="Skills I feel better at now..."></textarea></div>
+          <div class="fg"><label class="lbl">🎯 What will I work on next?</label><textarea id="refl_q4" placeholder="My goal for next week / term..."></textarea></div>
+          <div class="fg"><label class="lbl">⭐ My proudest achievement:</label><textarea id="refl_q5" placeholder="Something I am proud of..."></textarea></div>
+          <button class="btn btn-jade" onclick="saveReflection()">💾 Save Reflection</button>
+        </div>
+        <div id="reflHistory"></div>
+      </div>
+
+      <!-- ── TEACHER COMMENTS ── -->
+      <div id="pg-teacher" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>✏️ Teacher Comment Module</h2>
+          <p>Add structured narrative feedback for each student</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Add Feedback</div>
+          <div class="g2">
+            <div class="fg"><label class="lbl">Student</label><select id="tc_student"></select></div>
+            <div class="fg"><label class="lbl">Date</label><input type="date" id="tc_date"/></div>
+          </div>
+          <div class="fg"><label class="lbl">💪 Strengths Observed</label><textarea id="tc_strength" placeholder="What is the student doing well?"></textarea></div>
+          <div class="fg"><label class="lbl">🌱 Areas for Growth</label><textarea id="tc_growth" placeholder="What specific areas need development?"></textarea></div>
+          <div class="fg"><label class="lbl">🛠️ Intervention / Support Suggested</label><textarea id="tc_support" placeholder="What additional support would help?"></textarea></div>
+          <div class="fg"><label class="lbl">📝 General Narrative Comment</label><textarea id="tc_general" placeholder="Overall narrative feedback for the report card..."></textarea></div>
+          <button class="btn btn-jade" onclick="saveTeacherComment()">💾 Save Comment</button>
+        </div>
+        <div id="tcHistory"></div>
+      </div>
+
+      <!-- ── DASHBOARD ── -->
+      <div id="pg-dashboard" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>📊 Competency Dashboard</h2>
+          <p>Visual overview of student competency levels and skill growth</p>
+        </div>
+        <div class="card">
+          <div class="card-title">Select Student</div>
+          <select id="dash_student" onchange="renderDashboard()" style="max-width:300px"></select>
+        </div>
+        <div id="dashContent"></div>
+      </div>
+
+      <!-- ── REPORT ── -->
+      <div id="pg-report" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>📄 Holistic Progress Report Generator</h2>
+          <p>Generate printable NEP 2020 aligned progress cards — no marks, competency-based</p>
+        </div>
+        <div class="card no-print">
+          <div class="card-title">Select Student</div>
+          <div class="fl">
+            <select id="rep_student" style="max-width:280px"></select>
+            <button class="btn btn-jade" onclick="generateReport()">📄 Generate Report</button>
+            <button class="btn btn-out" onclick="window.print()">🖨️ Print</button>
+          </div>
+        </div>
+        <div id="reportContent"></div>
+      </div>
+
+      <!-- ── SCHOOL ── -->
+      <div id="pg-school" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>🏫 School Portfolio Overview</h2>
+          <p>Class-level competency distribution and holistic development index</p>
+        </div>
+        <div id="schoolContent"></div>
+      </div>
+
+      <!-- ── POLICY ── -->
+      <div id="pg-policy" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>📖 Policy &amp; Framework Reference</h2>
+          <p>NEP 2020 · NCF 2023 · PARAKH · Portfolio Assessment</p>
+        </div>
+        <div class="tabs" style="flex-wrap:wrap">
+          <div class="tab on" onclick="tab(this,'pol','p1')">NEP 2020</div>
+          <div class="tab" onclick="tab(this,'pol','p2')">NCF 2023</div>
+          <div class="tab" onclick="tab(this,'pol','p3')">PARAKH</div>
+          <div class="tab" onclick="tab(this,'pol','p4')">Portfolio</div>
+          <div class="tab" onclick="tab(this,'pol','p5')">Beyond Marks</div>
+          <div class="tab" onclick="tab(this,'pol','p6')">Student Agency</div>
+          <div class="tab" onclick="tab(this,'pol','p7')">Reflection</div>
+          <div class="tab" onclick="tab(this,'pol','p8')">PBL</div>
+          <div class="tab" onclick="tab(this,'pol','p9')">Skill Mapping</div>
+          <div class="tab" onclick="tab(this,'pol','p10')">Co-Scholastic</div>
+          <div class="tab" onclick="tab(this,'pol','p11')">Formative Evidence</div>
+          <div class="tab" onclick="tab(this,'pol','p12')">Implementation</div>
+        </div>
+        <div id="pol-p1"  class="tp on card policy-body"></div>
+        <div id="pol-p2"  class="tp card policy-body"></div>
+        <div id="pol-p3"  class="tp card policy-body"></div>
+        <div id="pol-p4"  class="tp card policy-body"></div>
+        <div id="pol-p5"  class="tp card policy-body"></div>
+        <div id="pol-p6"  class="tp card policy-body"></div>
+        <div id="pol-p7"  class="tp card policy-body"></div>
+        <div id="pol-p8"  class="tp card policy-body"></div>
+        <div id="pol-p9"  class="tp card policy-body"></div>
+        <div id="pol-p10" class="tp card policy-body"></div>
+        <div id="pol-p11" class="tp card policy-body"></div>
+        <div id="pol-p12" class="tp card policy-body"></div>
+      </div>
+
+      <!-- ── BACKUP ── -->
+      <div id="pg-backup" class="pg" style="display:none">
+        <div class="pg-head">
+          <h2>💾 Backup &amp; Restore</h2>
+          <p>Export all portfolio data as JSON, or restore from a backup file</p>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-title">Export Data</div>
+            <p style="font-size:13px;color:var(--slate);margin-bottom:14px">Download all student portfolios, competency records, reflections, and reports.</p>
+            <button class="btn btn-ink" onclick="exportAll()">⬇️ Export Backup</button>
+          </div>
+          <div class="card">
+            <div class="card-title">Import Data</div>
+            <p style="font-size:13px;color:var(--slate);margin-bottom:14px">Restore from a previously exported JSON backup file.</p>
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importAll(event)"/>
+            <button class="btn btn-out" onclick="document.getElementById('importFile').click()">⬆️ Import Backup</button>
+          </div>
+        </div>
+        <div class="card"><div class="card-title">Storage Summary</div><div id="backupSummary"></div></div>
+      </div>
+
+    </div><!-- /body -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+
+/* ═══════════════════════════════
+   DATA LAYER
+═══════════════════════════════ */
+const LS = {
+  get: k => { try { return JSON.parse(localStorage.getItem(k)||'null'); } catch(e){ return null; } },
+  set: (k,v) => localStorage.setItem(k, JSON.stringify(v)),
+  list: k => { const v = LS.get(k); return Array.isArray(v) ? v : []; }
+};
+
+const SUBJECTS = ['Language (Hindi/English/Urdu)','Mathematics','Environmental Studies / Science','Social Science','Art & Craft','Physical Education','Music / Dance','Computer Science'];
+const COMP_LEVELS = [
+  { val: 1, label: 'Emerging',   css: 'lvl-1' },
+  { val: 2, label: 'Developing', css: 'lvl-2' },
+  { val: 3, label: 'Proficient', css: 'lvl-3' },
+  { val: 4, label: 'Advanced',   css: 'lvl-4' }
+];
+const COSKILLS = ['Communication','Collaboration','Creativity','Critical Thinking','Leadership','Responsibility','Ethical Awareness','Self-Management'];
+
+/* ═══════════════════════════════
+   NAVIGATION
+═══════════════════════════════ */
+let activeDashChart = null;
+
+function go(page) {
+  document.getElementById('home').classList.remove('active');
+  document.getElementById('app').classList.add('active');
+  showPg(page);
+}
+function goHome() {
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('home').classList.add('active');
+}
+function showPg(page) {
+  document.querySelectorAll('.pg').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  const el = document.getElementById('pg-' + page);
+  if (el) el.style.display = 'block';
+  document.querySelectorAll('.sb-item').forEach(i => { if(i.dataset.page===page) i.classList.add('active'); });
+  const titles = {
+    portfolio:'Student Portfolio Management', competency:'Academic Competency Tracker',
+    projects:'Project Portfolio', skills:'Co-Scholastic Skills', reflection:'Student Reflection',
+    teacher:'Teacher Comments', dashboard:'Competency Dashboard', school:'School Overview',
+    report:'Holistic Report Generator', policy:'Policy & Framework', backup:'Backup & Restore'
+  };
+  document.getElementById('tbTitle').textContent = titles[page] || 'Portfolio System';
+  closeSb();
+
+  if (page==='portfolio') renderStudentList();
+  if (page==='competency') { populateStudentDropdowns(); initCompSubjects(); }
+  if (page==='projects') { populateStudentDropdowns(); renderProjectList(); }
+  if (page==='skills') { populateStudentDropdowns(); initSkillRows(); }
+  if (page==='reflection') { populateStudentDropdowns(); document.getElementById('refl_date').value = today(); }
+  if (page==='teacher') { populateStudentDropdowns(); document.getElementById('tc_date').value = today(); }
+  if (page==='dashboard') { populateStudentDropdowns(); }
+  if (page==='report') { populateStudentDropdowns(); }
+  if (page==='school') renderSchool();
+  if (page==='policy') initPolicy();
+  if (page==='backup') renderBackupSummary();
+}
+
+function toggleSb() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('on');
+}
+function closeSb() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('on');
+}
+document.querySelectorAll('.sb-item').forEach(i => i.addEventListener('click', () => showPg(i.dataset.page)));
+
+function tab(el, group, id) {
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll(`[id^="${group}-"]`).forEach(p => p.classList.remove('on'));
+  document.getElementById(`${group}-${id}`).classList.add('on');
+}
+
+function today() { return new Date().toISOString().split('T')[0]; }
+
+/* ═══════════════════════════════
+   STUDENTS
+═══════════════════════════════ */
+function addStudent() {
+  const name = document.getElementById('s_name').value.trim();
+  if (!name) { alert('Please enter student name.'); return; }
+  const s = {
+    id: Date.now().toString(),
+    name, class: document.getElementById('s_class').value,
+    section: document.getElementById('s_section').value,
+    year: document.getElementById('s_year').value,
+    interests: document.getElementById('s_interests').value,
+    strengths: document.getElementById('s_strengths').value,
+    notes: document.getElementById('s_notes').value,
+    created: today()
+  };
+  const list = LS.list('studentProfiles');
+  list.push(s);
+  LS.set('studentProfiles', list);
+  ['s_name','s_section','s_interests','s_strengths','s_notes'].forEach(id => document.getElementById(id).value = '');
+  alert(`✅ Portfolio created for ${name}`);
+  renderStudentList();
+}
+
+function renderStudentList() {
+  const list = LS.list('studentProfiles');
+  const el = document.getElementById('studentList');
+  if (!list.length) {
+    el.innerHTML = '<div class="alert a-info">📌 No students yet. Use the "Add Student" tab to create portfolios.</div>';
+    return;
+  }
+  el.innerHTML = list.map(s => `
+    <div class="student-card" onclick="openStudent('${s.id}')">
+      <div class="student-avatar">${s.name.charAt(0).toUpperCase()}</div>
+      <div class="student-info">
+        <div class="si-name">${s.name}</div>
+        <div class="si-meta">${s.class} · Section ${s.section||'-'} · ${s.year}</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <span class="tag t-jade">Portfolio Active</span>
+        <button class="btn btn-red btn-sm no-print" onclick="event.stopPropagation();deleteStudent('${s.id}')">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+function openStudent(id) {
+  document.getElementById('comp_student').value = id;
+  showPg('competency');
+}
+
+function deleteStudent(id) {
+  if (!confirm('Delete this student and all their records?')) return;
+  ['studentProfiles','competencyRecords','projectEntries','reflectionEntries','teacherComments','skillRecords'].forEach(k => {
+    const list = LS.list(k);
+    LS.set(k, list.filter(i => i.id !== id && i.studentId !== id));
+  });
+  renderStudentList();
+}
+
+function populateStudentDropdowns() {
+  const list = LS.list('studentProfiles');
+  const ids = ['comp_student','proj_student','skill_student','refl_student','tc_student','dash_student','rep_student'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const cur = el.value;
+    el.innerHTML = list.length
+      ? list.map(s => `<option value="${s.id}">${s.name} — ${s.class}</option>`).join('')
+      : '<option value="">No students yet</option>';
+    if (cur) el.value = cur;
+  });
+}
+
+/* ═══════════════════════════════
+   COMPETENCIES
+═══════════════════════════════ */
+function initCompSubjects() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('comp_date').value = today;
+  let html = '';
+  SUBJECTS.forEach((sub, i) => {
+    html += `<div class="card">
+      <div class="card-title" style="font-size:16px;margin-bottom:10px">📚 ${sub}</div>
+      <div class="comp-row">
+        <span class="cr-label">Competency Level</span>
+        <select id="cl_${i}">
+          <option value="">-- Not Assessed --</option>
+          <option value="1">🔴 Emerging</option>
+          <option value="2">🟡 Developing</option>
+          <option value="3">🔵 Proficient</option>
+          <option value="4">🟢 Advanced</option>
+        </select>
+      </div>
+      <div class="fg" style="margin-top:10px"><label class="lbl">Learning Outcome / Evidence Notes</label><textarea id="cn_${i}" placeholder="What specific outcome was demonstrated?" style="min-height:60px"></textarea></div>
+    </div>`;
+  });
+  document.getElementById('compSubjects').innerHTML = html;
+  document.getElementById('compSaveBtn').style.display = 'block';
+}
+
+function loadCompetencies() {
+  const sid = document.getElementById('comp_student').value;
+  if (!sid) return;
+  const records = LS.list('competencyRecords');
+  const latest = records.filter(r => r.studentId === sid).sort((a,b) => b.date.localeCompare(a.date))[0];
+  if (!latest) return;
+  latest.subjects.forEach((s, i) => {
+    const cl = document.getElementById(`cl_${i}`);
+    const cn = document.getElementById(`cn_${i}`);
+    if (cl) cl.value = s.level || '';
+    if (cn) cn.value = s.notes || '';
+  });
+}
+
+function saveCompetencies() {
+  const sid = document.getElementById('comp_student').value;
+  if (!sid) { alert('Select a student first.'); return; }
+  const subjects = SUBJECTS.map((sub,i) => ({
+    subject: sub,
+    level: document.getElementById(`cl_${i}`).value,
+    notes: document.getElementById(`cn_${i}`).value
+  }));
+  const record = { studentId: sid, date: document.getElementById('comp_date').value, subjects };
+  const list = LS.list('competencyRecords');
+  list.push(record);
+  LS.set('competencyRecords', list);
+  alert('✅ Competency record saved!');
+}
+
+/* ═══════════════════════════════
+   PROJECTS
+═══════════════════════════════ */
+function addProject() {
+  const sid = document.getElementById('proj_student').value;
+  const title = document.getElementById('proj_title').value.trim();
+  if (!sid || !title) { alert('Select student and enter project title.'); return; }
+  const proj = {
+    id: Date.now().toString(), studentId: sid,
+    title, subject: document.getElementById('proj_subject').value,
+    date: document.getElementById('proj_date').value || today(),
+    desc: document.getElementById('proj_desc').value,
+    skills: document.getElementById('proj_skills').value,
+    reflection: document.getElementById('proj_ref').value,
+    teacherComment: document.getElementById('proj_tc').value
+  };
+  const list = LS.list('projectEntries');
+  list.push(proj);
+  LS.set('projectEntries', list);
+  ['proj_title','proj_subject','proj_desc','proj_skills','proj_ref','proj_tc'].forEach(id => document.getElementById(id).value = '');
+  alert('✅ Project saved!');
+  renderProjectList();
+}
+
+function renderProjectList() {
+  const projects = LS.list('projectEntries');
+  const students = LS.list('studentProfiles');
+  const el = document.getElementById('projectList');
+  if (!projects.length) {
+    el.innerHTML = '<div class="card"><div class="alert a-info">📌 No projects yet. Use the "Add Project" tab to document student work.</div></div>';
+    return;
+  }
+  let html = '<div class="card"><div class="card-title">All Projects</div>';
+  projects.slice().reverse().forEach(p => {
+    const s = students.find(st => st.id === p.studentId);
+    html += `<div class="proj-card">
+      <div class="fl" style="justify-content:space-between;margin-bottom:6px">
+        <div class="pc-title">🔬 ${p.title}</div>
+        <button class="btn btn-red btn-sm no-print" onclick="deleteProject('${p.id}')">🗑️</button>
+      </div>
+      <div class="pc-desc">${p.desc}</div>
+      <div class="fl">
+        <span class="tag t-sky">👤 ${s?.name||'Unknown'}</span>
+        ${p.subject ? `<span class="tag t-slate">📚 ${p.subject}</span>` : ''}
+        ${p.date ? `<span class="tag t-slate">📅 ${p.date}</span>` : ''}
+        ${p.skills ? `<span class="tag t-jade">⚡ ${p.skills}</span>` : ''}
+      </div>
+      ${p.reflection ? `<div style="margin-top:8px;font-size:13px;color:var(--sapphire)">🪞 <em>${p.reflection}</em></div>` : ''}
+      ${p.teacherComment ? `<div style="margin-top:6px;font-size:13px;color:var(--jade)">✏️ ${p.teacherComment}</div>` : ''}
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function deleteProject(id) {
+  if (!confirm('Delete this project?')) return;
+  LS.set('projectEntries', LS.list('projectEntries').filter(p => p.id !== id));
+  renderProjectList();
+}
+
+/* ═══════════════════════════════
+   CO-SCHOLASTIC SKILLS
+═══════════════════════════════ */
+function initSkillRows() {
+  let html = '';
+  COSKILLS.forEach((skill, i) => {
+    html += `<div class="skill-row">
+      <span class="sr-label">${skill}</span>
+      <div class="skill-stars" id="stars_${i}">${[1,2,3,4].map(n => `<div class="star" data-i="${i}" data-n="${n}" onclick="rateStar(${i},${n})">⭐</div>`).join('')}</div>
+      <span id="star_val_${i}" style="font-size:12px;color:var(--slate);width:70px"></span>
+    </div>`;
+  });
+  document.getElementById('skillRows').innerHTML = html;
+}
+
+function rateStar(idx, n) {
+  const stars = document.querySelectorAll(`[data-i="${idx}"]`);
+  stars.forEach((s, i) => s.classList.toggle('on', i < n));
+  const labels = ['Beginning','Developing','Proficient','Exemplary'];
+  document.getElementById(`star_val_${idx}`).textContent = labels[n-1] || '';
+}
+
+function getStarVal(idx) {
+  const stars = document.querySelectorAll(`[data-i="${idx}"].on`);
+  return stars.length;
+}
+
+function loadSkills() {
+  const sid = document.getElementById('skill_student').value;
+  const term = document.getElementById('skill_term').value;
+  const records = LS.list('skillRecords').filter(r => r.studentId===sid && r.term===term);
+  const latest = records.sort((a,b)=>b.date.localeCompare(a.date))[0];
+  if (!latest) return;
+  COSKILLS.forEach((_, i) => {
+    const n = latest.skills[i] || 0;
+    if (n) rateStar(i, n);
+  });
+}
+
+function saveSkills() {
+  const sid = document.getElementById('skill_student').value;
+  if (!sid) { alert('Select a student.'); return; }
+  const record = {
+    studentId: sid,
+    term: document.getElementById('skill_term').value,
+    date: today(),
+    skills: COSKILLS.map((_, i) => getStarVal(i))
+  };
+  const list = LS.list('skillRecords');
+  list.push(record);
+  LS.set('skillRecords', list);
+  alert('✅ Skills saved!');
+  renderSkillHistory();
+}
+
+function renderSkillHistory() {
+  const sid = document.getElementById('skill_student').value;
+  const records = LS.list('skillRecords').filter(r => r.studentId===sid);
+  const el = document.getElementById('skillHistory');
+  if (!records.length) { el.innerHTML = ''; return; }
+  let html = '<div class="card"><div class="card-title">Skill History</div>';
+  records.slice().reverse().slice(0,3).forEach(r => {
+    html += `<div style="margin-bottom:12px;padding:12px;background:var(--linen);border-radius:10px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px">${r.term} · ${r.date}</div>`;
+    COSKILLS.forEach((skill,i) => {
+      const v = r.skills[i] || 0;
+      html += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">
+        <span style="font-size:13px;width:160px">${skill}</span>
+        <div class="progress-bar" style="flex:1"><div class="pb-fill pb-jade" style="width:${v*25}%"></div></div>
+        <span style="font-size:12px;color:var(--slate)">${v}/4</span>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+/* ═══════════════════════════════
+   REFLECTION
+═══════════════════════════════ */
+function saveReflection() {
+  const sid = document.getElementById('refl_student').value;
+  if (!sid) { alert('Select a student.'); return; }
+  const rec = {
+    studentId: sid,
+    date: document.getElementById('refl_date').value || today(),
+    q1: document.getElementById('refl_q1').value,
+    q2: document.getElementById('refl_q2').value,
+    q3: document.getElementById('refl_q3').value,
+    q4: document.getElementById('refl_q4').value,
+    q5: document.getElementById('refl_q5').value
+  };
+  const list = LS.list('reflectionEntries');
+  list.push(rec);
+  LS.set('reflectionEntries', list);
+  ['refl_q1','refl_q2','refl_q3','refl_q4','refl_q5'].forEach(id => document.getElementById(id).value = '');
+  alert('✅ Reflection saved!');
+  renderReflHistory();
+}
+
+function renderReflHistory() {
+  const sid = document.getElementById('refl_student').value;
+  const records = LS.list('reflectionEntries').filter(r => r.studentId===sid);
+  const el = document.getElementById('reflHistory');
+  if (!records.length) { el.innerHTML = ''; return; }
+  const labels = ['💡 What I learned','🧱 Challenges faced','📈 Skills improved','🎯 My next goal','⭐ Proudest achievement'];
+  let html = '<div class="card"><div class="card-title">Previous Reflections</div>';
+  records.slice().reverse().slice(0,5).forEach(r => {
+    html += `<div style="background:var(--linen);border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="font-size:12px;color:var(--slate);margin-bottom:8px">📅 ${r.date}</div>`;
+    [r.q1,r.q2,r.q3,r.q4,r.q5].forEach((q,i) => {
+      if (q) html += `<p style="font-size:13px;margin-bottom:6px"><strong>${labels[i]}:</strong> ${q}</p>`;
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+/* ═══════════════════════════════
+   TEACHER COMMENTS
+═══════════════════════════════ */
+function saveTeacherComment() {
+  const sid = document.getElementById('tc_student').value;
+  if (!sid) { alert('Select a student.'); return; }
+  const rec = {
+    studentId: sid, date: document.getElementById('tc_date').value || today(),
+    strength: document.getElementById('tc_strength').value,
+    growth: document.getElementById('tc_growth').value,
+    support: document.getElementById('tc_support').value,
+    general: document.getElementById('tc_general').value
+  };
+  const list = LS.list('teacherComments');
+  list.push(rec);
+  LS.set('teacherComments', list);
+  ['tc_strength','tc_growth','tc_support','tc_general'].forEach(id => document.getElementById(id).value = '');
+  alert('✅ Comment saved!');
+  renderTCHistory();
+}
+
+function renderTCHistory() {
+  const sid = document.getElementById('tc_student').value;
+  const records = LS.list('teacherComments').filter(r => r.studentId===sid);
+  const el = document.getElementById('tcHistory');
+  if (!records.length) { el.innerHTML = ''; return; }
+  let html = '<div class="card"><div class="card-title">Previous Feedback</div>';
+  records.slice().reverse().slice(0,3).forEach(r => {
+    html += `<div style="background:var(--linen);border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="font-size:12px;color:var(--slate);margin-bottom:8px">📅 ${r.date}</div>
+      ${r.strength ? `<p style="font-size:13px;margin-bottom:5px">💪 <strong>Strengths:</strong> ${r.strength}</p>` : ''}
+      ${r.growth ? `<p style="font-size:13px;margin-bottom:5px">🌱 <strong>Growth areas:</strong> ${r.growth}</p>` : ''}
+      ${r.general ? `<p style="font-size:13px;font-style:italic;color:var(--sapphire)">📝 ${r.general}</p>` : ''}
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+/* ═══════════════════════════════
+   DASHBOARD
+═══════════════════════════════ */
+function renderDashboard() {
+  const sid = document.getElementById('dash_student').value;
+  if (!sid) return;
+  const students = LS.list('studentProfiles');
+  const student = students.find(s => s.id===sid);
+  const compRecords = LS.list('competencyRecords').filter(r => r.studentId===sid);
+  const skillRecords = LS.list('skillRecords').filter(r => r.studentId===sid);
+  const projects = LS.list('projectEntries').filter(p => p.studentId===sid);
+
+  if (!student) return;
+
+  const el = document.getElementById('dashContent');
+
+  // Compute averages
+  let compAvg = null, subjectData = [];
+  if (compRecords.length) {
+    const latest = compRecords.sort((a,b)=>b.date.localeCompare(a.date))[0];
+    subjectData = latest.subjects.map(s => ({ label: s.subject.split(' ')[0], val: parseInt(s.level) || 0 }));
+    const scored = subjectData.filter(s => s.val > 0);
+    compAvg = scored.length ? (scored.reduce((a,s)=>a+s.val,0)/scored.length).toFixed(1) : null;
+  }
+
+  let skillAvg = null, skillData = [];
+  if (skillRecords.length) {
+    const latest = skillRecords.sort((a,b)=>b.date.localeCompare(a.date))[0];
+    skillData = COSKILLS.map((s,i) => ({ label: s.split(' ')[0], val: latest.skills[i]||0 }));
+    const scored = skillData.filter(s => s.val > 0);
+    skillAvg = scored.length ? (scored.reduce((a,s)=>a+s.val,0)/scored.length).toFixed(1) : null;
+  }
+
+  const holistic = (compAvg && skillAvg) ? ((parseFloat(compAvg)/4*50)+(parseFloat(skillAvg)/4*50)).toFixed(0) : null;
+
+  let html = `<div class="g3" style="margin-bottom:18px">
+    <div class="stat"><div class="sn" style="color:var(--sapphire)">${compAvg ? (compAvg >= 3.5 ? 'Advanced' : compAvg >= 2.5 ? 'Proficient' : compAvg >= 1.5 ? 'Developing' : 'Emerging') : '—'}</div><div class="sl">Academic Level</div></div>
+    <div class="stat"><div class="sn" style="color:var(--jade)">${skillAvg ? skillAvg + '/4' : '—'}</div><div class="sl">Skill Rating</div></div>
+    <div class="stat"><div class="sn" style="color:var(--gold)">${holistic ? holistic + '%' : '—'}</div><div class="sl">Holistic Index</div></div>
+  </div>`;
+
+  // Charts
+  html += '<div class="g2">';
+
+  if (subjectData.filter(s=>s.val>0).length) {
+    html += `<div class="card"><div class="card-title">Academic Competencies</div><canvas id="dashComp" height="220"></canvas></div>`;
+  } else {
+    html += `<div class="card"><div class="alert a-info">No competency records yet.</div></div>`;
+  }
+
+  if (skillData.filter(s=>s.val>0).length) {
+    html += `<div class="card"><div class="card-title">Co-Scholastic Skills</div><canvas id="dashSkill" height="220"></canvas></div>`;
+  } else {
+    html += `<div class="card"><div class="alert a-info">No skill records yet.</div></div>`;
+  }
+  html += '</div>';
+
+  // Projects
+  html += `<div class="card"><div class="card-title">Projects (${projects.length})</div>`;
+  if (projects.length) {
+    html += projects.slice(-3).map(p => `<div class="proj-card"><div class="pc-title">${p.title}</div><div class="pc-desc">${p.subject} · ${p.date}</div>${p.skills ? `<span class="tag t-jade">${p.skills}</span>` : ''}</div>`).join('');
+  } else {
+    html += '<div class="alert a-info">No projects documented yet.</div>';
+  }
+  html += '</div>';
+
+  el.innerHTML = html;
+
+  // Draw charts
+  if (activeDashChart) { try{ activeDashChart.forEach(c=>c.destroy()); }catch(e){} }
+  activeDashChart = [];
+
+  if (subjectData.filter(s=>s.val>0).length) {
+    const ctx = document.getElementById('dashComp');
+    if (ctx) activeDashChart.push(new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: subjectData.map(s => s.label),
+        datasets: [{ label: 'Competency Level', data: subjectData.map(s => s.val),
+          borderColor: '#1d4ed8', backgroundColor: 'rgba(29,78,216,.12)', pointBackgroundColor: '#1d4ed8' }]
+      },
+      options: { responsive: true, scales: { r: { min: 0, max: 4, ticks: { stepSize: 1 } } } }
+    }));
+  }
+
+  if (skillData.filter(s=>s.val>0).length) {
+    const ctx2 = document.getElementById('dashSkill');
+    if (ctx2) activeDashChart.push(new Chart(ctx2, {
+      type: 'radar',
+      data: {
+        labels: skillData.map(s => s.label),
+        datasets: [{ label: 'Skill Rating', data: skillData.map(s => s.val),
+          borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.12)', pointBackgroundColor: '#059669' }]
+      },
+      options: { responsive: true, scales: { r: { min: 0, max: 4, ticks: { stepSize: 1 } } } }
+    }));
+  }
+}
+
+/* ═══════════════════════════════
+   HOLISTIC REPORT
+═══════════════════════════════ */
+function generateReport() {
+  const sid = document.getElementById('rep_student').value;
+  if (!sid) { alert('Select a student.'); return; }
+  const students = LS.list('studentProfiles');
+  const s = students.find(st => st.id===sid);
+  if (!s) return;
+
+  const compRecords = LS.list('competencyRecords').filter(r => r.studentId===sid);
+  const skillRecords = LS.list('skillRecords').filter(r => r.studentId===sid);
+  const projects = LS.list('projectEntries').filter(p => p.studentId===sid);
+  const reflections = LS.list('reflectionEntries').filter(r => r.studentId===sid);
+  const comments = LS.list('teacherComments').filter(c => c.studentId===sid);
+
+  const latestComp = compRecords.sort((a,b)=>b.date.localeCompare(a.date))[0];
+  const latestSkill = skillRecords.sort((a,b)=>b.date.localeCompare(a.date))[0];
+  const latestRefl = reflections.sort((a,b)=>b.date.localeCompare(a.date))[0];
+  const latestComment = comments.sort((a,b)=>b.date.localeCompare(a.date))[0];
+
+  const lvlLabel = v => ['','🔴 Emerging','🟡 Developing','🔵 Proficient','🟢 Advanced'][v] || '—';
+
+  let html = `<div class="card" id="reportDoc">
+    <div style="text-align:center;border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:22px">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--slate);margin-bottom:8px">School Education Department · Kashmir</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--ink)">Holistic Progress Card</div>
+      <div style="font-size:12px;color:var(--slate);margin-top:4px">NEP 2020 · NCF 2023 · PARAKH Aligned &nbsp;|&nbsp; Competency-Based · No Marks Ranking</div>
+    </div>
+
+    <div class="g2 report-section">
+      <div><strong>Student:</strong> ${s.name}</div>
+      <div><strong>Class:</strong> ${s.class} · Section ${s.section||'—'}</div>
+      <div><strong>Academic Year:</strong> ${s.year}</div>
+      <div><strong>Report Date:</strong> ${today()}</div>
+      ${s.interests ? `<div><strong>Interests:</strong> ${s.interests}</div>` : ''}
+      ${s.strengths ? `<div><strong>Strength Areas:</strong> ${s.strengths}</div>` : ''}
+    </div>`;
+
+  // Academic
+  html += `<div class="report-section"><p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;margin-bottom:12px">📚 Academic Competency Summary</p>`;
+  if (latestComp) {
+    html += '<table><tr><th>Subject</th><th>Competency Level</th><th>Evidence / Notes</th></tr>';
+    latestComp.subjects.forEach(sub => {
+      if (sub.level) html += `<tr><td>${sub.subject}</td><td>${lvlLabel(parseInt(sub.level))}</td><td style="font-size:12px;color:var(--slate)">${sub.notes||'—'}</td></tr>`;
+    });
+    html += '</table>';
+  } else {
+    html += '<div class="alert a-info">No competency records found.</div>';
+  }
+  html += '</div>';
+
+  // Skills
+  html += `<div class="report-section"><p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;margin-bottom:12px">🌟 Co-Scholastic Skills</p>`;
+  if (latestSkill) {
+    const labels = ['Beginning','Developing','Proficient','Exemplary'];
+    html += '<div class="g2">';
+    COSKILLS.forEach((skill,i) => {
+      const v = latestSkill.skills[i]||0;
+      html += `<div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>${skill}</span><span style="color:var(--slate)">${labels[v-1]||'Not Rated'}</span></div>
+        <div class="progress-bar"><div class="pb-fill pb-jade" style="width:${v*25}%"></div></div>
+      </div>`;
+    });
+    html += '</div>';
+  } else {
+    html += '<div class="alert a-info">No skill records found.</div>';
+  }
+  html += '</div>';
+
+  // Projects
+  if (projects.length) {
+    html += `<div class="report-section"><p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;margin-bottom:12px">🔬 Project Highlights (${projects.length} projects)</p>`;
+    projects.slice(-3).forEach(p => {
+      html += `<div style="background:var(--linen);border-radius:10px;padding:12px;margin-bottom:8px">
+        <strong style="font-size:14px">${p.title}</strong>
+        ${p.subject ? `<span style="font-size:12px;color:var(--slate);margin-left:8px">${p.subject}</span>` : ''}
+        ${p.desc ? `<p style="font-size:13px;margin-top:5px;color:#334155">${p.desc}</p>` : ''}
+        ${p.skills ? `<div style="font-size:12px;color:var(--jade);margin-top:4px">⚡ Skills: ${p.skills}</div>` : ''}
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  // Reflection
+  if (latestRefl) {
+    html += `<div class="report-section"><p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;margin-bottom:12px">🪞 Student's Own Voice</p>`;
+    if (latestRefl.q1) html += `<p style="font-size:13px;margin-bottom:6px"><strong>What I learned:</strong> <em>${latestRefl.q1}</em></p>`;
+    if (latestRefl.q3) html += `<p style="font-size:13px;margin-bottom:6px"><strong>Skills improved:</strong> <em>${latestRefl.q3}</em></p>`;
+    if (latestRefl.q5) html += `<p style="font-size:13px;margin-bottom:6px"><strong>Proudest achievement:</strong> <em>${latestRefl.q5}</em></p>`;
+    html += '</div>';
+  }
+
+  // Teacher
+  if (latestComment) {
+    html += `<div class="report-section"><p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;margin-bottom:12px">✏️ Teacher's Remarks</p>`;
+    if (latestComment.strength) html += `<p style="font-size:13px;margin-bottom:6px"><strong>💪 Strengths:</strong> ${latestComment.strength}</p>`;
+    if (latestComment.growth) html += `<p style="font-size:13px;margin-bottom:6px"><strong>🌱 Growth areas:</strong> ${latestComment.growth}</p>`;
+    if (latestComment.general) html += `<p style="font-size:14px;margin-top:10px;background:var(--linen);padding:12px;border-radius:8px;font-style:italic">${latestComment.general}</p>`;
+    html += '</div>';
+  }
+
+  html += `<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:12px;color:var(--slate)">
+    <div>Teacher's Signature: ________________________</div>
+    <div>Principal's Signature: ________________________</div>
+    <div>Parent's Signature: ________________________</div>
+  </div>
+  <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--slate)">Generated by Comprehensive Student Competency Portfolio System · Developed by Mateen Yousuf · SED Kashmir</div>
+  </div>`;
+
+  document.getElementById('reportContent').innerHTML = html;
+}
+
+/* ═══════════════════════════════
+   SCHOOL OVERVIEW
+═══════════════════════════════ */
+function renderSchool() {
+  const students = LS.list('studentProfiles');
+  const compRecords = LS.list('competencyRecords');
+  const skillRecords = LS.list('skillRecords');
+  const projects = LS.list('projectEntries');
+
+  const totalStudents = students.length;
+  const studentsWithComp = students.filter(s => compRecords.some(r => r.studentId===s.id)).length;
+  const studentsWithProj = students.filter(s => projects.some(p => p.studentId===s.id)).length;
+
+  // Aggregate competency distribution
+  const levelCounts = [0,0,0,0];
+  compRecords.forEach(rec => {
+    rec.subjects.forEach(sub => {
+      const l = parseInt(sub.level);
+      if (l >= 1 && l <= 4) levelCounts[l-1]++;
+    });
+  });
+
+  // Skill averages
+  const skillAvgs = Array(8).fill(0);
+  let skillCount = 0;
+  skillRecords.forEach(r => {
+    r.skills.forEach((v,i) => skillAvgs[i] += v);
+    skillCount++;
+  });
+  if (skillCount) skillAvgs.forEach((_,i) => skillAvgs[i] = (skillAvgs[i]/skillCount).toFixed(1));
+
+  const total = levelCounts.reduce((a,b)=>a+b,0);
+  const healthIndex = total ? Math.round((levelCounts[2]*75 + levelCounts[3]*100 + levelCounts[1]*40 + levelCounts[0]*10) / total) : 0;
+
+  let html = `<div class="g3" style="margin-bottom:18px">
+    <div class="stat"><div class="sn" style="color:var(--sapphire)">${totalStudents}</div><div class="sl">Total Students</div></div>
+    <div class="stat"><div class="sn" style="color:var(--jade)">${projects.length}</div><div class="sl">Total Projects</div></div>
+    <div class="stat"><div class="sn" style="color:var(--gold)">${healthIndex}%</div><div class="sl">School Holistic Index</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Competency Level Distribution</div>
+    <div class="g2">
+      <div>
+        ${['Emerging','Developing','Proficient','Advanced'].map((l,i) => {
+          const pct = total ? Math.round(levelCounts[i]/total*100) : 0;
+          const cols = ['pb-red','pb-gold','pb-sky','pb-jade'];
+          return `<div style="margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;font-size:13px"><span>${l}</span><span>${levelCounts[i]} (${pct}%)</span></div>
+            <div class="progress-bar"><div class="pb-fill ${cols[i]}" style="width:${pct}%"></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center">
+        <canvas id="schoolChart" width="180" height="180"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">School-Level Skill Averages</div>
+    ${COSKILLS.map((skill,i) => {
+      const v = parseFloat(skillAvgs[i]);
+      return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <span style="font-size:13px;width:160px">${skill}</span>
+        <div class="progress-bar" style="flex:1"><div class="pb-fill pb-jade" style="width:${v/4*100}%"></div></div>
+        <span style="font-size:12px;color:var(--slate)">${v}/4</span>
+      </div>`;
+    }).join('')}
+  </div>
+
+  <div class="card">
+    <div class="card-title">Priority Focus Areas</div>
+    <div class="alert ${healthIndex >= 70 ? 'a-ok' : healthIndex >= 50 ? 'a-warn' : 'a-err'}">
+      ${healthIndex >= 70 ? '✅ School holistic index is strong. Continue portfolio-based practices.' :
+        healthIndex >= 50 ? '⚠️ School is developing. Focus on enriching project documentation and skills.' :
+        '🔴 School needs intensive portfolio implementation. Begin with basic competency tracking.'}
+    </div>
+    ${studentsWithComp < totalStudents ? `<div class="alert a-warn">📊 ${totalStudents - studentsWithComp} students have no competency records yet.</div>` : ''}
+    ${studentsWithProj < totalStudents ? `<div class="alert a-info">🔬 ${totalStudents - studentsWithProj} students have no projects documented yet.</div>` : ''}
+  </div>`;
+
+  document.getElementById('schoolContent').innerHTML = html;
+
+  if (total > 0) {
+    const ctx = document.getElementById('schoolChart');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Emerging','Developing','Proficient','Advanced'],
+          datasets: [{ data: levelCounts, backgroundColor: ['#dc2626','#f59e0b','#3b82f6','#059669'] }]
+        },
+        options: { responsive: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
+      });
+    }
+  }
+}
+
+/* ═══════════════════════════════
+   POLICY CONTENT
+═══════════════════════════════ */
+const policyData = {
+  'pol-p1': {
+    title: 'NEP 2020 and the Holistic Progress Card',
+    body: `
+      <h3>A Paradigm Shift in Student Assessment</h3>
+      <p>The National Education Policy 2020 represents the most fundamental reimagining of Indian education in three decades. At its core is a recognition that the existing examination system — built on marks, rankings, and high-stakes testing — has failed to capture, nurture, or even acknowledge the full range of human capabilities that education is meant to develop.</p>
+      <p>One of NEP 2020's most transformative provisions is the Holistic Progress Card (HPC). This innovation moves beyond percentage marks and grade-point averages to capture a multi-dimensional picture of each student's development: academic competencies, creative abilities, physical development, social skills, ethical awareness, and emotional growth. The Holistic Progress Card is not just a reporting tool — it is a statement about what education values.</p>
+      <h3>Key Provisions of NEP 2020 on Assessment</h3>
+      <ul>
+        <li>Shift from summative to formative, competency-based assessment</li>
+        <li>Holistic Progress Card replacing marks-based report cards</li>
+        <li>Elimination of high-stakes board examinations for Classes 1–8</li>
+        <li>Student self-assessment as a core component of evaluation</li>
+        <li>Portfolio-based evidence of learning over time</li>
+        <li>360-degree feedback from teachers, peers, and self</li>
+        <li>Recognition of co-scholastic achievements alongside academics</li>
+      </ul>
+      <h3>The 5+3+3+4 Structure and Assessment Implications</h3>
+      <p>NEP 2020's restructured school stages have direct implications for assessment. The foundational stage (ages 3–8) emphasizes developmental observation over formal testing. The preparatory stage (ages 8–11) introduces competency tracking. The middle stage begins portfolio documentation. The secondary stage integrates portfolio evidence with board examinations.</p>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>Instead of "Riya scored 78/100 in Mathematics," a Holistic Progress Card would say: "Riya demonstrates proficiency in number sense and pattern recognition. She approaches mathematical problems creatively and supports peers in group problem-solving activities. Area for growth: computational fluency with multi-digit operations."</p></div>
+      <div class="ref-box"><strong>🪞 Reflection for Teachers</strong><p>Look at your current report cards. How much space is given to marks versus descriptions of what a student can actually DO? How could you enrich your written comments to reflect the whole child?</p></div>`
+  },
+  'pol-p2': {
+    title: 'NCF 2023 Competency Framework',
+    body: `
+      <h3>What NCF 2023 Changes About Assessment</h3>
+      <p>The National Curriculum Framework 2023 provides the curricular architecture for implementing NEP 2020's vision. For assessment, NCF 2023 makes a decisive break from content-coverage models and establishes competency as the unit of educational progress. This means: a student hasn't "learned Chapter 4" — a student has developed specific capabilities that can be demonstrated in multiple contexts.</p>
+      <h3>Competency vs. Knowledge: A Critical Distinction</h3>
+      <p><strong>Knowledge-based assessment asks:</strong> "Can you state the formula for the area of a rectangle?" — A student can memorize this and score full marks without understanding.</p>
+      <p><strong>Competency-based assessment asks:</strong> "Can you use your understanding of area to design a garden with specific measurement constraints?" — This requires genuine understanding that transfers to new situations.</p>
+      <h3>The NCF 2023 Competency Progression Levels</h3>
+      <ul>
+        <li><strong>Emerging (Level 1):</strong> Beginning awareness; requires significant support; inconsistent demonstration</li>
+        <li><strong>Developing (Level 2):</strong> Growing understanding; can perform with guidance; inconsistent independence</li>
+        <li><strong>Proficient (Level 3):</strong> Consistent independent performance; applies understanding across contexts</li>
+        <li><strong>Advanced (Level 4):</strong> Deep understanding; creates, innovates, supports others; extends beyond grade-level expectations</li>
+      </ul>
+      <h3>Cross-Cutting Competencies</h3>
+      <p>NCF 2023 identifies competencies that cut across all subjects: critical thinking, communication, collaboration, creativity, ethical reasoning, and self-management. These are the capabilities that prepare students for life, not just examinations.</p>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>A student working on a group science project demonstrates competencies simultaneously across multiple domains: communication (explaining the hypothesis), collaboration (dividing tasks fairly), scientific inquiry (designing the experiment), and mathematical reasoning (analyzing results). A portfolio entry captures all these dimensions.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection</strong><p>Choose one subject you teach. List 3 competencies (not topics) that you want students to develop. How would you assess whether they have developed each competency?</p></div>`
+  },
+  'pol-p3': {
+    title: 'PARAKH and Diagnostic Assessment',
+    body: `
+      <h3>What is PARAKH?</h3>
+      <p>PARAKH (Performance Assessment, Review, and Analysis of Knowledge for Holistic Development) is a national assessment body established under NEP 2020, housed within NCERT. PARAKH's mandate is to transform assessment culture in Indian education — moving from high-stakes, marks-based examinations to holistic, competency-aligned, and diagnostically useful evaluation systems.</p>
+      <h3>PARAKH's Core Principles</h3>
+      <ul>
+        <li>Assessment should develop, not just measure</li>
+        <li>Diagnostic value over ranking value</li>
+        <li>Multiple modes and forms of assessment</li>
+        <li>Alignment with learning goals, not examination success</li>
+        <li>Equity: assessment should not disadvantage any social group</li>
+        <li>Transparency: students and parents understand what is being assessed and why</li>
+      </ul>
+      <h3>PARAKH and the State Board Connection</h3>
+      <p>PARAKH works with state examination boards — including JKBOSE in Jammu & Kashmir — to align state assessment practices with NEP 2020 principles. This means teachers in J&K schools are at the forefront of a national transformation in how student achievement is understood and reported.</p>
+      <h3>Diagnostic Assessment: The PARAKH Approach</h3>
+      <p>Diagnostic assessment, in PARAKH's framework, serves a different purpose from grading. It answers: "What specific gaps does this student have? What specific strengths can be built upon?" This requires assessment tools that can pinpoint where in a learning progression a student currently stands — not just whether they passed or failed.</p>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>A PARAKH-aligned diagnostic for reading might not ask "Score the student out of 10 in Reading." Instead, it checks: "Can the student decode unfamiliar words? Can they read with expression? Can they answer inferential questions?" Each competency is separately assessed, creating a specific profile that guides targeted teaching.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection</strong><p>The last assessment you conducted — did it reveal WHAT specifically each student can and cannot yet do? Or did it reveal their rank in the class? How could you redesign it to be more diagnostic?</p></div>`
+  },
+  'pol-p4': {
+    title: 'Portfolio-Based Assessment Explained',
+    body: `
+      <h3>What is a Student Portfolio?</h3>
+      <p>A student portfolio is a purposeful, curated collection of student work that demonstrates learning, growth, and competencies over time. Unlike a folder of random worksheets, a portfolio is intentional: it includes evidence that tells the story of a student's development, including their best work, their reflective commentary, and the teacher's observations.</p>
+      <h3>Three Types of Portfolio</h3>
+      <p><strong>1. Showcase Portfolio:</strong> Best work that demonstrates what the student is most proud of. Used for sharing with parents and celebrating achievement.</p>
+      <p><strong>2. Growth Portfolio:</strong> Work from the beginning and end of a period, showing development. Most powerful for demonstrating progress over time, especially for students who started at a lower level.</p>
+      <p><strong>3. Process Portfolio:</strong> Multiple drafts of a single work, showing the learning process. Reveals how students think, revise, and improve — not just what they produce.</p>
+      <h3>Essential Components of a Strong Portfolio</h3>
+      <ul>
+        <li>Selection rationale: Why was this piece chosen?</li>
+        <li>Student reflection: What does the student say about their own work?</li>
+        <li>Competency evidence: Which specific competencies does this demonstrate?</li>
+        <li>Teacher comment: What does the teacher observe about this work?</li>
+        <li>Date: When was this produced? (Essential for showing growth)</li>
+      </ul>
+      <h3>Digital vs. Physical Portfolios</h3>
+      <p>This application supports digital portfolio documentation stored locally — ideal for schools with limited connectivity. Physical portfolios (folders with printed work) can be maintained in parallel. The key is the PROCESS of curation, reflection, and documentation — not the medium.</p>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>Every month, ask each student to choose ONE piece of work they are proud of. They write two sentences: "I chose this because..." and "I learned..." The teacher adds one observation. After 8 months, students have a portfolio that powerfully documents their development in their own voice.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection</strong><p>Where do student work samples currently go in your classroom? Do students ever revisit their old work to notice how much they have grown? What would change if they did?</p></div>`
+  },
+  'pol-p5': {
+    title: 'Moving Beyond Marks: The Case for Competency',
+    body: `
+      <h3>The Problem with Marks</h3>
+      <p>Marks have dominated Indian education for so long that it can be difficult to imagine what assessment looks like without them. Yet the research evidence against marks-based assessment is overwhelming: they increase anxiety, reduce intrinsic motivation, discourage risk-taking, create inaccurate hierarchies among students, and measure only a narrow slice of human capability.</p>
+      <h3>What Marks Cannot Capture</h3>
+      <ul>
+        <li>Creative thinking and artistic development</li>
+        <li>Emotional intelligence and empathy</li>
+        <li>Leadership, collaboration, and teamwork</li>
+        <li>Persistence and resilience when facing difficulty</li>
+        <li>Ethical reasoning and values development</li>
+        <li>Physical development and health literacy</li>
+        <li>Cultural knowledge and linguistic creativity</li>
+      </ul>
+      <h3>The Competency Alternative</h3>
+      <p>Competency-based reporting does not mean no standards — it means richer, more meaningful standards. Instead of "78/100," a competency report says: "Demonstrates strong conceptual understanding in mathematics, applies multiple strategies to solve non-routine problems, and explains reasoning clearly. Needs continued development in computational fluency and time management during tasks."</p>
+      <p>This report is infinitely more informative for the student, parent, and next teacher. It reveals what the student CAN do, what needs work, and gives specific direction for improvement.</p>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>Imagine two students: Arjun scores 45/100 in Science but has designed three brilliant science projects showing deep curiosity and investigative ability. Priya scores 90/100 but only through rote memorization and cannot apply concepts to novel situations. Which student has a stronger foundation for future science learning? Marks alone give a deeply misleading answer.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection</strong><p>Think of a student who "fails" by marks but is clearly capable and intelligent in non-academic ways. What would a competency-based portfolio for that student reveal?</p></div>`
+  },
+  'pol-p6': {
+    title: 'Student Agency and Voice in Assessment',
+    body: `
+      <h3>Why Student Voice Matters</h3>
+      <p>NEP 2020 uses the term "student agency" — the capacity of students to direct their own learning, make meaningful choices, and take ownership of their educational experience. This represents a profound shift from viewing students as passive recipients of education to recognizing them as active co-constructors of their own learning journey.</p>
+      <h3>Student Agency in Portfolio Assessment</h3>
+      <p>When students participate in their own assessment, several important things happen:</p>
+      <ul>
+        <li>They develop metacognition — awareness of their own learning processes</li>
+        <li>They take ownership of their growth rather than being graded by an external judge</li>
+        <li>They develop self-regulation skills that are essential for lifelong learning</li>
+        <li>They experience assessment as meaningful rather than threatening</li>
+        <li>They have a space to express their perspective, not just demonstrate knowledge</li>
+      </ul>
+      <h3>Practical Ways to Build Student Voice</h3>
+      <p><strong>Choice in Portfolio Selection:</strong> Students choose which work to include and explain why. This act of selection is itself a learning experience.</p>
+      <p><strong>Self-Assessment Rubrics:</strong> Students assess their own work against clear criteria before the teacher assesses it. Comparing self-assessment with teacher assessment is a powerful learning conversation.</p>
+      <p><strong>Goal Setting:</strong> Students set their own learning goals at the start of a term. At the end, they reflect on progress toward those goals.</p>
+      <p><strong>Portfolio Conferences:</strong> Students present their portfolio to parents and teacher. They do most of the talking. This develops confidence, communication, and accountability.</p>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>At the end of each month, a Grade 5 teacher conducts 5-minute "learning conferences" with each student. The student brings two pieces of work: their best work and the work they found hardest. The conversation focuses on "what did you learn?" and "what do you want to work on?" This simple practice transforms students' relationship with their own learning.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection</strong><p>When do students currently have a voice in their own assessment? How often do students have the experience of saying "I am proud of this work because..."?</p></div>`
+  },
+  'pol-p7': {
+    title: 'The Role of Reflection in Learning',
+    body: `
+      <h3>Reflection as a Learning Skill</h3>
+      <p>Reflection — the deliberate thinking about one's own experiences, decisions, and learning — is one of the most powerful metacognitive skills humans can develop. John Dewey, the philosopher of education, wrote: "We do not learn from experience; we learn from reflecting on experience." Without reflection, experiences are lived but not fully learned from.</p>
+      <h3>Why Schools Rarely Teach Reflection</h3>
+      <p>Reflection takes time that is usually consumed by content delivery. It requires psychological safety — students must feel safe to acknowledge difficulty and uncertainty. It requires open-ended questions without single correct answers. And it requires teachers who are themselves comfortable with reflective practice.</p>
+      <p>NEP 2020 and NCF 2023 both emphasize reflection as an essential component of student assessment and portfolio development. This is not an add-on — it is central to the educational vision.</p>
+      <h3>The Four Levels of Reflection</h3>
+      <ul>
+        <li><strong>Descriptive:</strong> "What happened?" — Recounting experience without analysis</li>
+        <li><strong>Analytical:</strong> "Why did it happen that way?" — Examining causes and processes</li>
+        <li><strong>Critical:</strong> "What assumptions were operating? What would I challenge?" — Examining underlying beliefs</li>
+        <li><strong>Transformative:</strong> "How has this changed me? What will I do differently?" — Identifying personal growth</li>
+      </ul>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>After completing a group project, instead of just submitting it, students spend 10 minutes writing answers to: (1) What went well? (2) What was difficult? (3) What did I contribute that I am proud of? (4) What would I do differently? These reflections become part of the portfolio and reveal far more about learning than the project itself.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection</strong><p>When was the last time you asked students to reflect on their learning process — not just their learning outcomes? How did they respond?</p></div>`
+  },
+  'pol-p8': {
+    title: 'Project-Based Learning Documentation',
+    body: `
+      <h3>What is Project-Based Learning?</h3>
+      <p>Project-Based Learning (PBL) is an instructional approach where students explore real-world questions and problems over an extended period, producing authentic work that demonstrates their learning. Unlike traditional activities where the teacher gives information and students reproduce it, PBL requires students to inquire, investigate, collaborate, and create — developing competencies that transfer far beyond the classroom.</p>
+      <h3>NEP 2020 and Experiential Learning</h3>
+      <p>NEP 2020 mandates that learning at all stages include substantial components of experiential learning — learning by doing, exploring, and creating. Projects are the primary vehicle for experiential learning in school education. NCF 2023 specifies that even at the foundational stage, children should engage in hands-on projects that connect learning to real life.</p>
+      <h3>Essential Project Documentation Elements</h3>
+      <ul>
+        <li><strong>The Driving Question:</strong> What real-world problem or question did the project explore?</li>
+        <li><strong>Process Documentation:</strong> How did the student approach the investigation? What methods were used?</li>
+        <li><strong>Evidence of Learning:</strong> Photos, artifacts, written work, oral presentations</li>
+        <li><strong>Skills Demonstrated:</strong> Which competencies were practiced and developed?</li>
+        <li><strong>Student Reflection:</strong> What does the student say they learned?</li>
+        <li><strong>Teacher Observation:</strong> What did the teacher notice about the student during the project?</li>
+      </ul>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>A Grade 4 class in Kashmir studies local water sources as a science-social science integration project. Students survey their neighborhood's water access, interview elders about historical water use, draw maps, write reports, and present findings to parents. A portfolio entry documents not just the finished report, but the student's process, struggles, and growth — creating far richer evidence of learning than any test could.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection</strong><p>What project-based activities do you currently do in your classroom? Are they documented in a way that creates a record of student learning over time? What could you add to your documentation practice?</p></div>`
+  },
+  'pol-p9': {
+    title: 'Skill Mapping Framework',
+    body: `
+      <h3>Beyond Academic Subjects: The Full Skill Landscape</h3>
+      <p>NCF 2023 identifies two categories of competencies that schools must develop: domain-specific competencies (tied to particular subjects) and cross-cutting competencies (applicable across all domains and in life). Effective portfolio systems track both.</p>
+      <h3>The 21st-Century Skill Categories</h3>
+      <p><strong>Learning Skills (The 4 Cs):</strong></p>
+      <ul>
+        <li><strong>Communication:</strong> Expressing ideas clearly in multiple modes (oral, written, visual)</li>
+        <li><strong>Collaboration:</strong> Working effectively with others toward shared goals</li>
+        <li><strong>Critical Thinking:</strong> Analyzing, evaluating, and reasoning systematically</li>
+        <li><strong>Creativity:</strong> Generating novel ideas, making unexpected connections, innovating</li>
+      </ul>
+      <p><strong>Life Skills:</strong></p>
+      <ul>
+        <li>Self-management and self-regulation</li>
+        <li>Initiative and entrepreneurship</li>
+        <li>Flexibility and adaptability</li>
+        <li>Leadership and responsibility</li>
+        <li>Ethical reasoning and values</li>
+      </ul>
+      <h3>Assessing Skills: The Challenge and the Opportunity</h3>
+      <p>Skills are harder to assess than knowledge — they manifest in behavior over time, not in answers on a test. This is why observation, documentation, and portfolio evidence are so important. A teacher who has documented 15 instances of a student demonstrating leadership across different contexts has much stronger evidence than one who simply scores leadership as 8/10 at the end of term.</p>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>Keep a "Skill Sighting" log — a simple notebook or sticky-note system. When you observe a student demonstrating a notable skill (e.g., "Tariq calmly mediated a conflict between two classmates during group work"), write a brief note with the student's name, skill, and context. Over a term, these observations provide rich evidence for skills-based portfolio entries.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection</strong><p>Which of your students demonstrates strong skills that their academic marks do NOT reveal? What would change in how you see and support that student if skills were formally documented?</p></div>`
+  },
+  'pol-p10': {
+    title: 'Co-Scholastic Competency Evaluation',
+    body: `
+      <h3>What is Co-Scholastic Evaluation?</h3>
+      <p>Co-scholastic evaluation refers to the systematic assessment of student development in areas beyond the academic curriculum: arts, sports, character, social development, and personal attributes. NEP 2020 gives co-scholastic domains equal importance with academic domains in the Holistic Progress Card — not as add-ons, but as core developmental areas.</p>
+      <h3>The Seven Co-Scholastic Domains</h3>
+      <ul>
+        <li><strong>Communication:</strong> Oral, written, visual, and digital communication across contexts</li>
+        <li><strong>Collaboration:</strong> Teamwork, conflict resolution, respect for others' contributions</li>
+        <li><strong>Creativity:</strong> Artistic, musical, dramatic, linguistic, and scientific creativity</li>
+        <li><strong>Critical Thinking:</strong> Analysis, evaluation, logical reasoning, questioning assumptions</li>
+        <li><strong>Leadership:</strong> Taking initiative, motivating others, accepting responsibility for outcomes</li>
+        <li><strong>Responsibility:</strong> Reliability, follow-through, accountability, taking care of shared resources</li>
+        <li><strong>Ethical Awareness:</strong> Fairness, honesty, empathy, environmental responsibility</li>
+      </ul>
+      <h3>How to Evaluate Co-Scholastic Skills Validly</h3>
+      <p>The greatest risk in co-scholastic evaluation is subjectivity — teachers rating students based on personality preferences rather than evidence. The portfolio approach addresses this by requiring that ratings be accompanied by specific observed evidence: "Student X demonstrated leadership by organizing and leading the class science fair committee, managing 5 sub-groups, and presenting the results to parents."</p>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>At the end of each term, show students the co-scholastic skill descriptions. Ask them to rate themselves AND give one specific example for each rating. Compare with teacher ratings. Discuss discrepancies. This process is itself a powerful learning activity — students develop vocabulary for talking about their own development.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection</strong><p>Which co-scholastic skills do you observe most clearly in your students? Which are hardest to observe and document? What structures would help you collect evidence for the harder-to-observe skills?</p></div>`
+  },
+  'pol-p11': {
+    title: 'Formative Evidence Collection',
+    body: `
+      <h3>The Shift to Evidence-Based Assessment</h3>
+      <p>Traditional assessment often operates on a "test at the end" model: teach for weeks, then give an examination to find out what students know. This model provides minimal useful information during the learning process and creates the high-stakes anxiety that undermines learning.</p>
+      <p>Formative evidence collection inverts this: gather evidence of learning throughout the process, use it to adjust teaching in real time, and build a portfolio of that evidence that tells a richer story of growth than any single examination.</p>
+      <h3>Forms of Formative Evidence</h3>
+      <ul>
+        <li><strong>Written work:</strong> Drafts, journals, worksheets, creative writing</li>
+        <li><strong>Oral evidence:</strong> Class discussions, oral presentations, reading aloud, explaining to a partner</li>
+        <li><strong>Performance evidence:</strong> Projects, experiments, art works, sports performances</li>
+        <li><strong>Observation evidence:</strong> Teacher notes on student behavior, problem-solving approaches, social interactions</li>
+        <li><strong>Self-assessment evidence:</strong> Student reflections, self-ratings, goal-setting documents</li>
+        <li><strong>Peer assessment evidence:</strong> Structured feedback from classmates</li>
+      </ul>
+      <h3>The Documentation Habit</h3>
+      <p>The challenge of evidence collection is not recognizing learning when it happens — it's capturing it before it disappears. A brief note made on the day ("Fatima today for the first time explained a concept to a peer without my help — unprompted") is worth far more than a month-end recollection.</p>
+      <div class="ex-box"><strong>🏫 Classroom Example</strong><p>Keep a class observation clipboard. During independent/group work, spend 5 minutes circulating and making brief notes about specific students. Use a simple code: L (listening), E (explaining), C (creating), Q (questioning), S (struggling → needs support). Over 2 weeks, you have rich formative data on every student.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection</strong><p>What evidence of student learning disappears in your classroom — moments of insight, breakthrough understanding, creative risk-taking — that you observe but never document? How could you capture more of this?</p></div>`
+  },
+  'pol-p12': {
+    title: 'School-Level Portfolio Implementation',
+    body: `
+      <h3>From Individual Practice to School System</h3>
+      <p>Portfolio-based assessment is most powerful when it becomes a school-wide practice — not dependent on individual teacher enthusiasm, but embedded in school structures, culture, and expectations. School leaders play a crucial role in creating the conditions for portfolio implementation to succeed.</p>
+      <h3>Implementation Roadmap</h3>
+      <p><strong>Phase 1 — Foundation (Months 1–2):</strong></p>
+      <ul>
+        <li>Teacher orientation on portfolio philosophy and practice</li>
+        <li>Selection of portfolio tool and documentation approach</li>
+        <li>Student and parent introduction to the new system</li>
+        <li>Begin with one class or one subject as a pilot</li>
+      </ul>
+      <p><strong>Phase 2 — Building (Months 3–6):</strong></p>
+      <ul>
+        <li>Regular portfolio entries (minimum monthly for each student)</li>
+        <li>Monthly teacher review of portfolio evidence</li>
+        <li>Parent sharing sessions using portfolio evidence</li>
+        <li>Student-led conferences in at least one class</li>
+      </ul>
+      <p><strong>Phase 3 — Deepening (Months 7–12):</strong></p>
+      <ul>
+        <li>Portfolio evidence informing instructional decisions</li>
+        <li>School-level aggregation of competency data</li>
+        <li>Sharing of portfolio practice across teachers</li>
+        <li>Integration with official reporting to education department</li>
+      </ul>
+      <h3>Critical Success Factors</h3>
+      <ul>
+        <li>Headmaster/Principal as visible champion of portfolio practice</li>
+        <li>Protected time for portfolio documentation (not an add-on)</li>
+        <li>Clear, simple processes that don't overwhelm teachers</li>
+        <li>Community understanding and support for the shift from marks</li>
+        <li>Connection to official reporting requirements (JKBOSE/SCERT)</li>
+      </ul>
+      <div class="ex-box"><strong>🏫 School Example</strong><p>A primary school in Shopian, Kashmir, began portfolio implementation by dedicating the last 20 minutes of every Friday to "Portfolio Friday" — a protected, school-wide time when all teachers and students worked on portfolio documentation, reflection, and goal-setting. Within one year, this simple structural innovation transformed assessment culture across the school.</p></div>
+      <div class="ref-box"><strong>🪞 Reflection for School Leaders</strong><p>What is the current assessment culture in your school? What ONE structural change — a time allocation, a shared tool, a regular review meeting — would most help portfolio practice take root?</p></div>`
+  }
+};
+
+function initPolicy() {
+  Object.keys(policyData).forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.innerHTML.trim()) {
+      const pg = policyData[id];
+      el.innerHTML = `<div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;margin-bottom:16px;color:var(--ink)">${pg.title}</div>${pg.body}`;
+    }
+  });
+}
+
+/* ═══════════════════════════════
+   BACKUP
+═══════════════════════════════ */
+function renderBackupSummary() {
+  const keys = ['studentProfiles','competencyRecords','projectEntries','reflectionEntries','teacherComments','skillRecords'];
+  let html = '<table><tr><th>Data Store</th><th>Status</th><th>Records</th></tr>';
+  keys.forEach(k => {
+    const v = LS.get(k);
+    let count = '—';
+    if (Array.isArray(v)) count = v.length + ' records';
+    html += `<tr><td>${k}</td><td>${v ? '<span class="tag t-jade">Has Data</span>' : '<span class="tag t-slate">Empty</span>'}</td><td>${count}</td></tr>`;
+  });
+  html += '</table>';
+  document.getElementById('backupSummary').innerHTML = html;
+}
+
+function exportAll() {
+  const keys = ['studentProfiles','competencyRecords','projectEntries','reflectionEntries','teacherComments','skillRecords'];
+  const data = {};
+  keys.forEach(k => { const v = LS.get(k); if (v) data[k] = v; });
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `portfolio-backup-${today()}.json`;
+  a.click();
+}
+
+function importAll(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      Object.keys(data).forEach(k => LS.set(k, data[k]));
+      alert('✅ Data imported successfully!');
+      renderBackupSummary();
+    } catch(err) { alert('❌ Invalid backup file.'); }
+  };
+  reader.readAsText(file);
+}
+
+/* ═══════════════════════════════
+   INIT
+═══════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+  }
+  // Set default dates
+  ['refl_date','tc_date','comp_date','proj_date'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.type === 'date') el.value = today();
+  });
+});
+
+</script>
+</body>
+</html>

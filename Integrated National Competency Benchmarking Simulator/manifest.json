@@ -1,0 +1,24 @@
+{
+  "name": "Integrated National Competency Benchmarking Simulator",
+  "short_name": "INCBS",
+  "description": "NEP 2020 | NCF 2023 | PARAKH Aligned Benchmarking Simulator — Offline Edition by Mateen Yousuf",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a1628",
+  "theme_color": "#0a1628",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%230a1628'/><text y='140' font-size='120' text-anchor='middle' x='96'>📊</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%230a1628'/><text y='370' font-size='320' text-anchor='middle' x='256'>📊</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "lang": "en-IN"
+}
